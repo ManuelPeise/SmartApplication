@@ -21,12 +21,16 @@ namespace Logic.Shared
         private readonly IRepositoryBase<UserRole> _userRoleRepository;
         public IRepositoryBase<UserRole> UserRoleRepository => _userRoleRepository ?? new RepositoryBase<UserRole>(_identityContext);
 
+        private IRepositoryBase<UserModuleEntity> _userModulesRepository;
+        public IRepositoryBase<UserModuleEntity> UserModuleRepository => _userModulesRepository ?? new RepositoryBase<UserModuleEntity>(_identityContext);
+
         public IdentityUnitOfWork(IdentityDbContext identityContext, IHttpContextAccessor httpContextAccessor) : base(identityContext, httpContextAccessor, null)
         {
             _identityContext = identityContext;
             _userRepository = new RepositoryBase<UserIdentity>(_identityContext);
             _userCredentialRepository = new RepositoryBase<UserCredentials>(_identityContext);
             _userRoleRepository = new RepositoryBase<UserRole>(_identityContext);
+            _userModulesRepository = new RepositoryBase<UserModuleEntity>(_identityContext);
         }
 
         #region dispose

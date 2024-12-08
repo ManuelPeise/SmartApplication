@@ -47,9 +47,11 @@ namespace Logic.Identity
 
                 if (user.UserCredentials.Password == GetEncodedPassword(request.Password, user.UserCredentials.Salt))
                 {
+                    var userModules = await LoadUserModules(unitOfWork, user.Id);
+
                     var jwtTokenGenerator = new JwtTokenGenerator(_jwtData.Value);
 
-                    var (jwt, refreshToken) = jwtTokenGenerator.GenerateToken(LoadUserClaims(user), 30);
+                    var (jwt, refreshToken) = jwtTokenGenerator.GenerateToken(LoadUserClaims(user, userModules), 30);
 
                     user.UserCredentials.RefreshToken = refreshToken;
 
@@ -106,6 +108,13 @@ namespace Logic.Identity
             await unitOfWork.UserRoleRepository.GetFirstOrDefault(role => role.Id == roleId);
         }
 
+        private async Task<List<UserModuleEntity>> LoadUserModules(IdentityUnitOfWork unitOfWork, int userId)
+        {
+            var modules = await unitOfWork.UserModuleRepository.GetAll(module => module.UserId == userId);
+
+            return modules ?? new List<UserModuleEntity>();
+        }
+
         private string GetEncodedPassword(string password, string salt)
         {
             var passwordBytes = Encoding.UTF8.GetBytes(password).ToList();
@@ -114,15 +123,29 @@ namespace Logic.Identity
             return Convert.ToBase64String(passwordBytes.ToArray());
         }
 
-        private List<Claim> LoadUserClaims(UserIdentity user)
+        private List<Claim> LoadUserClaims(UserIdentity user, List<UserModuleEntity> userModules)
         {
+            var modules = (from module in userModules
+                           let moduleId = module.ModuleId - 1
+                           let moduleValue = (ModuleEnum)moduleId
+                           select new ModuleAccessRight
+                           {
+                               ModuleType = (ModuleEnum)moduleId,
+                               ModuleName = Enum.GetName(typeof(ModuleEnum), moduleValue),
+                               Deny = module.Deny,
+                               HasReadAccess = module.HasReadAccess,
+                               HasWriteAccess = module.HasWriteAccess,
+                           }).ToList();
+
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Email),
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, Enum.GetName(typeof(UserRoleEnum), user.UserRole)),
+                new Claim(ClaimTypes.Role, Enum.GetName(typeof(UserRoleEnum), user.UserRole.RoleType)),
                 new Claim("isActive", user.IsActive.ToString()),
+                new Claim("accessRights", JsonConvert.SerializeObject(modules))
             };
 
             return claims;

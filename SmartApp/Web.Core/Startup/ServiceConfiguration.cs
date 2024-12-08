@@ -85,8 +85,8 @@ namespace Web.Core.Startup
 
         private static (string? jwtIssuer, string? jwtKey) GetJwtDataFromConfig(WebApplicationBuilder builder)
         {
-            var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
-            var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
+            var jwtIssuer = builder.Configuration.GetSection("JwtSettings:issuer").Get<string>();
+            var jwtKey = builder.Configuration.GetSection("JwtSettings:key").Get<string>();
 
             return (jwtIssuer, jwtKey);
         }

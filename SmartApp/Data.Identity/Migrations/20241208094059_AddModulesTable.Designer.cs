@@ -3,6 +3,7 @@ using System;
 using Data.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    partial class IdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241208094059_AddModulesTable")]
+    partial class AddModulesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,13 +95,13 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 8, 10, 57, 37, 112, DateTimeKind.Local).AddTicks(6116),
+                            CreatedAt = new DateTime(2024, 12, 8, 10, 40, 58, 839, DateTimeKind.Local).AddTicks(9894),
                             CreatedBy = "System",
-                            ExpiresAt = new DateTime(2025, 3, 8, 10, 57, 37, 112, DateTimeKind.Local).AddTicks(6116),
-                            Password = "U3VwZXJTZWNyZXQ3MzMzYmU4YS1kZTc4LTQ5M2QtOGRhOS05ZWI5NTgyYmVjZWM=",
+                            ExpiresAt = new DateTime(2025, 3, 8, 10, 40, 58, 839, DateTimeKind.Local).AddTicks(9894),
+                            Password = "U3VwZXJTZWNyZXRmNjhjNGQ2NS00MzNiLTQ2OWItOTQ3Yy04ZjZiZGRlNzM4ZWM=",
                             RefreshToken = "",
-                            Salt = "7333be8a-de78-493d-8da9-9eb9582becec",
-                            UpdatedAt = new DateTime(2024, 12, 8, 10, 57, 37, 112, DateTimeKind.Local).AddTicks(6116),
+                            Salt = "f68c4d65-433b-469b-947c-8f6bdde738ec",
+                            UpdatedAt = new DateTime(2024, 12, 8, 10, 40, 58, 839, DateTimeKind.Local).AddTicks(9894),
                             UpdatedBy = "System"
                         });
                 });
@@ -156,7 +159,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 8, 10, 57, 37, 112, DateTimeKind.Local).AddTicks(6511),
+                            CreatedAt = new DateTime(2024, 12, 8, 10, 40, 58, 840, DateTimeKind.Local).AddTicks(239),
                             CreatedBy = "System",
                             CredentialsId = 1,
                             Email = "admin.user@gmx.de",
@@ -164,7 +167,7 @@ namespace Data.Identity.Migrations
                             IsActive = true,
                             LastName = "User",
                             RoleId = 2,
-                            UpdatedAt = new DateTime(2024, 12, 8, 10, 57, 37, 112, DateTimeKind.Local).AddTicks(6511),
+                            UpdatedAt = new DateTime(2024, 12, 8, 10, 40, 58, 840, DateTimeKind.Local).AddTicks(239),
                             UpdatedBy = "System"
                         });
                 });
@@ -211,21 +214,6 @@ namespace Data.Identity.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserModules");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 8, 10, 57, 37, 112, DateTimeKind.Local).AddTicks(7971),
-                            CreatedBy = "System",
-                            Deny = false,
-                            HasReadAccess = true,
-                            HasWriteAccess = true,
-                            ModuleId = 1,
-                            UpdatedAt = new DateTime(2024, 12, 8, 10, 57, 37, 112, DateTimeKind.Local).AddTicks(7971),
-                            UpdatedBy = "System",
-                            UserId = 1
-                        });
                 });
 
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserRole", b =>
