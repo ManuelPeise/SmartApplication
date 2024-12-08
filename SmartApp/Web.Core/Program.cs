@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var identityConnectionString = builder.Configuration.GetConnectionString(identityContext) ?? null;
 
-ServiceConfiguration.ConfigureServices(builder.Services, corsPolicy, identityConnectionString);
+ServiceConfiguration.ConfigureServices(builder, corsPolicy, identityConnectionString);
 
 var app = builder.Build();
 

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20241207142630_SeedUserRoles")]
-    partial class SeedUserRoles
+    [Migration("20241208064719_SeedAdminUser")]
+    partial class SeedAdminUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,9 @@ namespace Data.Identity.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -56,6 +59,20 @@ namespace Data.Identity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Credentials");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 12, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(4905),
+                            CreatedBy = "System",
+                            ExpiresAt = new DateTime(2025, 3, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(4905),
+                            Password = "U3VwZXJTZWNyZXQwNGMxMDBiNS0yYzEzLTRjYzQtOWYzNS0xYjFlNjY1MGFmNGE=",
+                            RefreshToken = "",
+                            Salt = "04c100b5-2c13-4cc4-9f35-1b1e6650af4a",
+                            UpdatedAt = new DateTime(2024, 12, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(4905),
+                            UpdatedBy = "System"
+                        });
                 });
 
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserIdentity", b =>
@@ -71,7 +88,7 @@ namespace Data.Identity.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("CredentialsId")
+                    b.Property<int>("CredentialsId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -89,7 +106,7 @@ namespace Data.Identity.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("RoleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -106,6 +123,22 @@ namespace Data.Identity.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 12, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(5282),
+                            CreatedBy = "System",
+                            CredentialsId = 1,
+                            Email = "admin.user@gmx.de",
+                            FirstName = "Admin",
+                            IsActive = true,
+                            LastName = "User",
+                            RoleId = 2,
+                            UpdatedAt = new DateTime(2024, 12, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(5282),
+                            UpdatedBy = "System"
+                        });
                 });
 
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserRole", b =>
@@ -148,11 +181,15 @@ namespace Data.Identity.Migrations
                 {
                     b.HasOne("Data.Shared.Identity.Entities.UserCredentials", "UserCredentials")
                         .WithMany()
-                        .HasForeignKey("CredentialsId");
+                        .HasForeignKey("CredentialsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Data.Shared.Identity.Entities.UserRole", "UserRole")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("UserCredentials");
 

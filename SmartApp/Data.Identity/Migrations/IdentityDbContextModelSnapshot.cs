@@ -39,6 +39,9 @@ namespace Data.Identity.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -58,12 +61,13 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(5753),
+                            CreatedAt = new DateTime(2024, 12, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(4905),
                             CreatedBy = "System",
-                            ExpiresAt = new DateTime(2025, 3, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(5753),
-                            Password = "U3VwZXJTZWNyZXQ1MzRhYTQ1Yi05YWRkLTQzNGUtYWQzYy1mNzJlNWFkNTA1ZGE=",
-                            Salt = "534aa45b-9add-434e-ad3c-f72e5ad505da",
-                            UpdatedAt = new DateTime(2024, 12, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(5753),
+                            ExpiresAt = new DateTime(2025, 3, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(4905),
+                            Password = "U3VwZXJTZWNyZXQwNGMxMDBiNS0yYzEzLTRjYzQtOWYzNS0xYjFlNjY1MGFmNGE=",
+                            RefreshToken = "",
+                            Salt = "04c100b5-2c13-4cc4-9f35-1b1e6650af4a",
+                            UpdatedAt = new DateTime(2024, 12, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(4905),
                             UpdatedBy = "System"
                         });
                 });
@@ -121,7 +125,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(6078),
+                            CreatedAt = new DateTime(2024, 12, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(5282),
                             CreatedBy = "System",
                             CredentialsId = 1,
                             Email = "admin.user@gmx.de",
@@ -129,7 +133,7 @@ namespace Data.Identity.Migrations
                             IsActive = true,
                             LastName = "User",
                             RoleId = 2,
-                            UpdatedAt = new DateTime(2024, 12, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(6078),
+                            UpdatedAt = new DateTime(2024, 12, 8, 7, 47, 19, 545, DateTimeKind.Local).AddTicks(5282),
                             UpdatedBy = "System"
                         });
                 });

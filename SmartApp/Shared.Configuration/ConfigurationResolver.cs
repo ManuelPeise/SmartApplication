@@ -4,7 +4,7 @@ using Shared.Configuration.Interfaces;
 
 namespace Shared.Configuration
 {
-    public class ConfigurationResolver : IConfigurationResolver
+    public class ConfigurationResolver<T> : IConfigurationResolver
     {
         private IConfiguration _configuration;
         public ConfigurationResolver(IConfiguration configuration)
@@ -14,14 +14,14 @@ namespace Shared.Configuration
 
         public T? GetModel<T>(string key)
         {
-            var modelJson = _configuration[key];
+            var modelJson = _configuration.GetSection(key);
 
             if (modelJson == null)
             {
                 return default(T);
             }
 
-            return JsonConvert.DeserializeObject<T>(modelJson)?? default(T);
+            return JsonConvert.DeserializeObject<T>(modelJson.Value)?? default(T);
         }
     }
 }

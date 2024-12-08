@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20241207143127_SeedUserAdminUser")]
-    partial class SeedUserAdminUser
+    [Migration("20241208064624_SeedUserRoles")]
+    partial class SeedUserRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,9 @@ namespace Data.Identity.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -56,19 +59,6 @@ namespace Data.Identity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Credentials");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(5753),
-                            CreatedBy = "System",
-                            ExpiresAt = new DateTime(2025, 3, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(5753),
-                            Password = "U3VwZXJTZWNyZXQ1MzRhYTQ1Yi05YWRkLTQzNGUtYWQzYy1mNzJlNWFkNTA1ZGE=",
-                            Salt = "534aa45b-9add-434e-ad3c-f72e5ad505da",
-                            UpdatedAt = new DateTime(2024, 12, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(5753),
-                            UpdatedBy = "System"
-                        });
                 });
 
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserIdentity", b =>
@@ -119,22 +109,6 @@ namespace Data.Identity.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(6078),
-                            CreatedBy = "System",
-                            CredentialsId = 1,
-                            Email = "admin.user@gmx.de",
-                            FirstName = "Admin",
-                            IsActive = true,
-                            LastName = "User",
-                            RoleId = 2,
-                            UpdatedAt = new DateTime(2024, 12, 7, 15, 31, 27, 202, DateTimeKind.Local).AddTicks(6078),
-                            UpdatedBy = "System"
-                        });
                 });
 
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserRole", b =>

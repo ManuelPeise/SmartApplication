@@ -6,8 +6,6 @@ namespace Data.Identity
 {
     public class IdentityDbContext : DbContext
     {
-       
-
         public IdentityDbContext(DbContextOptions<IdentityDbContext> options) : base(options)
         {
            
@@ -15,8 +13,8 @@ namespace Data.Identity
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-           builder.ApplyConfiguration(new UserCredentialsSeed());
-           builder.ApplyConfiguration(new AdminUserSeed());
+            builder.ApplyConfiguration(new UserCredentialsSeed());
+            builder.ApplyConfiguration(new AdminUserSeed());
         }
 
         public DbSet<UserRole> UserRoles { get; set; }

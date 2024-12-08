@@ -4,17 +4,20 @@
     {
         public static void ConfigureApp(WebApplication app, string corsPolicy)
         {
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseCors(corsPolicy);
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
+            app.UseCors(corsPolicy);
+
             app.UseAuthorization();
+
+            app.Use(async (context, next) =>
+            {
+                Thread.CurrentPrincipal = context.User;
+                await next(context);
+            });
 
             app.MapControllers();
 

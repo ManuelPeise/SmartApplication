@@ -6,6 +6,7 @@ namespace Data.Shared.Identity.Entities
     {
         public string Salt { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public string? RefreshToken { get; set; } = string.Empty;
         public DateTime ExpiresAt { get; set; }
     }
 }

@@ -10,13 +10,13 @@ namespace Data.ContextAccessor
         private DbContext _context;
         private bool disposedValue;
 
-        public List<T> Entities
-        {
-            get
-            {
-                return _context.Set<T>().AsNoTracking().ToList();
-            }
-        }
+        //public List<T> Entities
+        //{
+        //    get
+        //    {
+        //        return _context.Set<T>().AsNoTracking().ToList();
+        //    }
+        //}
 
         public RepositoryBase(DbContext context)
         {
@@ -26,23 +26,35 @@ namespace Data.ContextAccessor
 
         public async Task<T?> GetSingle(Expression<Func<T, bool>> predicate, bool asNoTracking = false)
         {
-            var queryable = asNoTracking ? _context.Set<T>().AsNoTracking().AsQueryable() : _context.Set<T>().AsQueryable();
+            var table =  _context.Set<T>();
 
-            return await queryable.SingleAsync<T>(predicate, CancellationToken.None);
+            if (asNoTracking)
+            {
+               return await table.AsNoTracking().SingleOrDefaultAsync(predicate);
+            }
+
+            var entity = await table.SingleOrDefaultAsync(predicate);
+
+            return entity;
         }
 
         public async Task<T?> GetFirstOrDefault(Expression<Func<T, bool>> predicate, bool asNoTracking = false)
         {
-            var queryable = asNoTracking ? _context.Set<T>().AsNoTracking().AsQueryable() : _context.Set<T>().AsQueryable();
+            var table = _context.Set<T>();
 
-            return await queryable.FirstOrDefaultAsync(predicate, CancellationToken.None);
+            if (asNoTracking) 
+            { 
+                return table.AsNoTracking().FirstOrDefault(predicate);
+            }
+
+            return await table.FirstOrDefaultAsync(predicate, CancellationToken.None);
         }
 
         public async Task<List<T>?> GetAll(Expression<Func<T, bool>> predicate, bool asNoTracking = false)
         {
-            var queryable = asNoTracking ? _context.Set<T>().AsNoTracking().AsQueryable() : _context.Set<T>().AsQueryable();
+            var table = asNoTracking ? _context.Set<T>().AsNoTracking() : _context.Set<T>();
 
-            return await queryable.Where(predicate).ToListAsync();
+            return await table.Where(predicate).ToListAsync();
         }
 
         public async Task<T> AddOrUpdate(T entity, Expression<Func<T, bool>> predicate)

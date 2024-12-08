@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20241207142553_InitializeDatabase")]
+    [Migration("20241208064544_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />
@@ -40,6 +40,9 @@ namespace Data.Identity.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RefreshToken")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Salt")
@@ -71,7 +74,7 @@ namespace Data.Identity.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("CredentialsId")
+                    b.Property<int>("CredentialsId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -89,7 +92,7 @@ namespace Data.Identity.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("RoleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -148,11 +151,15 @@ namespace Data.Identity.Migrations
                 {
                     b.HasOne("Data.Shared.Identity.Entities.UserCredentials", "UserCredentials")
                         .WithMany()
-                        .HasForeignKey("CredentialsId");
+                        .HasForeignKey("CredentialsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Data.Shared.Identity.Entities.UserRole", "UserRole")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("UserCredentials");
 
