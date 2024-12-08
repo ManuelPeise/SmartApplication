@@ -1,14 +1,17 @@
 ﻿using Data.Identity;
 using Data.Shared.Identity.Entities;
+using Logic.Identity.Extensions;
 using Logic.Identity.Interfaces;
 using Logic.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Shared.Configuration.Interfaces;
 using Shared.Enums;
 using Shared.Models.Identity;
 using Shared.Models.Response;
+using System;
 using System.Security.Claims;
 using System.Text;
 
@@ -96,6 +99,67 @@ namespace Logic.Identity
             }
         }
 
+        public async Task RequestAccount(AccountRequest request)
+        {
+            using (var unitOfWork = new IdentityUnitOfWork(_identityDbContext, _httpContextAccessor))
+            {
+                var existingAccount = await unitOfWork.UserRepository.GetFirstOrDefault(usr => usr.Email.ToLower() == request.Email.ToLower());
+                var existingRequest = await unitOfWork.AccountRequestRepository.GetFirstOrDefault(req => req.Email.ToLower() == request.Email.ToLower());
+
+                if (existingAccount == null && existingRequest == null)
+                {
+                    await unitOfWork.AccountRequestRepository.AddOrUpdate(new AccountRegistrationRequestEntity
+                    {
+                        FirstName = request.FirstName,
+                        LastName = request.LastName,
+                        Email = request.Email,
+                        IsGranded = false
+                    }, x => x.Email.ToLower() == request.Email.ToLower());
+
+                    await unitOfWork.SaveChanges();
+                }
+            }
+        }
+
+        // TODO set user modules
+        public async Task<GrantAccountRequestResult> GrantAccountRequest(int requestId)
+        {
+            var result = new GrantAccountRequestResult { Success = false };
+
+            using (var unitOfWork = new IdentityUnitOfWork(_identityDbContext, _httpContextAccessor))
+            {
+                var existingRequest = await unitOfWork.AccountRequestRepository.GetFirstOrDefault(req => req.Id == requestId && !req.IsGranded);
+
+                if (existingRequest != null)
+                {
+                    var identity = existingRequest.ToIdentityBase();
+
+                    var (credentials, randomPassword) = GetRandomUserCredentials();
+
+                    identity.UserCredentials = credentials;
+
+                    existingRequest.IsGranded = true;
+
+                    var entity = await unitOfWork.AccountRequestRepository.AddOrUpdate(existingRequest, req => req.Id == requestId);
+
+                    if(entity != null)
+                    {
+                        await unitOfWork.SaveChanges();
+
+                        result.Success = true;
+                        result.FirstName = entity.FirstName;
+                        result.Email = entity.Email;
+                        result.Password = randomPassword;
+
+                        return result;
+                    }
+                }
+                    
+
+                return result;
+            }
+        }
+
         #region private members
 
         private async Task LoadCredentials(IdentityUnitOfWork unitOfWork, int credentialsId)
@@ -151,6 +215,26 @@ namespace Logic.Identity
             return claims;
         }
 
+        private static string GenerateRandomString(Random random, int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private (UserCredentials credentials , string randomPassword) GetRandomUserCredentials()
+        {
+            var random = new Random();
+            var salt = Guid.NewGuid().ToString();
+            var randomPassword = GenerateRandomString(random, 8);
+
+            return (new UserCredentials
+            {
+                Salt = salt,
+                Password = GetEncodedPassword(randomPassword, salt),
+                RefreshToken = string.Empty
+            }, randomPassword);
+        }
         #endregion
     }
 }

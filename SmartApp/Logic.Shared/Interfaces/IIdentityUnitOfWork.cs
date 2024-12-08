@@ -9,5 +9,6 @@ namespace Logic.Shared.Interfaces
         public IRepositoryBase<UserCredentials> UserCredentialsRepository { get; }
         public IRepositoryBase<UserRole> UserRoleRepository { get; }
         public IRepositoryBase<UserModuleEntity> UserModuleRepository { get; }
+        public IRepositoryBase<AccountRegistrationRequestEntity> AccountRequestRepository { get; }
     }
 }

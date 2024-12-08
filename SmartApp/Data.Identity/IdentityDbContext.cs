@@ -29,6 +29,7 @@ namespace Data.Identity
         public DbSet<UserCredentials> Credentials { get; set; }
         public DbSet<ModuleEntity> Modules { get; set; }
         public DbSet<UserModuleEntity> UserModules { get; set; }
+        public DbSet<AccountRegistrationRequestEntity> RegistrationRequests { get; set; }
 
     }
 }

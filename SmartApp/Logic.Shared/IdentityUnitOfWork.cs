@@ -24,6 +24,9 @@ namespace Logic.Shared
         private IRepositoryBase<UserModuleEntity> _userModulesRepository;
         public IRepositoryBase<UserModuleEntity> UserModuleRepository => _userModulesRepository ?? new RepositoryBase<UserModuleEntity>(_identityContext);
 
+        private IRepositoryBase<AccountRegistrationRequestEntity> _accountRequestRepository;
+        public IRepositoryBase<AccountRegistrationRequestEntity> AccountRequestRepository => _accountRequestRepository ?? new RepositoryBase<AccountRegistrationRequestEntity>(_identityContext);
+
         public IdentityUnitOfWork(IdentityDbContext identityContext, IHttpContextAccessor httpContextAccessor) : base(identityContext, httpContextAccessor, null)
         {
             _identityContext = identityContext;
@@ -31,6 +34,7 @@ namespace Logic.Shared
             _userCredentialRepository = new RepositoryBase<UserCredentials>(_identityContext);
             _userRoleRepository = new RepositoryBase<UserRole>(_identityContext);
             _userModulesRepository = new RepositoryBase<UserModuleEntity>(_identityContext);
+            _accountRequestRepository = new RepositoryBase<AccountRegistrationRequestEntity>(_identityContext);
         }
 
         #region dispose
