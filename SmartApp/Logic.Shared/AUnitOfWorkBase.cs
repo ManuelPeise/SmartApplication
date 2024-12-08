@@ -1,4 +1,6 @@
 ﻿using Data.Shared;
+using Data.Shared.Logging;
+using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,11 +10,45 @@ namespace Logic.Shared
     {
         private readonly DbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogRepository? _logRepository;
 
-        protected AUnitOfWorkBase(DbContext context, IHttpContextAccessor httpContextAccessor)
+        protected AUnitOfWorkBase(DbContext context, IHttpContextAccessor httpContextAccessor, ILogRepository? logRepository)
         {
             _dbContext = context;
             _httpContextAccessor = httpContextAccessor;
+            _logRepository = logRepository;
+        }
+
+        public async Task LogMessage(LogMessageEntity logMessage)
+        {
+            if(_logRepository != null)
+            {
+                await _logRepository.AddMessage(logMessage);
+            }
+        }
+
+        public async Task<List<LogMessageEntity>> GetLogmessages(DateTime? from, DateTime? to)
+        {
+            if(_logRepository == null)
+            {
+                return new List<LogMessageEntity>();
+            }
+
+            if (from != null)
+            {
+                return await _logRepository.GetAllAsync((DateTime)from, to);
+            }
+
+            return await _logRepository.GetAll();
+
+        }
+
+        public async Task DeleteLogMessages(DateTime from, DateTime? to)
+        {
+           if(_logRepository != null)
+            {
+                await _logRepository.DeleteMessages(from, to);
+            }
         }
 
         public async Task SaveChanges()

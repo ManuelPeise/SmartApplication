@@ -29,11 +29,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Enums", "Shared.Enum
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Configuration", "Shared.Configuration\Shared.Configuration.csproj", "{E3AA25C9-E407-4761-99BF-19A7D8384DEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic.Identity", "Logic.Identity\Logic.Identity.csproj", "{78CACAF8-21AA-4C3C-962B-2FC0C461C498}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logic.Identity", "Logic.Identity\Logic.Identity.csproj", "{78CACAF8-21AA-4C3C-962B-2FC0C461C498}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.ContextAccessor", "Data.IdentityContextAccessor\Data.ContextAccessor.csproj", "{F64DA913-2D46-4795-8FDA-98AB2A13B5E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.ContextAccessor", "Data.IdentityContextAccessor\Data.ContextAccessor.csproj", "{F64DA913-2D46-4795-8FDA-98AB2A13B5E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Models", "Shared.Models\Shared.Models.csproj", "{D394067E-4780-4110-8A33-279C01E100EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Models", "Shared.Models\Shared.Models.csproj", "{D394067E-4780-4110-8A33-279C01E100EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.AppContext", "Data.AppContext\Data.AppContext.csproj", "{75672113-BAC7-499A-8105-6BEAC189639D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,10 @@ Global
 		{D394067E-4780-4110-8A33-279C01E100EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D394067E-4780-4110-8A33-279C01E100EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D394067E-4780-4110-8A33-279C01E100EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75672113-BAC7-499A-8105-6BEAC189639D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75672113-BAC7-499A-8105-6BEAC189639D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75672113-BAC7-499A-8105-6BEAC189639D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75672113-BAC7-499A-8105-6BEAC189639D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +107,7 @@ Global
 		{78CACAF8-21AA-4C3C-962B-2FC0C461C498} = {2CA7213F-E2CB-4592-ABFA-508DACE1B1A4}
 		{F64DA913-2D46-4795-8FDA-98AB2A13B5E5} = {9C5971B8-D565-42C0-98F9-7032A88EE46A}
 		{D394067E-4780-4110-8A33-279C01E100EE} = {25E76C30-D293-42D7-9043-6D1ADF718ECB}
+		{75672113-BAC7-499A-8105-6BEAC189639D} = {9C5971B8-D565-42C0-98F9-7032A88EE46A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9805E008-BD81-43F0-AD26-5A3514B6E3CC}

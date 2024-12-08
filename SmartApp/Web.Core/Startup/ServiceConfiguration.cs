@@ -1,6 +1,9 @@
-﻿using Data.Identity;
+﻿using Data.AppContext;
+using Data.Identity;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
+using Logic.Shared.Interfaces;
+using Logic.Shared.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -11,21 +14,31 @@ namespace Web.Core.Startup
 {
     public static class ServiceConfiguration
     {
-        public static void ConfigureServices(WebApplicationBuilder builder, string corsPolicy, string? identityConnectionString)
+        public static void ConfigureServices(WebApplicationBuilder builder, string corsPolicy, string? identityContextConnectionString, string? applicationContextConnectionString)
         {
             builder.Services.AddDbContext<IdentityDbContext>(opt =>
             {
-                if (identityConnectionString == null)
+                if (identityContextConnectionString == null)
                 {
-                    throw new ArgumentNullException(nameof(identityConnectionString));
+                    throw new ArgumentNullException(nameof(identityContextConnectionString));
                 }
 
-                opt.UseMySQL(identityConnectionString);
+                opt.UseMySQL(identityContextConnectionString);
+            });
+
+            builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+            {
+                if (applicationContextConnectionString == null)
+                {
+                    throw new ArgumentNullException(nameof(applicationContextConnectionString));
+                }
+
+                opt.UseMySQL(applicationContextConnectionString);
             });
 
             builder.Services.AddHttpContextAccessor();
 
-            //  services.AddScoped<IConfigurationResolver, ConfigurationResolver>();
+            builder.Services.AddScoped<ILogRepository, LogRepository>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
 
             ConfigureOptions(builder);

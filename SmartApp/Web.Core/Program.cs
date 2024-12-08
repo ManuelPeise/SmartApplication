@@ -2,13 +2,16 @@ using Microsoft.EntityFrameworkCore;
 using Web.Core.Startup;
 
 var identityContext = "IdentityContext";
+var applicationContext = "ApplicationContext";
+
 var corsPolicy = "policy";
 
 var builder = WebApplication.CreateBuilder(args);
 
-var identityConnectionString = builder.Configuration.GetConnectionString(identityContext) ?? null;
+var identityContextConnectionString = builder.Configuration.GetConnectionString(identityContext) ?? null;
+var applicationContextConnectionString = builder.Configuration.GetConnectionString(applicationContext) ?? null;
 
-ServiceConfiguration.ConfigureServices(builder, corsPolicy, identityConnectionString);
+ServiceConfiguration.ConfigureServices(builder, corsPolicy, identityContextConnectionString, applicationContextConnectionString);
 
 var app = builder.Build();
 

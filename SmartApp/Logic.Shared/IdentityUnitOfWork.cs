@@ -21,7 +21,7 @@ namespace Logic.Shared
         private readonly IRepositoryBase<UserRole> _userRoleRepository;
         public IRepositoryBase<UserRole> UserRoleRepository => _userRoleRepository ?? new RepositoryBase<UserRole>(_identityContext);
 
-        public IdentityUnitOfWork(IdentityDbContext identityContext, IHttpContextAccessor httpContextAccessor) : base(identityContext, httpContextAccessor)
+        public IdentityUnitOfWork(IdentityDbContext identityContext, IHttpContextAccessor httpContextAccessor) : base(identityContext, httpContextAccessor, null)
         {
             _identityContext = identityContext;
             _userRepository = new RepositoryBase<UserIdentity>(_identityContext);
