@@ -6,12 +6,9 @@ using Logic.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Shared.Configuration.Interfaces;
 using Shared.Enums;
 using Shared.Models.Identity;
 using Shared.Models.Response;
-using System;
 using System.Security.Claims;
 using System.Text;
 
@@ -99,7 +96,7 @@ namespace Logic.Identity
             }
         }
 
-        public async Task RequestAccount(AccountRequest request)
+        public async Task<ApiResponseBase<SuccessResponse>> RequestAccount(AccountRequest request)
         {
             using (var unitOfWork = new IdentityUnitOfWork(_identityDbContext, _httpContextAccessor))
             {
@@ -117,12 +114,16 @@ namespace Logic.Identity
                     }, x => x.Email.ToLower() == request.Email.ToLower());
 
                     await unitOfWork.SaveChanges();
+
+                    return new ApiResponseBase<SuccessResponse> { Success = true, Data = new SuccessResponse { Success = true } };
                 }
             }
+
+            return new ApiResponseBase<SuccessResponse> { Success = false, Data = new SuccessResponse { Success = false } };
         }
 
         // TODO set user modules
-        public async Task<GrantAccountRequestResult> GrantAccountRequest(int requestId)
+        public async Task<ApiResponseBase<GrantAccountRequestResult>> GrantAccountRequest(int requestId)
         {
             var result = new GrantAccountRequestResult { Success = false };
 
@@ -151,12 +152,12 @@ namespace Logic.Identity
                         result.Email = entity.Email;
                         result.Password = randomPassword;
 
-                        return result;
+                        return new ApiResponseBase<GrantAccountRequestResult> { Success = true, Data = result };
+                    
                     }
                 }
-                    
 
-                return result;
+                return new ApiResponseBase<GrantAccountRequestResult> { Success = false, Data = result };
             }
         }
 
@@ -204,10 +205,10 @@ namespace Logic.Identity
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Email),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, Enum.GetName(typeof(UserRoleEnum), user.UserRole.RoleType)),
+                new Claim("userId", user.Id.ToString()),
+                new Claim("name", $"{user.FirstName} {user.LastName}"),
+                new Claim("email", user.Email),
+                new Claim("userRole", user.UserRole.RoleName),
                 new Claim("isActive", user.IsActive.ToString()),
                 new Claim("accessRights", JsonConvert.SerializeObject(modules))
             };

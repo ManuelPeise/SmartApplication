@@ -7,7 +7,7 @@ namespace Logic.Identity.Interfaces
     {
         Task<ApiResponseBase<AuthTokenResponse>> AuthenticateAsync(AuthenticationRequest request);
         Task<ApiResponseBase<LogoutResponse>> LogoutAsync(int userId);
-        Task RequestAccount(AccountRequest request);
-        Task<GrantAccountRequestResult> GrantAccountRequest(int requestId);
+        Task<ApiResponseBase<SuccessResponse>> RequestAccount(AccountRequest request);
+        Task<ApiResponseBase<GrantAccountRequestResult>> GrantAccountRequest(int requestId);
     }
 }
