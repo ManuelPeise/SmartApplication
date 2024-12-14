@@ -1,8 +1,4 @@
-import {
-  AccountCircleRounded,
-  Menu,
-  ExitToAppRounded,
-} from "@material-ui/icons";
+import { AccountCircleRounded, ExitToAppRounded } from "@material-ui/icons";
 import {
   AppBar,
   Button,
@@ -42,9 +38,6 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
       style={{ backgroundColor: "#00004d", width: "100%" }}
     >
       <Toolbar>
-        <IconButton size="large" color="inherit">
-          <Menu />
-        </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {getAppbarTitle(history.location.pathname)}
         </Typography>

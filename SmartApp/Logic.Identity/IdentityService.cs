@@ -1,7 +1,6 @@
 ﻿using Data.Identity;
 using Data.Shared.Identity.Entities;
 using Data.Shared.Logging;
-using Logic.Identity.Extensions;
 using Logic.Identity.Interfaces;
 using Logic.Shared;
 using Microsoft.AspNetCore.Http;
@@ -136,45 +135,6 @@ namespace Logic.Identity
             }
 
             return new ApiResponseBase<SuccessResponse> { Success = false, Data = new SuccessResponse { Success = false } };
-        }
-
-        // TODO set user modules
-        public async Task<ApiResponseBase<GrantAccountRequestResult>> GrantAccountRequest(int requestId)
-        {
-            var result = new GrantAccountRequestResult { Success = false };
-
-            using (var unitOfWork = new IdentityUnitOfWork(_identityDbContext, _httpContextAccessor))
-            {
-                var existingRequest = await unitOfWork.AccountRequestRepository.GetFirstOrDefault(req => req.Id == requestId && !req.IsGranded);
-
-                if (existingRequest != null)
-                {
-                    var identity = existingRequest.ToIdentityBase();
-
-                    var (credentials, randomPassword) = GetRandomUserCredentials();
-
-                    identity.UserCredentials = credentials;
-
-                    existingRequest.IsGranded = true;
-
-                    var entity = await unitOfWork.AccountRequestRepository.AddOrUpdate(existingRequest, req => req.Id == requestId);
-
-                    if (entity != null)
-                    {
-                        await unitOfWork.SaveChanges();
-
-                        result.Success = true;
-                        result.FirstName = entity.FirstName;
-                        result.Email = entity.Email;
-                        result.Password = randomPassword;
-
-                        return new ApiResponseBase<GrantAccountRequestResult> { Success = true, Data = result };
-
-                    }
-                }
-
-                return new ApiResponseBase<GrantAccountRequestResult> { Success = false, Data = result };
-            }
         }
 
         #region private members

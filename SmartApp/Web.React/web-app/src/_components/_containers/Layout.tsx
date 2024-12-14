@@ -6,6 +6,7 @@ import AuthenticationDialog from "../dialogs/AuthenticationDialog";
 import { BrowserHistory } from "history";
 import AppHeaderBar from "../_toolbars/AppHeaderBar";
 import RegisterDialog from "../dialogs/RegisterDialog";
+import PageContentContainer from "./PageContentContainer";
 
 interface IProps {
   isPrivate: boolean;
@@ -57,16 +58,18 @@ const Layout: React.FC<IProps> = (props) => {
         />
       </Grid2>
       <Grid2 height="100%">
-        <Outlet />
-        <AuthenticationDialog
-          open={authDialogOpen}
-          onCancel={onCancelLogin}
-          onClose={setAuthDialogOpen.bind(null, false)}
-        />
-        <RegisterDialog
-          open={registerDialogOpen}
-          onClose={setRegisterDialogOpen.bind(null, false)}
-        />
+        <PageContentContainer>
+          <Outlet />
+          <AuthenticationDialog
+            open={authDialogOpen}
+            onCancel={onCancelLogin}
+            onClose={setAuthDialogOpen.bind(null, false)}
+          />
+          <RegisterDialog
+            open={registerDialogOpen}
+            onClose={setRegisterDialogOpen.bind(null, false)}
+          />
+        </PageContentContainer>
       </Grid2>
     </Grid2>
   );

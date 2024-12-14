@@ -3,12 +3,11 @@ using Data.Shared.Identity.Entities;
 
 namespace Logic.Shared.Interfaces
 {
-    public interface IIdentityUnitOfWork: IDisposable
+    public interface IIdentityUnitOfWork : IDisposable
     {
         public IRepositoryBase<UserIdentity> UserRepository { get; }
         public IRepositoryBase<UserCredentials> UserCredentialsRepository { get; }
         public IRepositoryBase<UserRole> UserRoleRepository { get; }
         public IRepositoryBase<UserModuleEntity> UserModuleRepository { get; }
-        public IRepositoryBase<AccountRegistrationRequestEntity> AccountRequestRepository { get; }
     }
 }
