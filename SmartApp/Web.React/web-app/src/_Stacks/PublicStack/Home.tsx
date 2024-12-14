@@ -1,14 +1,14 @@
-import { Button } from "@mui/material";
+import { Button, Grid2 } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <div>
+    <Grid2 height="100%" bgcolor="ActiveBorder">
       <Button onClick={navigate.bind(null, "/private")}>Private</Button>
       <Button onClick={navigate.bind(null, "/")}>Home</Button>
-    </div>
+    </Grid2>
   );
 };
 

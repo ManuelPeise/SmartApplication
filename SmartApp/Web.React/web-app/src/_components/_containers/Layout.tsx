@@ -55,7 +55,7 @@ const Layout: React.FC<IProps> = (props) => {
           onRegisterDialogOpen={setRegisterDialogOpen.bind(null, true)}
         />
       </Grid2>
-      <Grid2>
+      <Grid2 height="100%">
         <Outlet />
         <AuthenticationDialog
           open={authDialogOpen}
@@ -66,9 +66,6 @@ const Layout: React.FC<IProps> = (props) => {
           open={registerDialogOpen}
           onClose={setRegisterDialogOpen.bind(null, false)}
         />
-      </Grid2>
-      <Grid2>
-        <div>Footer</div>
       </Grid2>
     </Grid2>
   );
