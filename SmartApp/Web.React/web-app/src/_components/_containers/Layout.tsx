@@ -19,6 +19,7 @@ const Layout: React.FC<IProps> = (props) => {
   const [authDialogOpen, setAuthDialogOpen] = React.useState<boolean>(false);
   const [registerDialogOpen, setRegisterDialogOpen] =
     React.useState<boolean>(false);
+
   React.useEffect(() => {
     if (
       isPrivate === true &&

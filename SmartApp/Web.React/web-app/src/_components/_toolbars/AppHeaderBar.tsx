@@ -15,15 +15,7 @@ import { BrowserHistory } from "history";
 import React from "react";
 import { useAuth } from "src/_hooks/useAuth";
 import { useI18n } from "src/_hooks/useI18n";
-
-const getAppbarTitle = (location: string) => {
-  switch (location) {
-    case "/":
-      return "Home";
-    default:
-      return "";
-  }
-};
+import { getAppbarTitle } from "src/_lib/pageTitle";
 
 interface IProps {
   history: BrowserHistory;

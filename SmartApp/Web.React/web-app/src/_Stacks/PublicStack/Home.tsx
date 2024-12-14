@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Home: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <Grid2 height="100%" bgcolor="ActiveBorder">
+    <Grid2 height="100%">
       <Button onClick={navigate.bind(null, "/private")}>Private</Button>
       <Button onClick={navigate.bind(null, "/")}>Home</Button>
     </Grid2>
