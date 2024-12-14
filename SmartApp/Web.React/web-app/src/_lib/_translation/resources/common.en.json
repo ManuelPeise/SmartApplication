@@ -1,9 +1,12 @@
 {
   "labelEmail": "Email",
   "labelPassword": "Password",
+  "labelPasswordValidation": "Password validation",
   "labelLogin": "Login",
   "labelCreateAccount": "Create your account",
   "labelRegister": "Register",
   "labelFirstName": "Firstname",
-  "labelLastName": "Firstname"
+  "labelLastName": "Lastname",
+  "labelCancel": "Cancel",
+  "labelNoAccount": "No account?"
 }

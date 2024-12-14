@@ -48,9 +48,3 @@ export const formTitleStyleBase: CSSProperties = {
   fontStyle: "italic",
   color: "#3399ff",
 };
-
-export const formButtonStyleBase: CSSProperties = {
-  padding: ".2rem .5rem",
-  backgroundColor: "#3399ff",
-  color: "#fff",
-};

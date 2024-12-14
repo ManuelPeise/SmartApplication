@@ -10,3 +10,7 @@ export type SuccessResponse = {
 export type AuthTokenResponse = {
   token: string;
 };
+
+export type LogoutResponse = {
+  isLoggedOut: boolean;
+};

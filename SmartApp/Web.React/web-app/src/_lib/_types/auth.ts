@@ -7,6 +7,8 @@ export type AccountRequest = {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
+  passwordValidation: string;
 };
 
 export type JwtTokenData = {
@@ -26,7 +28,7 @@ export type AuthenticationState = {
 export type AuthContextProps = {
   isLoading: boolean;
   authenticationState: AuthenticationState;
-  onLogin: (data: LoginData) => Promise<void>;
-  onLogout: (userId: number) => Promise<void>;
-  onRegister: (model: AccountRequest) => Promise<void>;
+  onLogin: (data: LoginData) => Promise<boolean>;
+  onLogout: (userId: number) => Promise<boolean>;
+  onRegister: (model: AccountRequest) => Promise<boolean>;
 };

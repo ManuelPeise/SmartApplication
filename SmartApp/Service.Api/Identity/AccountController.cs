@@ -15,7 +15,7 @@ namespace Service.Api.Identity
         }
 
         [HttpPost(Name = "RequestAccount")]
-        public async Task<ApiResponseBase<SuccessResponse>> Authenticate([FromBody] AccountRequest request)
+        public async Task<ApiResponseBase<SuccessResponse>> RequestAccount([FromBody] AccountRequest request)
         {
             return await _identityService.RequestAccount(request);
         }

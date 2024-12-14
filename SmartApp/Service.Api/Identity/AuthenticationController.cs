@@ -20,8 +20,8 @@ namespace Service.Api.Identity
             return await _identityService.AuthenticateAsync(request);
         }
 
-        [HttpGet("{userId}", Name = "LogoutAsync")]
-        public async Task<ApiResponseBase<LogoutResponse>> LogoutAsync(int userId)
+        [HttpGet(Name = "Logout")]
+        public async Task<ApiResponseBase<LogoutResponse>> Logout([FromQuery] int userId)
         {
             return await _identityService.LogoutAsync(userId);
         }

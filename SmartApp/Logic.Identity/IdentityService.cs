@@ -1,5 +1,6 @@
 ﻿using Data.Identity;
 using Data.Shared.Identity.Entities;
+using Data.Shared.Logging;
 using Logic.Identity.Extensions;
 using Logic.Identity.Interfaces;
 using Logic.Shared;
@@ -101,16 +102,31 @@ namespace Logic.Identity
             using (var unitOfWork = new IdentityUnitOfWork(_identityDbContext, _httpContextAccessor))
             {
                 var existingAccount = await unitOfWork.UserRepository.GetFirstOrDefault(usr => usr.Email.ToLower() == request.Email.ToLower());
-                var existingRequest = await unitOfWork.AccountRequestRepository.GetFirstOrDefault(req => req.Email.ToLower() == request.Email.ToLower());
-
-                if (existingAccount == null && existingRequest == null)
+                
+                if (existingAccount == null)
                 {
-                    await unitOfWork.AccountRequestRepository.AddOrUpdate(new AccountRegistrationRequestEntity
+                    var userRoleId = await LoadUserRoleId(unitOfWork, UserRoleEnum.User);
+
+                    if(userRoleId == null)
+                    {
+                        return new ApiResponseBase<SuccessResponse> { Success = false, Data = new SuccessResponse { Success = false } };
+                    }
+
+                    var salt = Guid.NewGuid().ToString();
+
+                    await unitOfWork.UserRepository.AddOrUpdate(new UserIdentity
                     {
                         FirstName = request.FirstName,
                         LastName = request.LastName,
                         Email = request.Email,
-                        IsGranded = false
+                        IsActive = true,
+                        UserCredentials = new UserCredentials
+                        {
+                            Salt = salt,
+                            RefreshToken = "",
+                            Password = GetEncodedPassword(request.Password, salt),
+                        },
+                        RoleId = (int)userRoleId,
                     }, x => x.Email.ToLower() == request.Email.ToLower());
 
                     await unitOfWork.SaveChanges();
@@ -143,7 +159,7 @@ namespace Logic.Identity
 
                     var entity = await unitOfWork.AccountRequestRepository.AddOrUpdate(existingRequest, req => req.Id == requestId);
 
-                    if(entity != null)
+                    if (entity != null)
                     {
                         await unitOfWork.SaveChanges();
 
@@ -153,7 +169,7 @@ namespace Logic.Identity
                         result.Password = randomPassword;
 
                         return new ApiResponseBase<GrantAccountRequestResult> { Success = true, Data = result };
-                    
+
                     }
                 }
 
@@ -223,7 +239,7 @@ namespace Logic.Identity
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        private (UserCredentials credentials , string randomPassword) GetRandomUserCredentials()
+        private (UserCredentials credentials, string randomPassword) GetRandomUserCredentials()
         {
             var random = new Random();
             var salt = Guid.NewGuid().ToString();
@@ -235,6 +251,29 @@ namespace Logic.Identity
                 Password = GetEncodedPassword(randomPassword, salt),
                 RefreshToken = string.Empty
             }, randomPassword);
+        }
+
+        private async Task<int?> LoadUserRoleId(IdentityUnitOfWork unitOfWork, UserRoleEnum userRole)
+        {
+            var role = await unitOfWork.UserRoleRepository.GetFirstOrDefault(r => r.RoleType == userRole);
+
+            if (role == null)
+            {
+                await unitOfWork.LogMessage(new LogMessageEntity
+                {
+                    Message = "Could not load required user role",
+                    MessageType = LogMessageTypeEnum.Error,
+                    Module = nameof(IdentityService),
+                    TimeStamp = DateTime.UtcNow,
+
+                });
+
+                await unitOfWork.SaveChanges();
+
+                return null;
+            }
+
+            return role.Id;
         }
         #endregion
     }

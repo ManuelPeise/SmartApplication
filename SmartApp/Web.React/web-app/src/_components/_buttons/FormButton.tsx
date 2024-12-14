@@ -1,6 +1,5 @@
 import { Button } from "@mui/material";
 import React, { CSSProperties } from "react";
-import { formButtonStyleBase } from "src/_lib/_styles/formStyles";
 
 interface IProps {
   label: string;
@@ -14,7 +13,12 @@ const FormButton: React.FC<IProps> = (props) => {
 
   return (
     <Button
-      style={{ ...formButtonStyleBase, ...cssProperties }}
+      style={{
+        ...cssProperties,
+        padding: ".2rem .5rem",
+        color: "#fff",
+        backgroundColor: disabled ? "#ffffff" : "#3399ff",
+      }}
       disabled={disabled}
       onClick={onAction}
     >
