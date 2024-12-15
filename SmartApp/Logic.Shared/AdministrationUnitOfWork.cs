@@ -30,6 +30,8 @@ namespace Logic.Shared
 
         public T? GetValueFromClaims<T>(string key) => GetClaimsValue<T>(key);
 
+        public async Task SaveChangesAsync() => await SaveChanges();
+
         #region dispose
 
         protected virtual void Dispose(bool disposing)

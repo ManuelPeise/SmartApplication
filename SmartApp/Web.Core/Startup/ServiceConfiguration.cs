@@ -3,7 +3,9 @@ using Data.Identity;
 using Logic.Administration;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
+using Logic.Interfaces;
 using Logic.Shared;
+using Logic.Shared.Clients;
 using Logic.Shared.Interfaces;
 using Logic.Shared.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -45,7 +47,8 @@ namespace Web.Core.Startup
 
             builder.Services.AddScoped<ILogMessageService, LogMessageService>();
             builder.Services.AddScoped<IAdministrationUnitOfWork, AdministrationUnitOfWork>();
-
+            builder.Services.AddScoped<IEmailClient, EmailClient>();
+            builder.Services.AddScoped<IEmailAccountCleanupModule, EmailAccountCleanupModule>();
             ConfigureOptions(builder);
 
             ConfigureJwt(builder);

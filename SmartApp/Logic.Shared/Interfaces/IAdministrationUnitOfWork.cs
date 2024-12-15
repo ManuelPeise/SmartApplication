@@ -9,5 +9,6 @@ namespace Logic.Shared.Interfaces
         public IRepositoryBase<EmailAccountSettingsEntity> EmailAccountSettingsRepository { get; }
         T? GetValueFromClaims<T>(string key);
         Task AddLogMessage(LogMessageEntity logMessageEntity);
+        Task SaveChangesAsync();
     }
 }

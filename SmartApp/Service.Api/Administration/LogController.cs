@@ -22,10 +22,10 @@ namespace Service.Api.Administration
             return await _logMessageService.GetLogmessages();
         }
 
-        [HttpGet(Name = "DeleteMessages")]
-        public async Task<List<LogMessageExportModel>> DeleteMessages([FromBody] List<int> messageIds)
+        [HttpPost(Name = "DeleteMessages")]
+        public async Task DeleteMessages([FromBody]List<int> messageIds)
         {
-            return await _logMessageService.DeleteMessages(messageIds);
+            await _logMessageService.DeleteMessages(messageIds);
 
         }
     }

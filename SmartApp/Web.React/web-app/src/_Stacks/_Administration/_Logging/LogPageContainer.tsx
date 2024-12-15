@@ -4,7 +4,7 @@ import { LogMessage } from "../_types/logMessage";
 import { useApi } from "src/_hooks/useApi";
 
 const LogPageContainer: React.FC = (props) => {
-  const { data, sendGetRequest } = useApi<LogMessage>({
+  const { data, sendPostRequest, sendGetRequest } = useApi<LogMessage>({
     requestUrl: "Log/GetLogMessages",
     isPrivate: true,
     parameters: null,
@@ -13,12 +13,14 @@ const LogPageContainer: React.FC = (props) => {
 
   const onDeleteMessages = React.useCallback(
     async (messageIds: number[]) => {
-      await sendGetRequest({
-        requestUrl: "Log/DeleteMessages",
+      await sendPostRequest({
+        requestUrl: `Log/DeleteMessages`,
         data: JSON.stringify(messageIds),
+      }).then(async () => {
+        await sendGetRequest();
       });
     },
-    [sendGetRequest]
+    [sendGetRequest, sendPostRequest]
   );
 
   return (

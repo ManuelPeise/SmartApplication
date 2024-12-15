@@ -27,7 +27,7 @@ namespace Logic.Shared.Clients
             {
                 try
                 {
-                    if (!await ConnectAsync(client, accountSettings.EmailServerAddress, accountSettings.Port) || !await AuthenticateAsync(client, accountSettings.EmailAddress, accountSettings.Password))
+                    if (!await ConnectAsync(client, accountSettings.EmailServerAddress, (int)accountSettings.Port) || !await AuthenticateAsync(client, accountSettings.EmailAddress, accountSettings.Password))
                     {
                         await _unitOfWork.AddLogMessage(new LogMessageEntity
                         {

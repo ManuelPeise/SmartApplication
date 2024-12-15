@@ -51,23 +51,12 @@ namespace Logic.Administration
             }
         }
 
-        public async Task<List<LogMessageExportModel>> DeleteMessages(List<int> messageIds)
+        public async Task DeleteMessages(List<int> messageIds)
         {
             try
             {
                 await _logRepository.DeleteMessages(messageIds);
 
-                var messages = await _logRepository.GetAll();
-
-                return (from msg in messages
-                        select new LogMessageExportModel
-                        {
-                            Id = msg.Id,
-                            Message = msg.Message,
-                            ExceptionMessage = msg.ExceptionMessage,
-                            TimeStamp = msg.TimeStamp,
-                            MessageType = msg.MessageType,
-                        }).ToList();
             }
             catch (Exception exception)
             {
@@ -80,7 +69,6 @@ namespace Logic.Administration
                     Module = nameof(LogMessageService)
                 });
 
-                return new List<LogMessageExportModel>();
             }
         }
         #region dispose
