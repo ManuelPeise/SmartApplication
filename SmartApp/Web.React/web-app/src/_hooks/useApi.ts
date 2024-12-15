@@ -33,7 +33,6 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
           if (res.status === 200) {
             const responseData: T = res.data;
 
-            console.log("Response:", responseData);
             setData(responseData);
           }
         });

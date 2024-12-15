@@ -27,6 +27,9 @@ const TextInput: React.FC<IProps> = (props) => {
       fullWidth={fullwidth}
       label={label}
       onChange={handleChange}
+      slotProps={{
+        input: { autoComplete: "off" },
+      }}
     />
   );
 };

@@ -9,6 +9,7 @@ import {
   ArrowBackRounded,
   MenuOutlined,
   ReportProblemRounded,
+  SettingsRounded,
 } from "@material-ui/icons";
 import React, { PropsWithChildren } from "react";
 import { SideMenu } from "src/_lib/_types/menu";
@@ -73,6 +74,12 @@ const PageContentContainer: React.FC<PropsWithChildren> = (props) => {
           icon: (
             <ReportProblemRounded fontSize="small" style={{ color: "#fff" }} />
           ),
+        },
+        {
+          displayName: "Settings",
+          route: routes.settings,
+          disabled: authenticationState == null,
+          icon: <SettingsRounded fontSize="small" style={{ color: "#fff" }} />,
         },
       ],
     };

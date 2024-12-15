@@ -44,7 +44,7 @@ namespace Logic.Interfaces
                 }
                 else
                 {
-                    new EmailAccountSettings
+                    return new EmailAccountSettings
                     {
                         EmailAddress = string.Empty,
                         EmailServerAddress = string.Empty,

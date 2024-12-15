@@ -16,8 +16,10 @@ const FormButton: React.FC<IProps> = (props) => {
       style={{
         ...cssProperties,
         padding: ".2rem .5rem",
-        color: "#fff",
-        backgroundColor: disabled ? "#ffffff" : "#3399ff",
+        border: "1px solid lightgray",
+        color: "lightgray",
+        opacity: disabled ? 0.5 : 1,
+        backgroundColor: "transparent",
       }}
       disabled={disabled}
       onClick={onAction}

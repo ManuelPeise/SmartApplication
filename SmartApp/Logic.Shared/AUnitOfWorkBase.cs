@@ -12,14 +12,14 @@ namespace Logic.Shared
         private readonly DbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogRepository? _logRepository;
-        private readonly Dictionary<string, string> _claimsDictionary;
+        private Dictionary<string, string> _claimsDictionary = new Dictionary<string, string>();
 
         protected AUnitOfWorkBase(DbContext context, IHttpContextAccessor httpContextAccessor, ILogRepository? logRepository)
         {
             _dbContext = context;
             _httpContextAccessor = httpContextAccessor;
             _logRepository = logRepository;
-            _claimsDictionary = new Dictionary<string, string>();
+            LoadClaimsData();
             
         }
 

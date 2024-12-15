@@ -5,6 +5,7 @@ import { createBrowserHistory } from "history";
 import Layout from "src/_components/_containers/Layout";
 import Home from "src/_Stacks/PublicStack/Home";
 import LogPageContainer from "src/_Stacks/_Administration/_Logging/LogPageContainer";
+import SettingsPageContainer from "src/_Stacks/_settings/SettingsPageContainer";
 
 type IProps = {
   basename?: string;
@@ -14,7 +15,9 @@ type IProps = {
 
 export const routes = {
   home: "/",
+  private: "/private",
   log: "/private/log",
+  settings: "private/settings",
 };
 const CustomBrowserRouter = ({ basename, children, history }: IProps) => {
   const [state, setState] = React.useState({
@@ -49,10 +52,11 @@ const AppRouter: React.FC = () => {
           <Route path={routes.home} Component={Home} />
         </Route>
         <Route
-          path="/private"
+          path={routes.private}
           element={<Layout isPrivate={true} history={history} />}
         >
           <Route path={routes.log} Component={LogPageContainer} />
+          <Route path={routes.settings} Component={SettingsPageContainer} />
         </Route>
       </Routes>
     </CustomBrowserRouter>

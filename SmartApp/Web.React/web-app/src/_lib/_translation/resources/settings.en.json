@@ -1,0 +1,9 @@
+{
+  "labelSettings": "Settings",
+  "labelEmailCleanupSettings": "Email cleanup settings",
+  "descriptionEmailCleanupSettings": "Define the email account server settings of account to clean up.",
+  "labelServerAddress": "Server address",
+  "labelServerPort": "Port",
+  "labelEmailAddress": "Email",
+  "labelPassword": "Password"
+}

@@ -1,6 +1,7 @@
 export const colors = {
   typography: {
     blue: "#3399ff",
+    darkgray: "#666666",
   },
   button: {
     disabled: "#ffffff",
