@@ -8,5 +8,7 @@ namespace Logic.Shared.Interfaces
         Task<List<LogMessageEntity>> GetAll();
         Task<List<LogMessageEntity>> GetAllAsync(DateTime from, DateTime? to);
         Task DeleteMessages(DateTime from, DateTime? to);
+
+        Task DeleteMessages(List<int> messageIds);
     }
 }

@@ -21,7 +21,7 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
       if (apiOptions.isPrivate) {
         AxiosClient.defaults.headers.common[
           "Authorization"
-        ] = `bearer ${authenticationState.token}`;
+        ] = `bearer ${authenticationState?.token}`;
       }
 
       setIsloading(true);
@@ -33,6 +33,7 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
           if (res.status === 200) {
             const responseData: T = res.data;
 
+            console.log("Response:", responseData);
             setData(responseData);
           }
         });
@@ -48,18 +49,15 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
   const post = React.useCallback(
     async (options?: Partial<ApiOptions>): Promise<boolean> => {
       let success = false;
-      if (options) {
-        setApiOptions({ ...apiOptions, ...options });
-      }
 
-      if (apiOptions.isPrivate) {
+      if (options.isPrivate) {
         AxiosClient.defaults.headers.common[
           "Authorization"
         ] = `bearer ${authenticationState.token}`;
       }
 
       try {
-        await AxiosClient.post(apiOptions.requestUrl, apiOptions.data, {
+        await AxiosClient.post(options.requestUrl, options.data, {
           headers: { "Content-Type": "application/json" },
         }).then(async (res) => {
           if (res.status === 200) {
@@ -74,7 +72,7 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
 
       return success;
     },
-    [authenticationState, apiOptions]
+    [authenticationState]
   );
 
   React.useEffect(() => {
@@ -82,10 +80,10 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
       await get();
     };
 
-    if (apiOptions.parameters) {
+    if (apiOptions.initialLoad === true) {
       sendInitialRequest();
     }
-  }, [apiOptions.parameters, get]);
+  }, [apiOptions, get]);
 
   return {
     isLoading,

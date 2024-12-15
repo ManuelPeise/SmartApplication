@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import React from "react";
 
 export const useI18n = () => {
-  const { t, i18n } = useTranslation(["common"]);
+  const { t, i18n } = useTranslation(["common", "administration"]);
 
   const changeLanguage = React.useCallback(
     (lng: "en" | "de") => {

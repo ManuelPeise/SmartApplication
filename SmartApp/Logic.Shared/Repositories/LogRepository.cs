@@ -56,6 +56,16 @@ namespace Logic.Shared.Repositories
             return messages;
         }
 
+        public async Task DeleteMessages(List<int> messageIds)
+        {
+            var table = _applicationDbContext.Set<LogMessageEntity>();
+
+            var messagesToDelete = await table.Where(x => messageIds.Contains(x.Id)).ToListAsync();
+
+            table.RemoveRange(messagesToDelete);
+
+            await _applicationDbContext.SaveChangesAsync();
+        }
         #region dispose
 
         protected virtual void Dispose(bool disposing)

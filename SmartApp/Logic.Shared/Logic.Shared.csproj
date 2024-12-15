@@ -14,6 +14,7 @@
     <ProjectReference Include="..\Data.AppContext\Data.AppContext.csproj" />
     <ProjectReference Include="..\Data.IdentityContextAccessor\Data.ContextAccessor.csproj" />
     <ProjectReference Include="..\Data.Identity\Data.Identity.csproj" />
+    <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
   </ItemGroup>
 
 </Project>

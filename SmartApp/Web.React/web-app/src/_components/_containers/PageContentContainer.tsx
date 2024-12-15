@@ -16,6 +16,7 @@ import { colors } from "src/_lib/colors";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/_hooks/useAuth";
 import { UserRoleEnum } from "src/_lib/_enums/UserRoleEnum";
+import { routes } from "src/_lib/AppRouter";
 
 const sideMenuMinWidth = "50px";
 const sideMenuExpandedWidth = "200px";
@@ -65,7 +66,7 @@ const PageContentContainer: React.FC<PropsWithChildren> = (props) => {
       items: [
         {
           displayName: "Logging",
-          route: "/private/logging",
+          route: routes.log,
           disabled:
             authenticationState == null ||
             authenticationState.jwtData.userRole !== UserRoleEnum.Admin,
@@ -119,7 +120,9 @@ const PageContentContainer: React.FC<PropsWithChildren> = (props) => {
         </Grid2>
       </Grid2>
       {/* content */}
-      <Grid2>{children}</Grid2>
+      <Grid2 display="flex" width="100%">
+        {children}
+      </Grid2>
     </Grid2>
   );
 };

@@ -3,6 +3,7 @@ export type ApiOptions = {
   data?: string;
   requestUrl: string;
   parameters: string | null;
+  initialLoad: boolean;
 };
 
 export type ApiResult<T> = {

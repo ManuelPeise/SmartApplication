@@ -8,5 +8,6 @@
   "labelFirstName": "Firstname",
   "labelLastName": "Lastname",
   "labelCancel": "Cancel",
-  "labelNoAccount": "No account?"
+  "labelNoAccount": "No account?",
+  "labelSelectAll": "Select all"
 }

@@ -1,0 +1,9 @@
+{
+  "labelNone": "None",
+  "labelTimeStampFilter": "Date filter",
+  "labelLogMessageTypeFilter": "Log message type filter",
+  "labelLogmessageTypeInfo": "Info",
+  "labelLogmessageTypeError": "Error",
+  "labelLogmessageTypeCriticalError": "Critical error",
+  "labelDeleteLogMessages": "Delete log messages"
+}

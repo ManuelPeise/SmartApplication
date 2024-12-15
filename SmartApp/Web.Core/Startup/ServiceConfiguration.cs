@@ -1,5 +1,6 @@
 ﻿using Data.AppContext;
 using Data.Identity;
+using Logic.Administration;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
 using Logic.Shared.Interfaces;
@@ -41,6 +42,7 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<ILogRepository, LogRepository>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
 
+            builder.Services.AddScoped<ILogMessageService, LogMessageService>();
             ConfigureOptions(builder);
 
             ConfigureJwt(builder);
