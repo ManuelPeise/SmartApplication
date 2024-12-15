@@ -1,0 +1,13 @@
+{
+  "labelEmail": "Email",
+  "labelPassword": "Password",
+  "labelPasswordValidation": "Password validation",
+  "labelLogin": "Login",
+  "labelCreateAccount": "Create your account",
+  "labelRegister": "Register",
+  "labelFirstName": "Firstname",
+  "labelLastName": "Lastname",
+  "labelCancel": "Cancel",
+  "labelNoAccount": "No account?",
+  "labelSelectAll": "Select all"
+}
