@@ -3,6 +3,7 @@ using Data.Shared.Logging;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Logic.Shared
 {
@@ -11,12 +12,15 @@ namespace Logic.Shared
         private readonly DbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogRepository? _logRepository;
+        private readonly Dictionary<string, string> _claimsDictionary;
 
         protected AUnitOfWorkBase(DbContext context, IHttpContextAccessor httpContextAccessor, ILogRepository? logRepository)
         {
             _dbContext = context;
             _httpContextAccessor = httpContextAccessor;
             _logRepository = logRepository;
+            _claimsDictionary = new Dictionary<string, string>();
+            
         }
 
         public async Task LogMessage(LogMessageEntity logMessage)
@@ -82,6 +86,56 @@ namespace Logic.Shared
             }
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public T? GetClaimsValue<T>(string key)
+        {
+            if (_claimsDictionary.ContainsKey(key))
+            {
+                var selectedClaimField = _claimsDictionary[key];
+                var type = typeof(T);
+
+                if (selectedClaimField == null)
+                {
+                    return default(T?);
+                }
+
+                if (type == typeof(int))
+                {
+                    return (T)Convert.ChangeType(int.Parse(selectedClaimField), type);
+                }
+
+                if (type == typeof(string))
+                {
+                    return (T)Convert.ChangeType(selectedClaimField, type);
+                }
+
+                if (type == typeof(Guid))
+                {
+                    return (T)Convert.ChangeType(new Guid(selectedClaimField), type);
+                }
+
+                if (type == typeof(DateTime))
+                {
+                    return (T)Convert.ChangeType(DateTime.Parse(selectedClaimField), type);
+                }
+
+            }
+
+            return default;
+        }
+
+        private void LoadClaimsData()
+        {
+            var claims = ClaimsPrincipal.Current?.Claims.ToList() ?? new List<Claim>();
+
+            foreach (var claim in claims)
+            {
+                if (!_claimsDictionary.ContainsKey(claim.Type))
+                {
+                    _claimsDictionary.Add(claim.Type, claim.Value);
+                }
+            }
         }
     }
 }

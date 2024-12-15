@@ -16,14 +16,14 @@ namespace Service.Api.Administration
             _logMessageService = logMessageService;
         }
 
-        [HttpGet(Name = "GetMessages")]
+        [HttpGet(Name = "GetLogMessages")]
         public async Task<List<LogMessageExportModel>> GetLogMessages()
         {
             return await _logMessageService.GetLogmessages();
         }
 
         [HttpGet(Name = "DeleteMessages")]
-        public async Task<List<LogMessageExportModel>> GetLogMessages([FromBody] List<int> messageIds)
+        public async Task<List<LogMessageExportModel>> DeleteMessages([FromBody] List<int> messageIds)
         {
             return await _logMessageService.DeleteMessages(messageIds);
 

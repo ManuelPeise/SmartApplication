@@ -3,6 +3,7 @@ using Data.Identity;
 using Logic.Administration;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
+using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Logic.Shared.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -43,6 +44,8 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<IIdentityService, IdentityService>();
 
             builder.Services.AddScoped<ILogMessageService, LogMessageService>();
+            builder.Services.AddScoped<IAdministrationUnitOfWork, AdministrationUnitOfWork>();
+
             ConfigureOptions(builder);
 
             ConfigureJwt(builder);

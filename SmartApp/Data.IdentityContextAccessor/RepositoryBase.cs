@@ -10,14 +10,6 @@ namespace Data.ContextAccessor
         private DbContext _context;
         private bool disposedValue;
 
-        //public List<T> Entities
-        //{
-        //    get
-        //    {
-        //        return _context.Set<T>().AsNoTracking().ToList();
-        //    }
-        //}
-
         public RepositoryBase(DbContext context)
         {
             _context = context;

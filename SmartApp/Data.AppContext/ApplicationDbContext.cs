@@ -1,4 +1,5 @@
-﻿using Data.Shared.Logging;
+﻿using Data.Shared.Email;
+using Data.Shared.Logging;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.AppContext
@@ -13,6 +14,7 @@ namespace Data.AppContext
 
         }
 
+        public DbSet<EmailAccountSettingsEntity> EmailAccountSettings { get; set; }
         public DbSet<LogMessageEntity> LogMessages { get; set; }
     }
 }
