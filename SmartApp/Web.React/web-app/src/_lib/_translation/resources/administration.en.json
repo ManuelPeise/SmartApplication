@@ -23,5 +23,6 @@
   "labelEmailProvideConnectionName": "Connection name",
   "descriptionEmailProvideConnectionName": "Set the name of connection to add.",
   "labelNewConfiguration": "New Configuration",
-  "labelDisconnect": "Disconnect"
+  "labelDisconnect": "Disconnect",
+  "descriptionCollectAiTrainingData": "Allow collecting of AI trainings data (email address and subject)."
 }

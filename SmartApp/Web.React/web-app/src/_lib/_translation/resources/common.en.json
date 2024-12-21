@@ -1,16 +1,18 @@
 {
-  "labelEmail": "Email",
-  "labelPassword": "Password",
-  "labelPasswordValidation": "Password validation",
-  "labelLogin": "Login",
+  "labelAdministration": "Administration",
+  "labelCancel": "Cancel",
+  "labelConfiguration": "Configuration",
   "labelCreateAccount": "Create your account",
-  "labelRegister": "Register",
+  "labelEmail": "Email",
+  "labelEmailProviderConfituration": "Email Provider Configuration",
   "labelFirstName": "Firstname",
   "labelLastName": "Lastname",
-  "labelCancel": "Cancel",
-  "labelNoAccount": "No account?",
-  "labelSelectAll": "Select all",
-  "labelSave": "Save",
   "labelLogging": "Logging",
-  "labelEmailProviderConfituration": "Email Provider Configuration"
+  "labelLogin": "Login",
+  "labelNoAccount": "No account?",
+  "labelPassword": "Password",
+  "labelPasswordValidation": "Password validation",
+  "labelRegister": "Register",
+  "labelSave": "Save",
+  "labelSelectAll": "Select all"
 }

@@ -3,58 +3,117 @@ import {
   Drawer,
   IconButton,
   List,
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Typography,
 } from "@mui/material";
-import {
-  ArrowBackRounded,
-  ReportProblemRounded,
-  EmailRounded,
-} from "@material-ui/icons";
+import { ArrowBackRounded } from "@material-ui/icons";
 import React, { PropsWithChildren } from "react";
-import { SideMenu } from "src/_lib/_types/menu";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/_hooks/useAuth";
 import { UserRoleEnum } from "src/_lib/_enums/UserRoleEnum";
-import { routes } from "src/_lib/AppRouter";
 import { colors } from "src/_lib/colors";
 import { useI18n } from "src/_hooks/useI18n";
+import {
+  SideMenuEntry,
+  getRoutes,
+  getSideMenuItems,
+} from "src/_lib/sideMenuItems";
 
 interface IProps extends PropsWithChildren {
   sideMenuOpen: boolean;
   onClose: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface ISideMenuItemProps extends SideMenuEntry {
+  userRole: UserRoleEnum;
+  getResource: (key: string) => string;
+}
+
+const SideMenuItem: React.FC<ISideMenuItemProps> = (props) => {
+  const {
+    displayNameRecourceKey,
+    route,
+    requiredRole,
+    userRole,
+    icon,
+    childItems,
+    getResource,
+  } = props;
+
+  const [expanded, setExpanded] = React.useState<boolean>(false);
+
+  const onClickHandler = childItems != null ? setExpanded : null;
+
+  return (
+    <ListItemButton
+      disabled={userRole === undefined || userRole !== requiredRole}
+      sx={{ display: "flex", flexDirection: "column", color: "#fff" }}
+      onClick={onClickHandler.bind(null, !expanded)}
+    >
+      <Box display="flex" flexDirection="row" alignItems="center" width="100%">
+        <ListItemIcon
+          sx={{
+            color: colors.typography.white,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {icon}
+        </ListItemIcon>
+        {childItems == null ? (
+          <Link style={{ height: "30xp" }} to={route} />
+        ) : (
+          <ListItemText style={{ display: "flex", alignItems: "center" }}>
+            <Typography sx={{ fontSize: "1rem" }}>
+              {getResource(displayNameRecourceKey)}
+            </Typography>
+          </ListItemText>
+        )}
+      </Box>
+      <Box display="flex" flexDirection="column" width="100%">
+        <List sx={{ paddingLeft: "1.5rem", width: "100%" }}>
+          {expanded &&
+            childItems.map((item, key) => (
+              <ListItem
+                sx={{
+                  paddingLeft: "2rem",
+                  paddingTop: 0,
+                  paddingBottom: 0,
+                }}
+              >
+                <ListItemText>
+                  <Link
+                    to={item.route}
+                    style={{
+                      textDecoration: "none",
+                      color: colors.typography.white,
+                    }}
+                  >
+                    <Typography sx={{ fontSize: "1rem" }}>
+                      {getResource(item.displayNameRecourceKey)}
+                    </Typography>
+                  </Link>
+                </ListItemText>
+              </ListItem>
+            ))}
+        </List>
+      </Box>
+    </ListItemButton>
+  );
+};
+
 const PageContentContainer: React.FC<IProps> = (props) => {
   const { children, sideMenuOpen, onClose } = props;
   const { authenticationState } = useAuth();
   const { getResource } = useI18n();
 
-  const appSideMenu = React.useMemo((): SideMenu => {
-    return {
-      items: [
-        {
-          displayName: getResource("common.labelLogging"),
-          route: routes.log,
-          disabled:
-            authenticationState == null ||
-            authenticationState.jwtData.userRole !== UserRoleEnum.Admin,
-          icon: (
-            <ReportProblemRounded fontSize="small" style={{ color: "#fff" }} />
-          ),
-        },
-        {
-          displayName: getResource("common.labelEmailProviderConfituration"),
-          route: routes.emailProviderConfiguration,
-          disabled: authenticationState == null,
-          icon: <EmailRounded fontSize="small" style={{ color: "#fff" }} />,
-        },
-      ],
-    };
-  }, [authenticationState, getResource]);
-
+  const sideMenuItems = React.useMemo(() => {
+    return getSideMenuItems(getRoutes());
+  }, []);
   return (
     <Box
       display="flex"
@@ -96,27 +155,16 @@ const PageContentContainer: React.FC<IProps> = (props) => {
               width: "100%",
             }}
           >
-            {appSideMenu.items.map((item, key) => {
+            {sideMenuItems.map((item, key) => {
               return (
-                <ListItemButton
+                <SideMenuItem
                   key={key}
-                  sx={{
-                    borderBottom: "1px solid lightgray",
-                  }}
-                >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText>
-                    <Link
-                      to={item.route}
-                      style={{ textDecoration: "none" }}
-                      onClick={onClose.bind(null, false)}
-                    >
-                      <Typography variant="inherit" color="secondary">
-                        {item.displayName}
-                      </Typography>
-                    </Link>
-                  </ListItemText>
-                </ListItemButton>
+                  {...item}
+                  userRole={
+                    authenticationState?.jwtData?.userRole as UserRoleEnum
+                  }
+                  getResource={getResource}
+                />
               );
             })}
           </List>

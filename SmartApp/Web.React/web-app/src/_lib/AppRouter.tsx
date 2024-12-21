@@ -6,6 +6,7 @@ import Layout from "src/_components/_containers/Layout";
 import Home from "src/_Stacks/PublicStack/Home";
 import LogPageContainer from "src/_Stacks/_Administration/_Logging/LogPageContainer";
 import EmailProviderConfigurationContainer from "src/_Stacks/_Configurations/_EmailProviderConfigurations/EmailProviderConfigurationContainer";
+import { getRoutes } from "./sideMenuItems";
 
 type IProps = {
   basename?: string;
@@ -13,13 +14,8 @@ type IProps = {
   history: BrowserHistory;
 };
 
-export const routes = {
-  home: "/",
-  private: "/private",
-  log: "/private/log",
-  configuration: "/configuration",
-  emailProviderConfiguration: "/configuration/email-provider",
-};
+export const routes = getRoutes();
+
 const CustomBrowserRouter = ({ basename, children, history }: IProps) => {
   const [state, setState] = React.useState({
     action: history.action,
@@ -53,7 +49,7 @@ const AppRouter: React.FC = () => {
           <Route path={routes.home} Component={Home} />
         </Route>
         <Route
-          path={routes.private}
+          path="/administration"
           element={<Layout isPrivate={true} history={history} />}
         >
           <Route path={routes.log} Component={LogPageContainer} />

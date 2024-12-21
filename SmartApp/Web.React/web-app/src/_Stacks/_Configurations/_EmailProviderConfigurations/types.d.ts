@@ -23,5 +23,6 @@ export type EmailProviderConfiguration = {
   password?: string;
   status: EmailProviderConfigurationStateEnum;
   connectionTestPasses: boolean;
+  allowCollectAiTrainingData: boolean;
   connectionInfo: EmailProviderConnectionInfo | null;
 };

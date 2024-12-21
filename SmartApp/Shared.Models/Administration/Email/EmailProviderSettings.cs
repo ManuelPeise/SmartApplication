@@ -11,6 +11,7 @@ namespace Shared.Models.Administration.Email
         public string Password { get; set; } = string.Empty;
         public EmailProviderConfigurationStatusEnum Status { get; set; }
         public bool ConnectionTestPassed { get; set; }
+        public bool AllowCollectAiTrainingData { get; set; }
         public EmailProviderConnectionInfo? ConnectionInfo { get; set; }
         public string UpdatePasswordIfDiffers(string prevPassword, EncriptPasswordAction encrypt)
         {

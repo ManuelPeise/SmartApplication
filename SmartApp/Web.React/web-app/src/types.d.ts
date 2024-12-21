@@ -5,3 +5,11 @@ export type ResponsiveSize = {
   lg: string;
   xl: string;
 };
+
+export type Routes = {
+  log: string;
+  home: string;
+  private: string;
+  configuration: string;
+  emailProviderConfiguration: string;
+};

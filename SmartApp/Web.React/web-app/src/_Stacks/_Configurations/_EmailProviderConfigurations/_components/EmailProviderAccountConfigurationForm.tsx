@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Switch } from "@mui/material";
 import React from "react";
 import { useFormState } from "src/_hooks/useFormState";
 import EmailProviderSelection from "./EmailProviderSelection";
@@ -181,6 +181,25 @@ const EmailProviderAccountConfigurationForm: React.FC<IProps> = (props) => {
               formState.provider.providerType === EmailProviderTypeEnum.None
             }
             onAction={onTestConnection}
+          />
+        </ListItemInput>
+        <ListItemInput
+          description={getResource(
+            "administration.descriptionCollectAiTrainingData"
+          )}
+          childWidth="12rem"
+        >
+          <Switch
+            checked={formState.allowCollectAiTrainingData ?? false}
+            disabled={
+              formState.provider.providerType === EmailProviderTypeEnum.None
+            }
+            onChange={(value) =>
+              form.handleUpdatePartial({
+                allowCollectAiTrainingData: value.target.checked,
+              })
+            }
+            color="success"
           />
         </ListItemInput>
         {formState?.connectionInfo && (

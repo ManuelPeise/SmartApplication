@@ -2,6 +2,7 @@ export const colors = {
   typography: {
     blue: "#3399ff",
     darkgray: "#666666",
+    white: "#fff",
   },
   button: {
     disabled: "#ffffff",

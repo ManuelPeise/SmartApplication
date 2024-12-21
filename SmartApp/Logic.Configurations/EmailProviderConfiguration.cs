@@ -44,6 +44,7 @@ namespace Logic.Interfaces
                     Password = "",
                     Status = EmailProviderConfigurationStatusEnum.Pending,
                     ConnectionTestPassed = false,
+                    AllowCollectAiTrainingData = false,
                     ConnectionInfo = null,
                 }
             };
@@ -155,6 +156,7 @@ namespace Logic.Interfaces
                     Password = passwordHandler.Encrypt(settings.Password),
                     Status = EmailProviderConfigurationStatusEnum.Established,
                     ConnectionTestPassed = settings.ConnectionTestPassed,
+                    AllowCollectAiTrainingData = settings.AllowCollectAiTrainingData,
                     ConnectionInfo = new EmailProviderConnectionInfo
                     {
                         UpdatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -206,101 +208,6 @@ namespace Logic.Interfaces
             }
         }
 
-        //public async Task<bool> UpdateEmailSettings(EmailProviderSettings providerSettings)
-        //{
-        //    try
-        //    {
-        //        var isModified = false;
-
-        //        var userId = _administrationUnitOfWork.GetValueFromClaims<int>("userId");
-
-        //        if (userId == 0)
-        //        {
-        //            await _administrationUnitOfWork.AddLogMessage(new LogMessageEntity
-        //            {
-        //                Message = "Could not update email cleanup settungs, reason: invalid user id",
-        //                ExceptionMessage = string.Empty,
-        //                TimeStamp = DateTime.UtcNow,
-        //                MessageType = LogMessageTypeEnum.Error,
-        //                Module = nameof(EmailAccountCleanupModule),
-        //            });
-
-        //            return false;
-        //        }
-
-        //        var emailSettings = await _administrationUnitOfWork
-        //            .SettingsRepository.GetFirstOrDefault(x => x.UserId == userId && x.SettingsType == SettingsTypeEnum.EmailAccountCleanupSettings);
-
-        //        var passwordHandler = new PasswordHandler(_securityData);
-
-        //        if (emailSettings == null)
-        //        {
-        //            await _administrationUnitOfWork.AddLogMessage(new LogMessageEntity
-        //            {
-        //                Message = "Could not update email provider settings",
-        //                ExceptionMessage = string.Empty,
-        //                TimeStamp = DateTime.UtcNow,
-        //                MessageType = LogMessageTypeEnum.Error,
-        //                Module = nameof(EmailAccountCleanupModule),
-        //            });
-
-        //            return false;
-        //        }
-        //        else
-        //        {
-        //            var settings = JsonConvert.DeserializeObject<List<EmailProviderSettings>>(emailSettings.SettingsJson) ?? new List<EmailProviderSettings>();
-
-        //            var settingsUpdate = new List<EmailProviderSettings>();
-
-        //            foreach (var setting in settings)
-        //            {
-        //                if (setting.Id == providerSettings.Id)
-        //                {
-        //                    setting.Name = providerSettings.Name;
-        //                    setting.Provider = providerSettings.Provider;
-        //                    setting.EmailAddress = providerSettings.EmailAddress;
-        //                    setting.Password = setting.UpdatePasswordIfDiffers(providerSettings.Password, passwordHandler.Encrypt);
-        //                    setting.Status = providerSettings.Status;
-        //                    setting.ConnectionTestPassed = providerSettings.ConnectionTestPassed;
-        //                    setting.ConnectionInfo = new EmailProviderConnectionInfo
-        //                    {
-        //                        UpdatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
-        //                        UpdatedBy = _administrationUnitOfWork.GetValueFromClaims<string>("name")
-        //                    };
-
-        //                    isModified = true;
-        //                }
-        //            }
-                    
-        //            emailSettings.SettingsJson = JsonConvert.SerializeObject(settingsUpdate);
-
-        //        }
-
-        //        if (isModified) 
-        //        {
-        //            await _administrationUnitOfWork.SettingsRepository.AddOrUpdate(emailSettings, x => x.UserId == userId && x.SettingsType == SettingsTypeEnum.EmailAccountCleanupSettings);
-
-        //            await _administrationUnitOfWork.SaveChangesAsync();
-        //        }
-               
-        //        return true;
-
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        await _administrationUnitOfWork.AddLogMessage(new LogMessageEntity
-        //        {
-        //            Message = "Could not update email provider settings",
-        //            ExceptionMessage = exception.Message,
-        //            TimeStamp = DateTime.UtcNow,
-        //            MessageType = LogMessageTypeEnum.Error,
-        //            Module = nameof(EmailAccountCleanupModule),
-        //        });
-
-        //        return false;
-        //    }
-        //}
-
         public async Task<bool> DeleteConnection(int connectionId)
         {
             try
@@ -316,8 +223,6 @@ namespace Logic.Interfaces
 
                 var emailSettings = await _administrationUnitOfWork
                     .SettingsRepository.GetFirstOrDefault(x => x.UserId == userId && x.SettingsType == SettingsTypeEnum.EmailProviderConfiguration);
-
-                var passwordHandler = new PasswordHandler(_securityData);
 
                 if (emailSettings == null || string.IsNullOrWhiteSpace(emailSettings.SettingsJson))
                 {
