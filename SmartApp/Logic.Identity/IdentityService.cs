@@ -16,11 +16,11 @@ namespace Logic.Identity
 {
     public class IdentityService : IIdentityService
     {
-        private readonly IOptions<JwtData> _jwtData;
+        private readonly IOptions<SecurityData> _jwtData;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IdentityDbContext _identityDbContext;
 
-        public IdentityService(IdentityDbContext context, IOptions<JwtData> jwtData, IHttpContextAccessor httpContextAccessor)
+        public IdentityService(IdentityDbContext context, IOptions<SecurityData> jwtData, IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
             _jwtData = jwtData;

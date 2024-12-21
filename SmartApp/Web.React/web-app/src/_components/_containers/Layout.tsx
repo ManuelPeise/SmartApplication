@@ -1,4 +1,4 @@
-import { Grid2 } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { useAuth } from "src/_hooks/useAuth";
@@ -17,6 +17,7 @@ const Layout: React.FC<IProps> = (props) => {
   const { isPrivate, history } = props;
   const { authenticationState } = useAuth();
 
+  const [sideMenuOpen, setSideMenuOpen] = React.useState<boolean>(false);
   const [authDialogOpen, setAuthDialogOpen] = React.useState<boolean>(false);
   const [registerDialogOpen, setRegisterDialogOpen] =
     React.useState<boolean>(false);
@@ -39,39 +40,38 @@ const Layout: React.FC<IProps> = (props) => {
   }, [history]);
 
   return (
-    <Grid2
+    <Box
       width="100%"
-      style={{
-        padding: 0,
-        margin: 0,
-        display: "flex",
-        flexDirection: "column",
-      }}
+      height="100%"
+      padding={0}
+      margin={0}
+      display="flex"
+      flexDirection="column"
     >
-      <Grid2>
-        <AppHeaderBar
-          history={history}
-          loginDialogOpen={authDialogOpen}
-          registerDialogOpen={registerDialogOpen}
-          onLoginDialogOpen={setAuthDialogOpen.bind(null, true)}
-          onRegisterDialogOpen={setRegisterDialogOpen.bind(null, true)}
+      <AppHeaderBar
+        history={history}
+        loginDialogOpen={authDialogOpen}
+        registerDialogOpen={registerDialogOpen}
+        onOpenSideMenu={setSideMenuOpen}
+        onLoginDialogOpen={setAuthDialogOpen.bind(null, true)}
+        onRegisterDialogOpen={setRegisterDialogOpen.bind(null, true)}
+      />
+      <PageContentContainer
+        sideMenuOpen={sideMenuOpen}
+        onClose={setSideMenuOpen}
+      >
+        <Outlet />
+        <AuthenticationDialog
+          open={authDialogOpen}
+          onCancel={onCancelLogin}
+          onClose={setAuthDialogOpen.bind(null, false)}
         />
-      </Grid2>
-      <Grid2 height="100%">
-        <PageContentContainer>
-          <Outlet />
-          <AuthenticationDialog
-            open={authDialogOpen}
-            onCancel={onCancelLogin}
-            onClose={setAuthDialogOpen.bind(null, false)}
-          />
-          <RegisterDialog
-            open={registerDialogOpen}
-            onClose={setRegisterDialogOpen.bind(null, false)}
-          />
-        </PageContentContainer>
-      </Grid2>
-    </Grid2>
+        <RegisterDialog
+          open={registerDialogOpen}
+          onClose={setRegisterDialogOpen.bind(null, false)}
+        />
+      </PageContentContainer>
+    </Box>
   );
 };
 

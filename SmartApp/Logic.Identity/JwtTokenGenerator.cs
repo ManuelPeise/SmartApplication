@@ -13,8 +13,8 @@ namespace Logic.Identity
 {
     public class JwtTokenGenerator
     {
-        private readonly JwtData _jwtData;
-        public JwtTokenGenerator(JwtData jwtData)
+        private readonly SecurityData _jwtData;
+        public JwtTokenGenerator(SecurityData jwtData)
         {
             _jwtData = jwtData; 
         }

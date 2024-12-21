@@ -1,5 +1,4 @@
 ﻿using Data.ContextAccessor.Interfaces;
-using Data.Shared.Email;
 using Data.Shared.Identity.Entities;
 
 namespace Logic.Shared.Interfaces

@@ -5,7 +5,7 @@ import { createBrowserHistory } from "history";
 import Layout from "src/_components/_containers/Layout";
 import Home from "src/_Stacks/PublicStack/Home";
 import LogPageContainer from "src/_Stacks/_Administration/_Logging/LogPageContainer";
-import SettingsPageContainer from "src/_Stacks/_settings/SettingsPageContainer";
+import EmailProviderConfigurationContainer from "src/_Stacks/_Configurations/_EmailProviderConfigurations/EmailProviderConfigurationContainer";
 
 type IProps = {
   basename?: string;
@@ -17,7 +17,8 @@ export const routes = {
   home: "/",
   private: "/private",
   log: "/private/log",
-  settings: "private/settings",
+  configuration: "/configuration",
+  emailProviderConfiguration: "/configuration/email-provider",
 };
 const CustomBrowserRouter = ({ basename, children, history }: IProps) => {
   const [state, setState] = React.useState({
@@ -56,7 +57,15 @@ const AppRouter: React.FC = () => {
           element={<Layout isPrivate={true} history={history} />}
         >
           <Route path={routes.log} Component={LogPageContainer} />
-          <Route path={routes.settings} Component={SettingsPageContainer} />
+        </Route>
+        <Route
+          path={routes.configuration}
+          element={<Layout isPrivate={true} history={history} />}
+        >
+          <Route
+            path={routes.emailProviderConfiguration}
+            Component={EmailProviderConfigurationContainer}
+          />
         </Route>
       </Routes>
     </CustomBrowserRouter>

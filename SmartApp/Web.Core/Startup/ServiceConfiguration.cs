@@ -48,7 +48,8 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<ILogMessageService, LogMessageService>();
             builder.Services.AddScoped<IAdministrationUnitOfWork, AdministrationUnitOfWork>();
             builder.Services.AddScoped<IEmailClient, EmailClient>();
-            builder.Services.AddScoped<IEmailAccountCleanupModule, EmailAccountCleanupModule>();
+            builder.Services.AddScoped<IEmailProviderConfiguration, EmailProviderConfiguration>();
+
             ConfigureOptions(builder);
 
             ConfigureJwt(builder);
@@ -93,15 +94,15 @@ namespace Web.Core.Startup
 
         private static (string? jwtIssuer, string? jwtKey) GetJwtDataFromConfig(WebApplicationBuilder builder)
         {
-            var jwtIssuer = builder.Configuration.GetSection("JwtSettings:issuer").Get<string>();
-            var jwtKey = builder.Configuration.GetSection("JwtSettings:key").Get<string>();
+            var jwtIssuer = builder.Configuration.GetSection("Security:issuer").Get<string>();
+            var jwtKey = builder.Configuration.GetSection("Security:key").Get<string>();
 
             return (jwtIssuer, jwtKey);
         }
 
         private static void ConfigureOptions(WebApplicationBuilder builder)
         {
-            builder.Services.Configure<JwtData>(builder.Configuration.GetSection("JwtSettings"));
+            builder.Services.Configure<SecurityData>(builder.Configuration.GetSection("Security"));
         }
     }
 }

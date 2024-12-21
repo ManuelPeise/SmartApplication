@@ -3,8 +3,10 @@ using Logic.Shared.Interfaces;
 using MailKit;
 using MailKit.Net.Imap;
 using MimeKit;
+using MySqlX.XDevAPI;
 using Shared.Enums;
 using Shared.Models.Administration.Email;
+using Shared.Models.Identity;
 
 namespace Logic.Shared.Clients
 {
@@ -18,58 +20,74 @@ namespace Logic.Shared.Clients
            _unitOfWork = unitOfWork;
         }
 
+        public async Task<bool> TestConnection(EmailProviderSettings settings)
+        {
+            var canConnect = false;
+
+            using (var client = new ImapClient())
+            {
+                if (await ConnectAsync(client, settings.Provider.IMapServerAddress, (int)settings.Provider.ImapPort) && await AuthenticateAsync(client, settings.EmailAddress, settings.Password))
+                {
+                    canConnect = true;
+
+                    await DisconnectAsync(client);
+                }
+            }
+
+            return canConnect;    
+        }
 
         #region private members
 
-        private async Task<List<MimeMessage>> LoadEmailsFromServer(EmailAccountSettings accountSettings)
-        {
-            using (var client = new ImapClient())
-            {
-                try
-                {
-                    if (!await ConnectAsync(client, accountSettings.EmailServerAddress, (int)accountSettings.Port) || !await AuthenticateAsync(client, accountSettings.EmailAddress, accountSettings.Password))
-                    {
-                        await _unitOfWork.AddLogMessage(new LogMessageEntity
-                        {
-                            Message = "Smtpclient could not Connected or Authenticated!",
-                            TimeStamp = DateTime.UtcNow,
-                            Module = nameof(EmailClient),
-                            MessageType = LogMessageTypeEnum.Error,
-                        });
+        //public async Task<List<MimeMessage>> LoadEmailsFromServer(EmailAccountCleanupSettings accountSettings)
+        //{
+        //    using (var client = new ImapClient())
+        //    {
+        //        try
+        //        {
+        //            if (!await ConnectAsync(client, accountSettings.EmailServerAddress, (int)accountSettings.Port) || !await AuthenticateAsync(client, accountSettings.EmailAddress, accountSettings.Password))
+        //            {
+        //                await _unitOfWork.AddLogMessage(new LogMessageEntity
+        //                {
+        //                    Message = "Smtpclient could not Connected or Authenticated!",
+        //                    TimeStamp = DateTime.UtcNow,
+        //                    Module = nameof(EmailClient),
+        //                    MessageType = LogMessageTypeEnum.Error,
+        //                });
 
-                        return new List<MimeMessage>();
-                    }
+        //                return new List<MimeMessage>();
+        //            }
 
-                    var emails = await ReceiveEmails(client);
+        //            var emails = await ReceiveEmails(client);
 
-                    if (emails.Any())
-                    {
-                        return emails;
-                    }
+        //            if (emails.Any())
+        //            {
+        //                return emails;
+        //            }
 
-                }
-                catch (Exception exception)
-                {
-                    await _unitOfWork.AddLogMessage(new LogMessageEntity
-                    {
-                        Message = "Could not receive emails from server!",
-                        ExceptionMessage = exception.Message,
-                        TimeStamp = DateTime.UtcNow,
-                        MessageType = LogMessageTypeEnum.Error,
-                        Module = nameof(EmailClient),
-                    });
-                }
-                finally
-                {
-                    if (client.IsConnected)
-                    {
-                        await DisconnectAsync(client);
-                    }
-                }
+        //        }
+        //        catch (Exception exception)
+        //        {
+        //            await _unitOfWork.AddLogMessage(new LogMessageEntity
+        //            {
+        //                Message = "Could not receive emails from server!",
+        //                ExceptionMessage = exception.Message,
+        //                TimeStamp = DateTime.UtcNow,
+        //                MessageType = LogMessageTypeEnum.Error,
+        //                Module = nameof(EmailClient),
+        //            });
+        //        }
+        //        finally
+        //        {
+        //            if (client.IsConnected)
+        //            {
+        //                await DisconnectAsync(client);
+        //            }
+        //        }
 
-                return new List<MimeMessage>();
-            }
-        }
+        //        return new List<MimeMessage>();
+        //    }
+        //}
         private async Task<bool> ConnectAsync(ImapClient client, string server, int port)
         {
             await client.ConnectAsync(server, port);

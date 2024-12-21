@@ -1,4 +1,6 @@
-﻿using Data.Shared;
+﻿using Data.AppContext;
+using Data.Identity;
+using Data.Shared;
 using Data.Shared.Logging;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -9,14 +11,16 @@ namespace Logic.Shared
 {
     public abstract class AUnitOfWorkBase
     {
-        private readonly DbContext _dbContext;
+        private readonly IdentityDbContext _identityContext;
+        private readonly ApplicationDbContext? _applicationContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogRepository? _logRepository;
         private Dictionary<string, string> _claimsDictionary = new Dictionary<string, string>();
 
-        protected AUnitOfWorkBase(DbContext context, IHttpContextAccessor httpContextAccessor, ILogRepository? logRepository)
+        protected AUnitOfWorkBase(IdentityDbContext identityContext, IHttpContextAccessor httpContextAccessor, ILogRepository? logRepository, ApplicationDbContext? applicationContext = null)
         {
-            _dbContext = context;
+            _identityContext = identityContext;
+            _applicationContext = applicationContext;
             _httpContextAccessor = httpContextAccessor;
             _logRepository = logRepository;
             LoadClaimsData();
@@ -57,35 +61,12 @@ namespace Logic.Shared
 
         public async Task SaveChanges()
         {
-            var currentUser = _httpContextAccessor.HttpContext.User.Identity;
+            await SaveIdentityContextChanges();
 
-           
-
-            var modifiedEntries = _dbContext.ChangeTracker.Entries()
-               .Where(x => x.State == EntityState.Modified ||
-               x.State == EntityState.Added);
-
-            foreach (var entry in modifiedEntries)
+            if (_applicationContext != null)
             {
-                if (entry != null)
-                {
-                    if (entry.State == EntityState.Added)
-                    {
-                        ((AEntityBase)entry.Entity).CreatedBy = currentUser?.Name ?? "System";
-                        ((AEntityBase)entry.Entity).CreatedAt = DateTime.Now;
-                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
-                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
-
-                    }
-                    else if (entry.State == EntityState.Modified)
-                    {
-                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
-                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
-                    }
-                }
+                await SaveApplicationContextChanges();
             }
-
-            await _dbContext.SaveChangesAsync();
         }
 
         public T? GetClaimsValue<T>(string key)
@@ -136,6 +117,68 @@ namespace Logic.Shared
                     _claimsDictionary.Add(claim.Type, claim.Value);
                 }
             }
+        }
+
+        private async Task SaveIdentityContextChanges()
+        {
+            var currentUser = _httpContextAccessor.HttpContext.User.Identity;
+
+            var modifiedEntries = _identityContext.ChangeTracker.Entries()
+              .Where(x => x.State == EntityState.Modified ||
+              x.State == EntityState.Added);
+
+            foreach (var entry in modifiedEntries)
+            {
+                if (entry != null)
+                {
+                    if (entry.State == EntityState.Added)
+                    {
+                        ((AEntityBase)entry.Entity).CreatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).CreatedAt = DateTime.Now;
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+
+                    }
+                    else if (entry.State == EntityState.Modified)
+                    {
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+                    }
+                }
+            }
+
+            await _identityContext.SaveChangesAsync();
+        }
+
+        private async Task SaveApplicationContextChanges()
+        {
+            var currentUser = _httpContextAccessor.HttpContext.User.Identity;
+
+            var modifiedEntries = _applicationContext.ChangeTracker.Entries()
+              .Where(x => x.State == EntityState.Modified ||
+              x.State == EntityState.Added);
+
+            foreach (var entry in modifiedEntries)
+            {
+                if (entry != null)
+                {
+                    if (entry.State == EntityState.Added)
+                    {
+                        ((AEntityBase)entry.Entity).CreatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).CreatedAt = DateTime.Now;
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+
+                    }
+                    else if (entry.State == EntityState.Modified)
+                    {
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+                    }
+                }
+            }
+
+            await _applicationContext.SaveChangesAsync();
         }
     }
 }

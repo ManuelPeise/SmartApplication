@@ -1,4 +1,8 @@
-import { AccountCircleRounded, ExitToAppRounded } from "@material-ui/icons";
+import {
+  AccountCircleRounded,
+  ExitToAppRounded,
+  MenuRounded,
+} from "@material-ui/icons";
 import {
   AppBar,
   Button,
@@ -17,6 +21,7 @@ interface IProps {
   history: BrowserHistory;
   loginDialogOpen: boolean;
   registerDialogOpen: boolean;
+  onOpenSideMenu: React.Dispatch<React.SetStateAction<boolean>>;
   onLoginDialogOpen: () => void;
   onRegisterDialogOpen: () => void;
 }
@@ -26,6 +31,7 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
     history,
     loginDialogOpen,
     registerDialogOpen,
+    onOpenSideMenu,
     onLoginDialogOpen,
     onRegisterDialogOpen,
   } = props;
@@ -38,7 +44,19 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
       style={{ backgroundColor: "#00004d", width: "100%" }}
     >
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <IconButton
+          size="small"
+          color="secondary"
+          onClick={onOpenSideMenu.bind(null, true)}
+        >
+          <MenuRounded />
+        </IconButton>
+        <Typography
+          variant="h6"
+          component="div"
+          marginLeft="10px"
+          sx={{ flexGrow: 1 }}
+        >
           {getAppbarTitle(history.location.pathname)}
         </Typography>
         {authenticationState != null ? (

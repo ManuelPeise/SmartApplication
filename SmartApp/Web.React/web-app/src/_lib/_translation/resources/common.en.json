@@ -10,5 +10,7 @@
   "labelCancel": "Cancel",
   "labelNoAccount": "No account?",
   "labelSelectAll": "Select all",
-  "labelSave": "Save"
+  "labelSave": "Save",
+  "labelLogging": "Logging",
+  "labelEmailProviderConfituration": "Email Provider Configuration"
 }

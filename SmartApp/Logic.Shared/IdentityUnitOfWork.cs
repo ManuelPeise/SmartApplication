@@ -1,4 +1,5 @@
-﻿using Data.ContextAccessor;
+﻿using Data.AppContext;
+using Data.ContextAccessor;
 using Data.ContextAccessor.Interfaces;
 using Data.Identity;
 using Data.Shared.Identity.Entities;
@@ -24,7 +25,7 @@ namespace Logic.Shared
         private IRepositoryBase<UserModuleEntity> _userModulesRepository;
         public IRepositoryBase<UserModuleEntity> UserModuleRepository => _userModulesRepository ?? new RepositoryBase<UserModuleEntity>(_identityContext);
 
-        public IdentityUnitOfWork(IdentityDbContext identityContext, IHttpContextAccessor httpContextAccessor) : base(identityContext, httpContextAccessor, null)
+        public IdentityUnitOfWork(IdentityDbContext identityContext, IHttpContextAccessor httpContextAccessor) : base(identityContext, httpContextAccessor, null, null)
         {
             _identityContext = identityContext;
             _userRepository = new RepositoryBase<UserIdentity>(_identityContext);

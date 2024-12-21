@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import React, { CSSProperties } from "react";
+import { colors } from "src/_lib/colors";
 
 interface IProps {
   label: string;
@@ -16,9 +17,9 @@ const FormButton: React.FC<IProps> = (props) => {
       style={{
         ...cssProperties,
         padding: ".2rem .5rem",
-        border: "1px solid lightgray",
-        color: "lightgray",
-        opacity: disabled ? 0.5 : 1,
+        border: `1px solid ${colors.typography.darkgray}`,
+        color: colors.typography.darkgray,
+        opacity: disabled ? 0.2 : 1,
         backgroundColor: "transparent",
       }}
       disabled={disabled}

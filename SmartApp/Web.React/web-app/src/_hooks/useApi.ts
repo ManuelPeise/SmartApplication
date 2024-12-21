@@ -10,7 +10,8 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
   );
   const [error, setError] = React.useState<string | null>(null);
   const [isLoading, setIsloading] = React.useState<boolean>(false);
-  const [data, setData] = React.useState<T>({} as T);
+
+  const [data, setData] = React.useState<T[] | null>(null);
 
   const get = React.useCallback(
     async (options?: ApiOptions): Promise<void> => {
@@ -31,9 +32,13 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
           headers: { "Content-Type": "application/json" },
         }).then(async (res) => {
           if (res.status === 200) {
-            const responseData: T = res.data;
+            if (Array.isArray(res.data)) {
+              const data: T[] = JSON.parse(JSON.stringify(res.data));
 
-            setData(responseData);
+              setData(data);
+            } else {
+              setData([res.data]);
+            }
           }
         });
       } catch (err) {
@@ -46,21 +51,46 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
   );
 
   const post = React.useCallback(
-    async (options?: Partial<ApiOptions>): Promise<boolean> => {
-      let success = false;
+    async (options?: Partial<ApiOptions>): Promise<void> => {
+      if (options.isPrivate) {
+        AxiosClient.defaults.headers.common[
+          "Authorization"
+        ] = `bearer ${authenticationState.token}`;
+      }
+      setIsloading(true);
+      try {
+        await AxiosClient.post(options.requestUrl, options.data, {
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsloading(false);
+      }
+    },
+    [authenticationState]
+  );
+
+  const PostWithResponse = React.useCallback(
+    async <TResponse>(options?: Partial<ApiOptions>): Promise<TResponse> => {
+      let response: TResponse = null;
 
       if (options.isPrivate) {
         AxiosClient.defaults.headers.common[
           "Authorization"
         ] = `bearer ${authenticationState.token}`;
       }
-
+      setIsloading(true);
       try {
         await AxiosClient.post(options.requestUrl, options.data, {
           headers: { "Content-Type": "application/json" },
         }).then(async (res) => {
           if (res.status === 200) {
-            success = true;
+            if (res.data) {
+              const responseData: TResponse = res.data;
+
+              response = responseData;
+            }
           }
         });
       } catch (err) {
@@ -69,7 +99,7 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
         setIsloading(false);
       }
 
-      return success;
+      return response;
     },
     [authenticationState]
   );
@@ -90,5 +120,6 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
     requestError: error,
     sendGetRequest: get,
     sendPostRequest: post,
+    sendPost: PostWithResponse,
   };
 };

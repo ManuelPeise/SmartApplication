@@ -1,9 +1,20 @@
 {
   "labelSettings": "Settings",
-  "labelEmailCleanupSettings": "Email cleanup settings",
-  "descriptionEmailCleanupSettings": "Define the email account server settings of account to clean up.",
+  "labelEmailCleanupSettings": "Email Cleanup Settings",
   "labelServerAddress": "Server address",
   "labelServerPort": "Port",
   "labelEmailAddress": "Email",
-  "labelPassword": "Password"
+  "labelPassword": "Password",
+  "descriptionEmailCleanupSettings": "Cleanup your email inbox automaticly",
+  "descriptionServerAddress": "The address of the email server (IMAP).",
+  "descriptionServerPort": "The port of the email server (IMAP).",
+  "descriptionEmailAddress": "The email address for authentication.",
+  "descriptionPassword": "The password for authentication.",
+  "labelCleanupAction": "Cleanup action",
+  "labelIgnore": "Ignore",
+  "labelUnknown": "Unknown",
+  "labelDelete": "Delete",
+  "labelDays": "Days",
+  "labelKeepMailsOfLastDays": "Keep mails of last days (default 30)",
+  "labelIsActive": "Set the active status of email account cleanup feature."
 }

@@ -8,8 +8,9 @@ export type ApiOptions = {
 
 export type ApiResult<T> = {
   isLoading: boolean;
-  data: T | T[];
+  data: T[] | null;
   requestError?: string | null;
   sendGetRequest: (options?: Partial<ApiOptions>) => Promise<void>;
-  sendPostRequest: (options?: Partial<ApiOptions>) => Promise<boolean>;
+  sendPostRequest: (options?: Partial<ApiOptions>) => Promise<void>;
+  sendPost: <TResponse>(options?: Partial<ApiOptions>) => Promise<TResponse>;
 };

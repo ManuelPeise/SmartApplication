@@ -50,7 +50,6 @@ const AuthContextProvider: React.FC<PropsWithChildren> = (props) => {
           const tokenResponse: ApiResponse<AuthTokenResponse> = res.data;
 
           if (tokenResponse.success) {
-            console.log(tokenResponse);
             decodeAndSetToken(tokenResponse.data.token);
 
             return true;

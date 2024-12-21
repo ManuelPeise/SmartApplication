@@ -1,72 +1,42 @@
 import {
-  Grid2,
+  Box,
+  Drawer,
   IconButton,
   List,
   ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Typography,
 } from "@mui/material";
 import {
   ArrowBackRounded,
-  MenuOutlined,
   ReportProblemRounded,
-  SettingsRounded,
+  EmailRounded,
 } from "@material-ui/icons";
 import React, { PropsWithChildren } from "react";
 import { SideMenu } from "src/_lib/_types/menu";
-import { colors } from "src/_lib/colors";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/_hooks/useAuth";
 import { UserRoleEnum } from "src/_lib/_enums/UserRoleEnum";
 import { routes } from "src/_lib/AppRouter";
+import { colors } from "src/_lib/colors";
+import { useI18n } from "src/_hooks/useI18n";
 
-const sideMenuMinWidth = "50px";
-const sideMenuExpandedWidth = "200px";
-
-interface ISideMenuItemProps {
-  displayName: string;
-  route: string;
-  disabled: boolean;
-  isExpanded: boolean;
-  icon: JSX.Element;
+interface IProps extends PropsWithChildren {
+  sideMenuOpen: boolean;
+  onClose: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideMenuItem: React.FC<ISideMenuItemProps> = (props) => {
-  const { displayName, route, disabled, isExpanded, icon } = props;
-
-  return (
-    <ListItemButton disabled={disabled} style={{ width: "100%" }}>
-      <Link to={route} style={{ textDecoration: "none", width: "100%" }}>
-        <Grid2 display="flex" alignItems="baseline" width="100%">
-          <Grid2
-            display="flex"
-            justifyItems="center"
-            alignItems="baseline"
-            width={sideMenuMinWidth}
-          >
-            {icon}
-          </Grid2>
-          <Grid2 display={isExpanded ? "block" : "none"}>
-            <Typography style={{ fontSize: "18px", color: "#fff" }}>
-              {displayName}
-            </Typography>
-          </Grid2>
-        </Grid2>
-      </Link>
-    </ListItemButton>
-  );
-};
-
-const PageContentContainer: React.FC<PropsWithChildren> = (props) => {
-  const { children } = props;
+const PageContentContainer: React.FC<IProps> = (props) => {
+  const { children, sideMenuOpen, onClose } = props;
   const { authenticationState } = useAuth();
-  const [sideMenuExpanded, setSideMenuExpanded] =
-    React.useState<boolean>(false);
+  const { getResource } = useI18n();
 
   const appSideMenu = React.useMemo((): SideMenu => {
     return {
       items: [
         {
-          displayName: "Logging",
+          displayName: getResource("common.labelLogging"),
           route: routes.log,
           disabled:
             authenticationState == null ||
@@ -76,61 +46,87 @@ const PageContentContainer: React.FC<PropsWithChildren> = (props) => {
           ),
         },
         {
-          displayName: "Settings",
-          route: routes.settings,
+          displayName: getResource("common.labelEmailProviderConfituration"),
+          route: routes.emailProviderConfiguration,
           disabled: authenticationState == null,
-          icon: <SettingsRounded fontSize="small" style={{ color: "#fff" }} />,
+          icon: <EmailRounded fontSize="small" style={{ color: "#fff" }} />,
         },
       ],
     };
-  }, [authenticationState]);
+  }, [authenticationState, getResource]);
 
   return (
-    <Grid2 display="flex" flexDirection="row" height="100%">
-      {/* sideMenu */}
-      <Grid2
-        bgcolor={colors.darkBlue}
-        width={sideMenuExpanded ? sideMenuExpandedWidth : sideMenuMinWidth}
+    <Box
+      display="flex"
+      flexDirection="row"
+      height="100%"
+      bgcolor={colors.background}
+    >
+      <Drawer
+        anchor="left"
+        open={sideMenuOpen}
+        slotProps={{
+          backdrop: {
+            sx: {
+              backgroundColor: "transparent",
+              opacity: 0.5,
+            },
+          },
+        }}
+        sx={{ zIndex: 1000 }}
       >
-        <Grid2
+        <Box
           display="flex"
-          padding="5px 8px"
-          justifyContent={sideMenuExpanded ? "flex-end" : "center"}
+          justifyContent="flex-end"
+          padding={2}
+          bgcolor="primary.dark"
         >
           <IconButton
-            size="large"
-            style={{ color: "#fff" }}
-            onClick={setSideMenuExpanded.bind(
-              null,
-              sideMenuExpanded ? false : true
-            )}
+            size="small"
+            color="secondary"
+            onClick={onClose.bind(null, false)}
           >
-            {sideMenuExpanded ? (
-              <ArrowBackRounded fontSize="small" />
-            ) : (
-              <MenuOutlined fontSize="small" />
-            )}
+            <ArrowBackRounded />
           </IconButton>
-        </Grid2>
-        <Grid2>
-          <List>
+        </Box>
+        <Box height="100%" width="300px" bgcolor="primary.dark">
+          <List
+            disablePadding
+            style={{
+              width: "100%",
+            }}
+          >
             {appSideMenu.items.map((item, key) => {
               return (
-                <SideMenuItem
+                <ListItemButton
                   key={key}
-                  {...item}
-                  isExpanded={sideMenuExpanded}
-                />
+                  sx={{
+                    borderBottom: "1px solid lightgray",
+                  }}
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText>
+                    <Link
+                      to={item.route}
+                      style={{ textDecoration: "none" }}
+                      onClick={onClose.bind(null, false)}
+                    >
+                      <Typography variant="inherit" color="secondary">
+                        {item.displayName}
+                      </Typography>
+                    </Link>
+                  </ListItemText>
+                </ListItemButton>
               );
             })}
           </List>
-        </Grid2>
-      </Grid2>
+        </Box>
+      </Drawer>
       {/* content */}
-      <Grid2 display="flex" width="100%">
+      <Box display="flex" width="100%">
         {children}
-      </Grid2>
-    </Grid2>
+      </Box>
+    </Box>
   );
 };
 

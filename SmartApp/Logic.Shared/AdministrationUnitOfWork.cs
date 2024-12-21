@@ -2,8 +2,8 @@
 using Data.ContextAccessor;
 using Data.ContextAccessor.Interfaces;
 using Data.Identity;
-using Data.Shared.Email;
 using Data.Shared.Logging;
+using Data.Shared.Settings;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -14,17 +14,17 @@ namespace Logic.Shared
         private readonly ApplicationDbContext _context;
         private readonly IdentityDbContext _identityContext;
 
-        private readonly IRepositoryBase<EmailAccountSettingsEntity> _emailAccountSettingsRepository;
+        private readonly IRepositoryBase<GenericSettingsEntity> _settingsRepository;
         private bool disposedValue;
 
-        public AdministrationUnitOfWork(IdentityDbContext identityContext, ApplicationDbContext applicationDbContext, IHttpContextAccessor contextAccessor, ILogRepository logRepository): base(identityContext, contextAccessor, logRepository)
+        public AdministrationUnitOfWork(IdentityDbContext identityContext, ApplicationDbContext applicationDbContext, IHttpContextAccessor contextAccessor, ILogRepository logRepository): base(identityContext, contextAccessor, logRepository, applicationDbContext)
         {
             _context = applicationDbContext;
             _identityContext = identityContext;
-            _emailAccountSettingsRepository = new RepositoryBase<EmailAccountSettingsEntity>(applicationDbContext);
+            _settingsRepository = new RepositoryBase<GenericSettingsEntity>(applicationDbContext);
         }
 
-        public IRepositoryBase<EmailAccountSettingsEntity> EmailAccountSettingsRepository => _emailAccountSettingsRepository ?? new RepositoryBase<EmailAccountSettingsEntity>(_context);
+        public IRepositoryBase<GenericSettingsEntity> SettingsRepository => _settingsRepository ?? new RepositoryBase<GenericSettingsEntity>(_context);
 
         public async Task AddLogMessage (LogMessageEntity logMessageEntity) => await LogMessage(logMessageEntity);
 
