@@ -30,6 +30,7 @@ interface IProps extends PropsWithChildren {
 interface ISideMenuItemProps extends SideMenuEntry {
   userRole: UserRoleEnum;
   getResource: (key: string) => string;
+  onCloseMenu: () => void;
 }
 
 const SideMenuItem: React.FC<ISideMenuItemProps> = (props) => {
@@ -41,6 +42,7 @@ const SideMenuItem: React.FC<ISideMenuItemProps> = (props) => {
     icon,
     childItems,
     getResource,
+    onCloseMenu,
   } = props;
 
   const [expanded, setExpanded] = React.useState<boolean>(false);
@@ -50,7 +52,11 @@ const SideMenuItem: React.FC<ISideMenuItemProps> = (props) => {
   return (
     <ListItemButton
       disabled={userRole === undefined || userRole !== requiredRole}
-      sx={{ display: "flex", flexDirection: "column", color: "#fff" }}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        color: "#fff",
+      }}
       onClick={onClickHandler.bind(null, !expanded)}
     >
       <Box display="flex" flexDirection="row" alignItems="center" width="100%">
@@ -81,9 +87,13 @@ const SideMenuItem: React.FC<ISideMenuItemProps> = (props) => {
               <ListItem
                 sx={{
                   paddingLeft: "2rem",
-                  paddingTop: 0,
-                  paddingBottom: 0,
+                  paddingTop: 1,
+                  paddingBottom: 1,
+                  "&:hover": {
+                    opacity: 0.7,
+                  },
                 }}
+                onClick={onCloseMenu}
               >
                 <ListItemText>
                   <Link
@@ -163,6 +173,7 @@ const PageContentContainer: React.FC<IProps> = (props) => {
                   userRole={
                     authenticationState?.jwtData?.userRole as UserRoleEnum
                   }
+                  onCloseMenu={onClose.bind(null, false)}
                   getResource={getResource}
                 />
               );

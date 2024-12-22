@@ -5,6 +5,7 @@
   "labelCreateAccount": "Create your account",
   "labelEmail": "Email",
   "labelEmailProviderConfituration": "Email Provider Configuration",
+  "labelSpamEmailClassification": "Spam Mail Classification",
   "labelFirstName": "Firstname",
   "labelLastName": "Lastname",
   "labelLogging": "Logging",
@@ -14,5 +15,9 @@
   "labelPasswordValidation": "Password validation",
   "labelRegister": "Register",
   "labelSave": "Save",
-  "labelSelectAll": "Select all"
+  "labelSelectAll": "All",
+  "labelSelectHam": "Ham",
+  "labelSelectSpam": "Spam",
+  "labelSelectUnknown": "Unknown",
+  "labemAddressFilter": "Address Filter"
 }

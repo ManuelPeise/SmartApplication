@@ -22,7 +22,7 @@ export type EmailProviderConfiguration = {
   emailAddress?: string;
   password?: string;
   status: EmailProviderConfigurationStateEnum;
-  connectionTestPasses: boolean;
+  connectionTestPassed: boolean;
   allowCollectAiTrainingData: boolean;
   connectionInfo: EmailProviderConnectionInfo | null;
 };

@@ -19,6 +19,7 @@ export const getRoutes = (): Routes => {
     private: "/private",
     configuration: "/configuration",
     emailProviderConfiguration: "/configuration/email-provider",
+    spamMailClassification: "/configuration/spam-email-classification",
   };
 };
 
@@ -46,7 +47,13 @@ export const getSideMenuItems = (routes: Routes): SideMenuEntry[] => [
       {
         displayNameRecourceKey: "common.labelEmailProviderConfituration",
         route: routes.emailProviderConfiguration,
-        requiredRole: UserRoleEnum.Admin,
+        requiredRole: UserRoleEnum.Admin || UserRoleEnum.User,
+        childItems: null,
+      },
+      {
+        displayNameRecourceKey: "common.labelSpamEmailClassification",
+        route: routes.spamMailClassification,
+        requiredRole: UserRoleEnum.Admin || UserRoleEnum.User,
         childItems: null,
       },
     ],

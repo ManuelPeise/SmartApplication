@@ -56,6 +56,28 @@ namespace Data.AppContext.Migrations
                     table.PrimaryKey("PK_LogMessages", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "SpamDetectorTrainingData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    From = table.Column<string>(type: "longtext", nullable: false),
+                    Subject = table.Column<string>(type: "longtext", nullable: false),
+                    Domain = table.Column<string>(type: "longtext", nullable: false),
+                    Classification = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SpamDetectorTrainingData", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
         }
 
         /// <inheritdoc />
@@ -66,6 +88,9 @@ namespace Data.AppContext.Migrations
 
             migrationBuilder.DropTable(
                 name: "LogMessages");
+
+            migrationBuilder.DropTable(
+                name: "SpamDetectorTrainingData");
         }
     }
 }

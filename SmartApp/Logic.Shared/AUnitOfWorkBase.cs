@@ -11,25 +11,25 @@ namespace Logic.Shared
 {
     public abstract class AUnitOfWorkBase
     {
-        private readonly IdentityDbContext _identityContext;
+        private readonly IdentityDbContext? _identityContext;
         private readonly ApplicationDbContext? _applicationContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogRepository? _logRepository;
         private Dictionary<string, string> _claimsDictionary = new Dictionary<string, string>();
 
-        protected AUnitOfWorkBase(IdentityDbContext identityContext, IHttpContextAccessor httpContextAccessor, ILogRepository? logRepository, ApplicationDbContext? applicationContext = null)
+        protected AUnitOfWorkBase(IHttpContextAccessor httpContextAccessor, ILogRepository? logRepository, IdentityDbContext? identityContext = null, ApplicationDbContext? applicationContext = null)
         {
             _identityContext = identityContext;
             _applicationContext = applicationContext;
             _httpContextAccessor = httpContextAccessor;
             _logRepository = logRepository;
             LoadClaimsData();
-            
+
         }
 
         public async Task LogMessage(LogMessageEntity logMessage)
         {
-            if(_logRepository != null)
+            if (_logRepository != null)
             {
                 await _logRepository.AddMessage(logMessage);
             }
@@ -37,7 +37,7 @@ namespace Logic.Shared
 
         public async Task<List<LogMessageEntity>> GetLogmessages(DateTime? from, DateTime? to)
         {
-            if(_logRepository == null)
+            if (_logRepository == null)
             {
                 return new List<LogMessageEntity>();
             }
@@ -53,7 +53,7 @@ namespace Logic.Shared
 
         public async Task DeleteLogMessages(DateTime from, DateTime? to)
         {
-           if(_logRepository != null)
+            if (_logRepository != null)
             {
                 await _logRepository.DeleteMessages(from, to);
             }
@@ -61,7 +61,10 @@ namespace Logic.Shared
 
         public async Task SaveChanges()
         {
-            await SaveIdentityContextChanges();
+            if (_identityContext != null)
+            {
+                await SaveIdentityContextChanges();
+            }
 
             if (_applicationContext != null)
             {

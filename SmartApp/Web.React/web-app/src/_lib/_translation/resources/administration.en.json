@@ -19,7 +19,7 @@
   "labelSaveConnection": "Save Connection",
   "labelEstablishConnection": "Establish Connection",
   "labelDisconnectConnection": "Disconnect Connection",
-  "labelProviderConnectionEstablishedAtBy": "Connection established by {user} at {at}",
+  "labelProviderConnectionEstablishedAtBy": "Connection established by {user} at {at} (UTC)",
   "labelEmailProvideConnectionName": "Connection name",
   "descriptionEmailProvideConnectionName": "Set the name of connection to add.",
   "labelNewConfiguration": "New Configuration",

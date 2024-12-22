@@ -16,6 +16,12 @@ namespace Data.ContextAccessor
 
         }
 
+
+        public async Task<List<T>> GetAllAsync()
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
+
         public async Task<T?> GetSingle(Expression<Func<T, bool>> predicate, bool asNoTracking = false)
         {
             var table =  _context.Set<T>();
@@ -67,6 +73,11 @@ namespace Data.ContextAccessor
             var insertResult = await _context.AddAsync(entity);
 
             return insertResult.Entity;
+        }
+
+        public async Task AddRange(IEnumerable<T> entities)
+        {
+            await _context.AddRangeAsync(entities);
         }
 
         public async Task<bool> Delete(int id)

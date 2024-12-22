@@ -1,12 +1,10 @@
-﻿using Data.Shared.Logging;
-using Logic.Shared.Interfaces;
+﻿using Logic.Shared.Interfaces;
 using MailKit;
 using MailKit.Net.Imap;
 using MimeKit;
-using MySqlX.XDevAPI;
-using Shared.Enums;
 using Shared.Models.Administration.Email;
-using Shared.Models.Identity;
+using Shared.Models.Ai;
+
 
 namespace Logic.Shared.Clients
 {
@@ -17,7 +15,7 @@ namespace Logic.Shared.Clients
 
         public EmailClient(IAdministrationUnitOfWork unitOfWork)
         {
-           _unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> TestConnection(EmailProviderSettings settings)
@@ -26,7 +24,7 @@ namespace Logic.Shared.Clients
 
             using (var client = new ImapClient())
             {
-                if (await ConnectAsync(client, settings.Provider.IMapServerAddress, (int)settings.Provider.ImapPort) && await AuthenticateAsync(client, settings.EmailAddress, settings.Password))
+                if (await IsConnected(client, settings))
                 {
                     canConnect = true;
 
@@ -34,71 +32,68 @@ namespace Logic.Shared.Clients
                 }
             }
 
-            return canConnect;    
+            return canConnect;
+        }
+
+        public async Task<List<AiEmailTrainingData>> GetEmailAiTrainingDataModel(EmailProviderSettings settings, int maxMessages)
+        {
+            var data = new List<AiEmailTrainingData>();
+
+            using (var client = new ImapClient())
+            {
+                if (await IsConnected(client, settings))
+                {
+                    await client.Inbox.OpenAsync(FolderAccess.ReadOnly);
+
+                    if (!client.Inbox.IsOpen)
+                    {
+                        return data;
+                    }
+
+                    var messagesToProcess = client.Inbox.Count > maxMessages ? maxMessages : client.Inbox.Count;
+
+                    for (int message = 0; message < messagesToProcess; message++)
+                    {
+                        var mail = await client.Inbox.GetMessageAsync(message);
+                        var fromAddress = mail.From.Mailboxes.FirstOrDefault()?.Address;
+
+                        if (fromAddress != null)
+                        {
+                            data.Add(new AiEmailTrainingData
+                            {
+                                From = fromAddress,
+                                Domain = fromAddress.Split('@')[1],
+                                Subject = mail.Subject,
+                            });
+                        }
+                    }
+                }
+            }
+
+            if (data.Any())
+            {
+                data = data.DistinctBy(entity => new { entity.From, entity.Subject }).ToList();
+            }
+
+            return data;
         }
 
         #region private members
 
-        //public async Task<List<MimeMessage>> LoadEmailsFromServer(EmailAccountCleanupSettings accountSettings)
-        //{
-        //    using (var client = new ImapClient())
-        //    {
-        //        try
-        //        {
-        //            if (!await ConnectAsync(client, accountSettings.EmailServerAddress, (int)accountSettings.Port) || !await AuthenticateAsync(client, accountSettings.EmailAddress, accountSettings.Password))
-        //            {
-        //                await _unitOfWork.AddLogMessage(new LogMessageEntity
-        //                {
-        //                    Message = "Smtpclient could not Connected or Authenticated!",
-        //                    TimeStamp = DateTime.UtcNow,
-        //                    Module = nameof(EmailClient),
-        //                    MessageType = LogMessageTypeEnum.Error,
-        //                });
-
-        //                return new List<MimeMessage>();
-        //            }
-
-        //            var emails = await ReceiveEmails(client);
-
-        //            if (emails.Any())
-        //            {
-        //                return emails;
-        //            }
-
-        //        }
-        //        catch (Exception exception)
-        //        {
-        //            await _unitOfWork.AddLogMessage(new LogMessageEntity
-        //            {
-        //                Message = "Could not receive emails from server!",
-        //                ExceptionMessage = exception.Message,
-        //                TimeStamp = DateTime.UtcNow,
-        //                MessageType = LogMessageTypeEnum.Error,
-        //                Module = nameof(EmailClient),
-        //            });
-        //        }
-        //        finally
-        //        {
-        //            if (client.IsConnected)
-        //            {
-        //                await DisconnectAsync(client);
-        //            }
-        //        }
-
-        //        return new List<MimeMessage>();
-        //    }
-        //}
-        private async Task<bool> ConnectAsync(ImapClient client, string server, int port)
+        private async Task<bool> IsConnected(ImapClient client, EmailProviderSettings settings)
         {
-            await client.ConnectAsync(server, port);
+            await client.ConnectAsync(settings.Provider.IMapServerAddress, (int)settings.Provider.ImapPort);
 
-            return client.IsConnected;
-        }
-        private async Task<bool> AuthenticateAsync(ImapClient client, string username, string password)
-        {
-            await client.AuthenticateAsync(username, password);
+            if (!client.IsConnected)
+            {
+                return false;
+            }
+
+            await client.AuthenticateAsync(settings.EmailAddress, settings.Password);
+
             return client.IsAuthenticated;
         }
+
         private async Task<List<MimeMessage>> ReceiveEmails(ImapClient client)
         {
             var messages = new List<MimeMessage>();
@@ -136,7 +131,7 @@ namespace Logic.Shared.Clients
             {
                 if (disposing)
                 {
-                   _unitOfWork.Dispose();
+                    _unitOfWork.Dispose();
                 }
 
                 disposedValue = true;

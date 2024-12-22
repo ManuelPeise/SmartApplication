@@ -52,10 +52,7 @@ export const useFormState = <T>(
     return {
       isDirty: isModified,
       formState: state,
-      isValid: validationCallback
-        ? validationCallback(state) ||
-          JSON.stringify(originalState.current) === JSON.stringify(state)
-        : undefined,
+      isValid: validationCallback ? validationCallback(state) : false,
     };
   }, [state, isModified, validationCallback]);
 
@@ -82,6 +79,12 @@ export const useFormState = <T>(
   const reset = React.useCallback(() => {
     dispatch({ type: "RESET", payload: originalState.current });
   }, [originalState, dispatch]);
+
+  React.useEffect(() => {
+    if (initialState) {
+      dispatch({ type: "UPDATE", payload: initialState });
+    }
+  }, [initialState]);
 
   return {
     subScribe,

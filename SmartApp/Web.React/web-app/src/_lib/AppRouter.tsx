@@ -7,6 +7,7 @@ import Home from "src/_Stacks/PublicStack/Home";
 import LogPageContainer from "src/_Stacks/_Administration/_Logging/LogPageContainer";
 import EmailProviderConfigurationContainer from "src/_Stacks/_Configurations/_EmailProviderConfigurations/EmailProviderConfigurationContainer";
 import { getRoutes } from "./sideMenuItems";
+import SpamMailClassificationContainer from "src/_Stacks/_Configurations/_SpamMailClassification/SpamMailClassificationContainer";
 
 type IProps = {
   basename?: string;
@@ -61,6 +62,10 @@ const AppRouter: React.FC = () => {
           <Route
             path={routes.emailProviderConfiguration}
             Component={EmailProviderConfigurationContainer}
+          />
+          <Route
+            path={routes.spamMailClassification}
+            Component={SpamMailClassificationContainer}
           />
         </Route>
       </Routes>

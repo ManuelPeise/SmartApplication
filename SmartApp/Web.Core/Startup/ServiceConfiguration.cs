@@ -1,6 +1,7 @@
 ﻿using Data.AppContext;
 using Data.Identity;
 using Logic.Administration;
+using Logic.Ai;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
 using Logic.Interfaces;
@@ -41,7 +42,6 @@ namespace Web.Core.Startup
             });
 
             builder.Services.AddHttpContextAccessor();
-
             builder.Services.AddScoped<ILogRepository, LogRepository>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
 
@@ -49,6 +49,7 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<IAdministrationUnitOfWork, AdministrationUnitOfWork>();
             builder.Services.AddScoped<IEmailClient, EmailClient>();
             builder.Services.AddScoped<IEmailProviderConfiguration, EmailProviderConfiguration>();
+            builder.Services.AddScoped<IAiTrainingService, AiTrainingService>();
 
             ConfigureOptions(builder);
 

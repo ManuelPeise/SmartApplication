@@ -33,8 +33,7 @@ const EmailProviderAccountConfigurationForm: React.FC<IProps> = (props) => {
         config.provider.providerType !== EmailProviderTypeEnum.None &&
         config.name !== "" &&
         emailValidation(config.emailAddress) &&
-        config.password !== "" &&
-        config.connectionTestPasses
+        config.password !== ""
       );
     },
     []
@@ -53,8 +52,8 @@ const EmailProviderAccountConfigurationForm: React.FC<IProps> = (props) => {
 
   const onTestConnection = React.useCallback(async () => {
     const canConnect = await handleProviderConnectionTest(formState);
-
-    form.handleUpdatePartial({ connectionTestPasses: canConnect });
+    console.log("Can connect", canConnect);
+    form.handleUpdatePartial({ connectionTestPassed: canConnect });
   }, [form, formState, handleProviderConnectionTest]);
 
   const onEstablishConnection = React.useCallback(async () => {
@@ -245,7 +244,7 @@ const EmailProviderAccountConfigurationForm: React.FC<IProps> = (props) => {
           <FormButton
             key="save-button"
             label={getResource("common.labelSave")}
-            disabled={!formState.connectionTestPasses || !isDirty}
+            disabled={!formState.connectionTestPassed || !isDirty}
             onAction={onEstablishConnection}
           />
         </Box>

@@ -36,12 +36,16 @@ const EmailConfigurationContextProvider: React.FC<PropsWithChildren> = (
 
   const handleProviderConnectionTest = React.useCallback(
     async (configuration: EmailProviderConfiguration): Promise<boolean> => {
-      return await sendPost<SuccessResponse>({
+      let success = false;
+
+      await sendPost<SuccessResponse>({
         requestUrl: "EmailProvider/ProviderConnectionTest",
         data: JSON.stringify(configuration),
       }).then((res) => {
-        return res.success;
+        success = res.success;
       });
+
+      return success;
     },
     [sendPost]
   );

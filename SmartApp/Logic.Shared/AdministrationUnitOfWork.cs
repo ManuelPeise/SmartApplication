@@ -1,7 +1,7 @@
 ﻿using Data.AppContext;
 using Data.ContextAccessor;
 using Data.ContextAccessor.Interfaces;
-using Data.Identity;
+using Data.Shared.Ai;
 using Data.Shared.Logging;
 using Data.Shared.Settings;
 using Logic.Shared.Interfaces;
@@ -12,19 +12,22 @@ namespace Logic.Shared
     public class AdministrationUnitOfWork: AUnitOfWorkBase, IAdministrationUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        private readonly IdentityDbContext _identityContext;
 
         private readonly IRepositoryBase<GenericSettingsEntity> _settingsRepository;
+        private readonly IRepositoryBase<EmailClassificationTrainingDataEntity> _emailSpamTrainingsRepository;
+
         private bool disposedValue;
 
-        public AdministrationUnitOfWork(IdentityDbContext identityContext, ApplicationDbContext applicationDbContext, IHttpContextAccessor contextAccessor, ILogRepository logRepository): base(identityContext, contextAccessor, logRepository, applicationDbContext)
+        public AdministrationUnitOfWork(ApplicationDbContext applicationDbContext, IHttpContextAccessor contextAccessor, ILogRepository logRepository): base(contextAccessor, logRepository, null, applicationDbContext)
         {
             _context = applicationDbContext;
-            _identityContext = identityContext;
+
             _settingsRepository = new RepositoryBase<GenericSettingsEntity>(applicationDbContext);
+            _emailSpamTrainingsRepository = new RepositoryBase<EmailClassificationTrainingDataEntity>(applicationDbContext);
         }
 
         public IRepositoryBase<GenericSettingsEntity> SettingsRepository => _settingsRepository ?? new RepositoryBase<GenericSettingsEntity>(_context);
+        public IRepositoryBase<EmailClassificationTrainingDataEntity> EmailSpamTrainingsRepository => _emailSpamTrainingsRepository ?? new RepositoryBase<EmailClassificationTrainingDataEntity>(_context);
 
         public async Task AddLogMessage (LogMessageEntity logMessageEntity) => await LogMessage(logMessageEntity);
 
@@ -41,7 +44,8 @@ namespace Logic.Shared
                 if (disposing)
                 {
                     _context.Dispose();
-                    _identityContext.Dispose();
+                    _emailSpamTrainingsRepository.Dispose();
+                    _emailSpamTrainingsRepository?.Dispose();
                 }
 
                 disposedValue = true;

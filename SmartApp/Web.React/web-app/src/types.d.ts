@@ -12,4 +12,5 @@ export type Routes = {
   private: string;
   configuration: string;
   emailProviderConfiguration: string;
+  spamMailClassification: string;
 };
