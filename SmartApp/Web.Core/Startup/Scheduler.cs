@@ -17,8 +17,7 @@ namespace Web.Core.Startup
                     EmailClassificationTrainingDataCollector,
                     new Dictionary<string, object>
                     {
-                        { "Url", $"{baseUrl}api/EmailClassification/LoadEmailClassificationTrainingData"},
-                        { "Params", "?maxMails=200" }
+                        { "Url", $"{baseUrl}api/EmailClassification/CollectTrainingData"}
                     }),
                 GetTrigger(
                     $"{EmailClassificationTrainingDataCollector}-trigger",

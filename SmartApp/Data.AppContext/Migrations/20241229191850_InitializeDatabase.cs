@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
@@ -63,7 +62,6 @@ namespace Data.AppContext.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false),
                     From = table.Column<string>(type: "longtext", nullable: false),
                     Subject = table.Column<string>(type: "longtext", nullable: false),
                     Domain = table.Column<string>(type: "longtext", nullable: false),

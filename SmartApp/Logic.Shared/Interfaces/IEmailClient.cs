@@ -6,7 +6,7 @@ namespace Logic.Shared.Interfaces
     public interface IEmailClient: IDisposable
     {
         Task<bool> TestConnection(EmailProviderSettings settings);
-        Task<List<AiEmailTrainingData>> GetEmailAiTrainingDataModel(EmailProviderSettings settings, int maxMessages);
+        Task<List<AiEmailTrainingData>> GetEmailAiTrainingDataModel(EmailProviderSettings settings);
 
 
     }

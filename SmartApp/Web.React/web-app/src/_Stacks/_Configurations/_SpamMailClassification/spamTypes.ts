@@ -1,8 +1,8 @@
 export enum SpamClassificationEnum {
   All = -1,
-  Unknown = 0,
-  Spam = 1,
-  Ham = 2,
+  Spam = 0,
+  Ham = 1,
+  Unknown = 2,
 }
 
 export type EmailCassificationFilter = {

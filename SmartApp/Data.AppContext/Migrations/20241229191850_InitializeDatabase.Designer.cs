@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.AppContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241222151557_InitializeDatabase")]
+    [Migration("20241229191850_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />
@@ -56,9 +56,6 @@ namespace Data.AppContext.Migrations
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

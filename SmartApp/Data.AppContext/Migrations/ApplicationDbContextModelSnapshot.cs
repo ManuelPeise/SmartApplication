@@ -54,9 +54,6 @@ namespace Data.AppContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("SpamDetectorTrainingData");

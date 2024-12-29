@@ -52,6 +52,7 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<IEmailProviderConfiguration, EmailProviderConfiguration>();
             builder.Services.AddScoped<IAiTrainingService, AiTrainingService>();
             builder.Services.AddScoped<IAiPredictionService, AiPredictionService>();
+            builder.Services.AddScoped<IAiTrainingDataCollector, AITrainingDataCollector>();
 
             ConfigureOptions(builder);
 

@@ -35,7 +35,7 @@ namespace Logic.Shared.Clients
             return canConnect;
         }
 
-        public async Task<List<AiEmailTrainingData>> GetEmailAiTrainingDataModel(EmailProviderSettings settings, int maxMessages)
+        public async Task<List<AiEmailTrainingData>> GetEmailAiTrainingDataModel(EmailProviderSettings settings)
         {
             var data = new List<AiEmailTrainingData>();
 
@@ -50,7 +50,7 @@ namespace Logic.Shared.Clients
                         return data;
                     }
 
-                    var messagesToProcess = client.Inbox.Count > maxMessages ? maxMessages : client.Inbox.Count;
+                    var messagesToProcess = client.Inbox.Count;
 
                     for (int message = 0; message < messagesToProcess; message++)
                     {

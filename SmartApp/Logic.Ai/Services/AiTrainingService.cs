@@ -5,7 +5,6 @@ using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.ML;
-using Org.BouncyCastle.Ocsp;
 using Shared.Enums;
 using Shared.Enums.Ai;
 
