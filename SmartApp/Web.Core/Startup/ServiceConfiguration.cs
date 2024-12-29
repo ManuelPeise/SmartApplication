@@ -2,6 +2,7 @@
 using Data.Identity;
 using Logic.Administration;
 using Logic.Ai;
+using Logic.Ai.Services;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
 using Logic.Interfaces;
@@ -50,6 +51,7 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<IEmailClient, EmailClient>();
             builder.Services.AddScoped<IEmailProviderConfiguration, EmailProviderConfiguration>();
             builder.Services.AddScoped<IAiTrainingService, AiTrainingService>();
+            builder.Services.AddScoped<IAiPredictionService, AiPredictionService>();
 
             ConfigureOptions(builder);
 

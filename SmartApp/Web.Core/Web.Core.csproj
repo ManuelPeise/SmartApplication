@@ -34,4 +34,9 @@
     <ProjectReference Include="..\Shared.Configuration\Shared.Configuration.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AiData\Models\" />
+    <Folder Include="AiData\TrainingData\" />
+  </ItemGroup>
+
 </Project>

@@ -1,9 +1,9 @@
 ﻿namespace Shared.Enums.Ai
 {
     public enum SpamClassificationEnum
-    {
-        Unknown = 0,
-        Spam = 1,
-        Ham = 2
+    { 
+        Spam = 0,
+        Ham = 1,
+        Unknown = 2,
     }
 }

@@ -1,0 +1,6 @@
+﻿Column;Column.Name;Column.Index;Column.IsHidden;Column.Type;Column.Annotations
+"Id: Int32";Id;0;False;Int32;""
+"Domain: String";Domain;1;False;String;""
+"From: String";From;2;False;String;""
+"Subject: String";Subject;3;False;String;""
+"Classification: Int32";Classification;4;False;Int32;""
