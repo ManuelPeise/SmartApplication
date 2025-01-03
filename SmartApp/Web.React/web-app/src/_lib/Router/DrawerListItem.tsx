@@ -1,7 +1,7 @@
+import React from "react";
+import { UserRoleEnum } from "../_enums/UserRoleEnum";
 import {
   Box,
-  Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -9,23 +9,9 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import React, { PropsWithChildren } from "react";
+import { colors } from "../colors";
 import { Link } from "react-router-dom";
-import { useAuth } from "src/_hooks/useAuth";
-import { UserRoleEnum } from "src/_lib/_enums/UserRoleEnum";
-import { colors } from "src/_lib/colors";
-import { useI18n } from "src/_hooks/useI18n";
-import {
-  SideMenuEntry,
-  getRoutes,
-  getSideMenuItems,
-} from "src/_lib/sideMenuItems";
-import { ArrowBackRounded } from "@mui/icons-material";
-
-interface IProps extends PropsWithChildren {
-  sideMenuOpen: boolean;
-  onClose: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { SideMenuEntry } from "../sideMenuItems";
 
 interface ISideMenuItemProps extends SideMenuEntry {
   userRole: UserRoleEnum;
@@ -33,7 +19,7 @@ interface ISideMenuItemProps extends SideMenuEntry {
   onCloseMenu: () => void;
 }
 
-const SideMenuItem: React.FC<ISideMenuItemProps> = (props) => {
+const DrawerListItem: React.FC<ISideMenuItemProps> = (props) => {
   const {
     displayNameRecourceKey,
     route,
@@ -116,77 +102,4 @@ const SideMenuItem: React.FC<ISideMenuItemProps> = (props) => {
   );
 };
 
-const PageContentContainer: React.FC<IProps> = (props) => {
-  const { children, sideMenuOpen, onClose } = props;
-  const { authenticationState } = useAuth();
-  const { getResource } = useI18n();
-
-  const sideMenuItems = React.useMemo(() => {
-    return getSideMenuItems(getRoutes());
-  }, []);
-  return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      height="100%"
-      bgcolor={colors.background}
-    >
-      <Drawer
-        anchor="left"
-        open={sideMenuOpen}
-        slotProps={{
-          backdrop: {
-            sx: {
-              backgroundColor: "transparent",
-              opacity: 0.5,
-            },
-          },
-        }}
-        sx={{ zIndex: 1000 }}
-      >
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          padding={2}
-          bgcolor="primary.dark"
-        >
-          <IconButton
-            size="small"
-            color="secondary"
-            onClick={onClose.bind(null, false)}
-          >
-            <ArrowBackRounded />
-          </IconButton>
-        </Box>
-        <Box height="100%" width="300px" bgcolor="primary.dark">
-          <List
-            disablePadding
-            style={{
-              width: "100%",
-            }}
-          >
-            {sideMenuItems.map((item, key) => {
-              return (
-                <SideMenuItem
-                  key={key}
-                  {...item}
-                  userRole={
-                    authenticationState?.jwtData?.userRole as UserRoleEnum
-                  }
-                  onCloseMenu={onClose.bind(null, false)}
-                  getResource={getResource}
-                />
-              );
-            })}
-          </List>
-        </Box>
-      </Drawer>
-      {/* content */}
-      <Box display="flex" width="100%">
-        {children}
-      </Box>
-    </Box>
-  );
-};
-
-export default PageContentContainer;
+export default DrawerListItem;

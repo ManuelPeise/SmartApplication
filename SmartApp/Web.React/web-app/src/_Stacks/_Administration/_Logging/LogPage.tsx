@@ -1,6 +1,5 @@
 import {
   Checkbox,
-  Divider,
   Grid2,
   Table,
   TableBody,
@@ -139,6 +138,8 @@ const LogPage: React.FC<IProps> = (props) => {
         justifyContent="flex-start"
         padding={1}
         bgcolor="#fff"
+        width="100%"
+        height="100%"
         sx={{
           height: "auto",
         }}
@@ -148,7 +149,6 @@ const LogPage: React.FC<IProps> = (props) => {
           disabled={!logMessages?.length}
           onChange={onFilterChanged}
         />
-        <Divider variant="middle" />
         <TableContainer
           sx={{
             maxHeight: "600px",

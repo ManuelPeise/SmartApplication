@@ -23,7 +23,11 @@ const AuthContextProvider: React.FC<PropsWithChildren> = (props) => {
   const { children } = props;
 
   const [authenticationState, setAuthenticationState] =
-    React.useState<AuthenticationState | null>(null);
+    React.useState<AuthenticationState>({
+      isAuthenticated: false,
+      jwtData: {} as JwtTokenData,
+      token: null,
+    });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const decodeAndSetToken = React.useCallback((token: string) => {

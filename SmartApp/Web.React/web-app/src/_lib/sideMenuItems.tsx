@@ -12,15 +12,6 @@ export type SideMenuEntry = {
   childItems?: SideMenuEntry[] | null;
 };
 
-export const getRoutes = (): Routes => {
-  return {
-    administration: "/administration",
-    log: "/administration/log",
-    home: "/",
-    private: "/private",
-  };
-};
-
 export const getSideMenuItems = (routes: Routes): SideMenuEntry[] => [
   {
     displayNameRecourceKey: "common.labelAdministration",

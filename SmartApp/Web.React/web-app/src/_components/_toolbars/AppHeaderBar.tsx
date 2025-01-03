@@ -5,86 +5,129 @@ import {
 } from "@mui/icons-material";
 import {
   AppBar,
+  Box,
   Button,
   Grid2,
   IconButton,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { BrowserHistory } from "history";
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "src/_hooks/useAuth";
 import { useI18n } from "src/_hooks/useI18n";
-import { getAppbarTitle } from "src/_lib/pageTitle";
+import { browserRoutes } from "src/_lib/Router/RouterUtils";
 
 interface IProps {
-  history: BrowserHistory;
-  loginDialogOpen: boolean;
-  registerDialogOpen: boolean;
   onOpenSideMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  onLoginDialogOpen: () => void;
-  onRegisterDialogOpen: () => void;
 }
 
 const AppHeaderBar: React.FC<IProps> = (props) => {
-  const {
-    history,
-    loginDialogOpen,
-    registerDialogOpen,
-    onOpenSideMenu,
-    onLoginDialogOpen,
-    onRegisterDialogOpen,
-  } = props;
+  const { onOpenSideMenu } = props;
   const { getResource } = useI18n();
   const { authenticationState, onLogout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const pageTitle = React.useMemo((): string => {
+    switch (location.pathname) {
+      case browserRoutes.home:
+        return `${process.env.REACT_APP_Name} - Home`;
+      case browserRoutes.login:
+        return `${process.env.REACT_APP_Name} - Login`;
+      case browserRoutes.register:
+        return `${process.env.REACT_APP_Name} - Register`;
+      case browserRoutes.log:
+        return `${process.env.REACT_APP_Name} - Log`;
+      default:
+        return "";
+    }
+  }, [location.pathname]);
 
   return (
     <AppBar
       position="relative"
       style={{ backgroundColor: "#00004d", width: "100%" }}
     >
-      <Toolbar>
-        <IconButton
-          size="small"
-          color="secondary"
-          onClick={onOpenSideMenu.bind(null, true)}
-        >
-          <MenuRounded />
-        </IconButton>
-        <Typography
-          variant="h6"
-          component="div"
-          marginLeft="10px"
-          sx={{ flexGrow: 1 }}
-        >
-          {getAppbarTitle(history.location.pathname)}
-        </Typography>
-        {authenticationState != null ? (
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box>
+          <IconButton
+            size="medium"
+            color="secondary"
+            disabled={!authenticationState?.isAuthenticated}
+            onClick={onOpenSideMenu.bind(null, true)}
+          >
+            <MenuRounded />
+          </IconButton>
+
+          <Button onClick={() => navigate(browserRoutes.home)}>
+            <Typography
+              variant="h6"
+              component="div"
+              marginLeft="10px"
+              sx={{ flexGrow: 1, color: "#fff" }}
+            >
+              {pageTitle}
+            </Typography>
+          </Button>
+        </Box>
+        {authenticationState?.isAuthenticated === true ? (
           <Grid2 display="flex" alignItems="center" flexDirection="row">
             <AccountCircleRounded style={{ width: "2rem", height: "2rem" }} />
             <Typography variant="h5" marginLeft="7px">
-              {authenticationState.jwtData.name}
+              {authenticationState?.jwtData?.name}
             </Typography>
             <IconButton
               size="large"
               color="inherit"
-              onClick={onLogout.bind(null, authenticationState.jwtData.userId)}
+              onClick={onLogout.bind(
+                null,
+                authenticationState?.jwtData?.userId
+              )}
             >
               <ExitToAppRounded style={{ width: "2rem", height: "2rem" }} />
             </IconButton>
           </Grid2>
         ) : (
           <Grid2 display="flex" alignItems="baseline" flexDirection="row">
-            <Button
-              disabled={registerDialogOpen}
-              onClick={onRegisterDialogOpen}
-            >
-              <Typography>{getResource("common.labelRegister")}</Typography>
-            </Button>
-            <Typography variant="h5">|</Typography>
-            <Button disabled={loginDialogOpen} onClick={onLoginDialogOpen}>
-              <Typography>{getResource("common.labelLogin")}</Typography>
-            </Button>
+            {!location.pathname.endsWith("register") && (
+              <Button
+                style={{
+                  color: "#fff",
+                  textDecoration: "none",
+                  padding: "5px 10px",
+                }}
+                onClick={() => navigate("/register")}
+              >
+                <Typography
+                  sx={{ fontSize: "1.1rem", "&:hover": { opacity: 0.6 } }}
+                >
+                  {getResource("common.labelRegister")}
+                </Typography>
+              </Button>
+            )}
+            {!location.pathname.endsWith("login") &&
+              !location.pathname.endsWith("register") && (
+                <Typography variant="h5" sx={{ fontSize: "1.1rem" }}>
+                  |
+                </Typography>
+              )}
+            {!location.pathname.endsWith("login") && (
+              <Button
+                style={{
+                  color: "#fff",
+                  textDecoration: "none",
+                  padding: "5px 10px",
+                }}
+                onClick={() => navigate("/login")}
+              >
+                <Typography
+                  sx={{ fontSize: "1.1rem", "&:hover": { opacity: 0.6 } }}
+                >
+                  {getResource("common.labelLogin")}
+                </Typography>
+              </Button>
+            )}
           </Grid2>
         )}
       </Toolbar>

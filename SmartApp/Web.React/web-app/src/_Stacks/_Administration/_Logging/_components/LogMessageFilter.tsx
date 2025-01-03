@@ -45,13 +45,13 @@ const LogMessageFilter: React.FC<IProps> = (props) => {
 
   return (
     <Grid2
+      width="100%"
       display="flex"
       justifyContent="space-around"
       alignItems="baseline"
-      gap={4}
-      padding={2}
+      gap={2}
     >
-      <Grid2 width="40%">
+      <Grid2 width="50%">
         <FilterTextInput
           filterText={filter.date}
           label={getResource("administration.labelTimeStampFilter")}
@@ -59,7 +59,7 @@ const LogMessageFilter: React.FC<IProps> = (props) => {
           disabled={disabled}
         />
       </Grid2>
-      <Grid2 width="40%">
+      <Grid2 width="50%">
         <FilterDropdown
           fullWidth
           disabled={disabled}

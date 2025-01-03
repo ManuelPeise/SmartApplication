@@ -27,7 +27,7 @@ export type AuthenticationState = {
 
 export type AuthContextProps = {
   isLoading: boolean;
-  authenticationState: AuthenticationState;
+  authenticationState: AuthenticationState | null;
   onLogin: (data: LoginData) => Promise<boolean>;
   onLogout: (userId: number) => Promise<boolean>;
   onRegister: (model: AccountRequest) => Promise<boolean>;
