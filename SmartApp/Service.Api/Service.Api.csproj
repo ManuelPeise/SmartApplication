@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Logic.Identity\Logic.Identity.csproj" />
+    <ProjectReference Include="..\Logic.Modules\Logic.Modules.csproj" />
   </ItemGroup>
 
 </Project>

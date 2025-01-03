@@ -13,38 +13,39 @@ const ListItemInput: React.FC<IProps> = (props) => {
   const { description, childWidth, children, cssTextProperties } = props;
 
   return (
-    <Box display="flex" padding={3}>
-      <StyledListItem
-        divider
-        sx={{ display: "flex", justifyContent: "space-between" }}
+    <StyledListItem
+      divider
+      sx={{
+        marginTop: 2,
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
+      <Box
+        component="div"
+        sx={{
+          padding: 1,
+        }}
       >
-        <Box
-          component="div"
-          sx={{
-            padding: 1,
+        <TypoGraphy
+          label={description}
+          fontSize={{
+            xs: ".8rem",
+            sm: ".8rem",
+            md: "1rem",
+            lg: "1.2rem",
+            xl: "1.2rem",
           }}
-        >
-          <TypoGraphy
-            label={description}
-            fontSize={{
-              xs: ".8rem",
-              sm: ".8rem",
-              md: "1rem",
-              lg: "1.2rem",
-              xl: "1.2rem",
-            }}
-            style={cssTextProperties}
-          />
-        </Box>
-
-        <Box
-          sx={{ display: "flex", justifyContent: "flex-end" }}
-          width={childWidth ?? "100%"}
-        >
-          {children}
-        </Box>
-      </StyledListItem>
-    </Box>
+          style={cssTextProperties}
+        />
+      </Box>
+      <Box
+        sx={{ display: "flex", justifyContent: "flex-end" }}
+        width={childWidth ?? "100%"}
+      >
+        {children}
+      </Box>
+    </StyledListItem>
   );
 };
 

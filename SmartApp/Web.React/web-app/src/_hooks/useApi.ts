@@ -13,8 +13,18 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
 
   const [data, setData] = React.useState<T[] | null>(null);
 
+  const getRequestUrl = React.useCallback((options: ApiOptions) => {
+    const uri = `${options.requestUrl}${
+      options.parameters ? options.parameters : ""
+    }`;
+
+    console.log("Url:", uri);
+
+    return uri;
+  }, []);
+
   const get = React.useCallback(
-    async (options?: ApiOptions): Promise<void> => {
+    async (options?: Partial<ApiOptions>): Promise<void> => {
       if (options) {
         setApiOptions({ ...apiOptions, ...options });
       }
@@ -28,7 +38,7 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
       setIsloading(true);
 
       try {
-        await AxiosClient.get(apiOptions.requestUrl, {
+        await AxiosClient.get(getRequestUrl({ ...apiOptions, ...options }), {
           headers: { "Content-Type": "application/json" },
         }).then(async (res) => {
           if (res.status === 200) {
@@ -47,7 +57,7 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
         setIsloading(false);
       }
     },
-    [authenticationState, apiOptions]
+    [authenticationState, apiOptions, getRequestUrl]
   );
 
   const post = React.useCallback(

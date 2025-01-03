@@ -55,6 +55,11 @@ namespace Data.ContextAccessor
             return await table.Where(predicate).ToListAsync();
         }
 
+        public async Task Add(T entity)
+        {
+            await _context.AddAsync(entity);
+        }
+
         public async Task<T> AddOrUpdate(T entity, Expression<Func<T, bool>> predicate)
         {
             var queryable = _context.Set<T>().AsQueryable();

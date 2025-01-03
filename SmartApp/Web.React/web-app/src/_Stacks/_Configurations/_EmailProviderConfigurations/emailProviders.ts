@@ -42,7 +42,8 @@ export const getDefaultEmailProviderConfiguration = (
       (x) => x.providerType === EmailProviderTypeEnum.None
     ),
     status: EmailProviderConfigurationStateEnum.Pending,
-    connectionTestPasses: false,
+    connectionTestPassed: false,
+    allowCollectAiTrainingData: false,
     // isValid: false,
     connectionInfo: null,
   };

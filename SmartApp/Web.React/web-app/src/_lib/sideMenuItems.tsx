@@ -1,4 +1,8 @@
-import { AppsOutlined, SettingsOutlined } from "@material-ui/icons";
+import {
+  AppsOutlined,
+  EmailOutlined,
+  SettingsOutlined,
+} from "@material-ui/icons";
 import React from "react";
 
 import { UserRoleEnum } from "./_enums/UserRoleEnum";
@@ -20,6 +24,9 @@ export const getRoutes = (): Routes => {
     configuration: "/configuration",
     emailProviderConfiguration: "/configuration/email-provider",
     spamMailClassification: "/configuration/spam-email-classification",
+    tools: "/tools",
+    emailCleaner: "/tools/email-cleaner",
+    emailCleanerSettings: "/tools/email-cleaner-settings",
   };
 };
 
@@ -53,6 +60,26 @@ export const getSideMenuItems = (routes: Routes): SideMenuEntry[] => [
       {
         displayNameRecourceKey: "common.labelSpamEmailClassification",
         route: routes.spamMailClassification,
+        requiredRole: UserRoleEnum.Admin || UserRoleEnum.User,
+        childItems: null,
+      },
+    ],
+  },
+  {
+    displayNameRecourceKey: "common.labelEmailTools",
+    requiredRole: UserRoleEnum.Admin || UserRoleEnum.User,
+    route: "#",
+    icon: <EmailOutlined style={{ width: "30px", height: "30px" }} />,
+    childItems: [
+      {
+        displayNameRecourceKey: "common.labelEmailCleaner",
+        route: routes.emailCleaner,
+        requiredRole: UserRoleEnum.Admin || UserRoleEnum.User,
+        childItems: null,
+      },
+      {
+        displayNameRecourceKey: "common.labelEmailCleanerSettings",
+        route: routes.emailCleaner,
         requiredRole: UserRoleEnum.Admin || UserRoleEnum.User,
         childItems: null,
       },

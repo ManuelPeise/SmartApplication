@@ -1,13 +1,8 @@
 ﻿using Data.AppContext;
 using Data.Identity;
 using Logic.Administration;
-using Logic.Ai;
-using Logic.Ai.Services;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
-using Logic.Interfaces;
-using Logic.Shared;
-using Logic.Shared.Clients;
 using Logic.Shared.Interfaces;
 using Logic.Shared.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -45,14 +40,7 @@ namespace Web.Core.Startup
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<ILogRepository, LogRepository>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
-
             builder.Services.AddScoped<ILogMessageService, LogMessageService>();
-            builder.Services.AddScoped<IAdministrationUnitOfWork, AdministrationUnitOfWork>();
-            builder.Services.AddScoped<IEmailClient, EmailClient>();
-            builder.Services.AddScoped<IEmailProviderConfiguration, EmailProviderConfiguration>();
-            builder.Services.AddScoped<IAiTrainingService, AiTrainingService>();
-            builder.Services.AddScoped<IAiPredictionService, AiPredictionService>();
-            builder.Services.AddScoped<IAiTrainingDataCollector, AITrainingDataCollector>();
 
             ConfigureOptions(builder);
 

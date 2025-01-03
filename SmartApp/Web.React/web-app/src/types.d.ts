@@ -13,4 +13,7 @@ export type Routes = {
   configuration: string;
   emailProviderConfiguration: string;
   spamMailClassification: string;
+  tools: string;
+  emailCleaner: string;
+  emailCleanerSettings: string;
 };

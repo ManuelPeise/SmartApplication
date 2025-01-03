@@ -24,12 +24,12 @@ namespace Logic.Ai
             return null;
         }
 
-        public IDataView? LoadAndUpdateTrainingData<TModel>(List<string> csvRows, string trainingFilePath, bool replace = true, bool hasHeader = true, char separator = '\t')
+        public IDataView? LoadAndUpdateTrainingData<TModel>(List<string> csvRows, string trainingFilePath, bool replace = false, bool hasHeader = true, char separator = '\t')
         {
-            if (File.Exists(trainingFilePath) && replace)
-            {
-                File.Delete(trainingFilePath);
-            }
+            //if (File.Exists(trainingFilePath) && replace)
+            //{
+            //    File.Delete(trainingFilePath);
+            //}
 
             if (replace)
             {

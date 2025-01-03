@@ -2,11 +2,6 @@
 using Logic.Shared.Interfaces;
 using Shared.Enums;
 using Shared.Models.Administration.Log;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logic.Administration
 {

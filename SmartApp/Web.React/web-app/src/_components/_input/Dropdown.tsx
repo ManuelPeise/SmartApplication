@@ -10,13 +10,14 @@ export type DropDownItem = {
 interface IProps {
   disabled?: boolean;
   fullWidth?: boolean;
+  minWidth?: number;
   items: DropDownItem[];
   value: number;
   onChange: (value: number) => void;
 }
 
 const Dropdown: React.FC<IProps> = (props) => {
-  const { disabled, items, fullWidth, value, onChange } = props;
+  const { disabled, items, fullWidth, minWidth, value, onChange } = props;
 
   const handleChange = React.useCallback(
     (e: SelectChangeEvent<number>) => {
@@ -29,6 +30,7 @@ const Dropdown: React.FC<IProps> = (props) => {
     <Select
       disabled={disabled}
       fullWidth={fullWidth}
+      sx={{ minWidth: minWidth }}
       value={value}
       variant="standard"
       onChange={handleChange}

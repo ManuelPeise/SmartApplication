@@ -1,6 +1,5 @@
-﻿using Data.Shared.Ai;
+﻿using Data.Shared;
 using Data.Shared.Logging;
-using Data.Shared.Settings;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.AppContext
@@ -15,8 +14,8 @@ namespace Data.AppContext
 
         }
 
-        public DbSet<GenericSettingsEntity> GenericSettings { get; set; }
+        
         public DbSet<LogMessageEntity> LogMessages { get; set; }
-        public DbSet<EmailClassificationTrainingDataEntity> SpamDetectorTrainingData { get; set; }
+        public DbSet<EmailAccountEntity> EmailAccounts { get; set; }
     }
 }

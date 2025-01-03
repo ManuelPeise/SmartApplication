@@ -19,5 +19,8 @@
   "labelSelectHam": "Ham",
   "labelSelectSpam": "Spam",
   "labelSelectUnknown": "Unknown",
-  "labemAddressFilter": "Address Filter"
+  "labemAddressFilter": "Address Filter",
+  "labelEmailTools": "Email-Tools",
+  "labelEmailCleaner": "Email-Cleaner",
+  "labelEmailCleanerSettings": "Email-Cleaner-Settings"
 }
