@@ -5,10 +5,7 @@ import { createBrowserHistory } from "history";
 import Layout from "src/_components/_containers/Layout";
 import Home from "src/_Stacks/PublicStack/Home";
 import LogPageContainer from "src/_Stacks/_Administration/_Logging/LogPageContainer";
-import EmailProviderConfigurationContainer from "src/_Stacks/_Configurations/_EmailProviderConfigurations/EmailProviderConfigurationContainer";
 import { getRoutes } from "./sideMenuItems";
-import SpamMailClassificationContainer from "src/_Stacks/_Configurations/_SpamMailClassification/SpamMailClassificationContainer";
-import EmailCleanerContainer from "src/Pages/EmailCleaner/EmailCleanerContainer";
 
 type IProps = {
   basename?: string;
@@ -55,29 +52,6 @@ const AppRouter: React.FC = () => {
           element={<Layout isPrivate={true} history={history} />}
         >
           <Route path={routes.log} Component={LogPageContainer} />
-        </Route>
-        <Route
-          path={routes.configuration}
-          element={<Layout isPrivate={true} history={history} />}
-        >
-          <Route
-            path={routes.emailProviderConfiguration}
-            Component={EmailProviderConfigurationContainer}
-          />
-          <Route
-            path={routes.spamMailClassification}
-            Component={SpamMailClassificationContainer}
-          />
-        </Route>
-        <Route
-          path={routes.tools}
-          element={<Layout isPrivate={true} history={history} />}
-        >
-          <Route path={routes.emailCleaner} Component={EmailCleanerContainer} />
-          {/* <Route
-            path={routes.emailCleanerSettings}
-            Component={SpamMailClassificationContainer}
-          /> */}
         </Route>
       </Routes>
     </CustomBrowserRouter>

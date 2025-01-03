@@ -7,13 +7,8 @@ export type ResponsiveSize = {
 };
 
 export type Routes = {
+  administration: string;
   log: string;
   home: string;
   private: string;
-  configuration: string;
-  emailProviderConfiguration: string;
-  spamMailClassification: string;
-  tools: string;
-  emailCleaner: string;
-  emailCleanerSettings: string;
 };

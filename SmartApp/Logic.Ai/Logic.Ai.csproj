@@ -15,9 +15,4 @@
     <ProjectReference Include="..\Logic.Shared\Logic.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
