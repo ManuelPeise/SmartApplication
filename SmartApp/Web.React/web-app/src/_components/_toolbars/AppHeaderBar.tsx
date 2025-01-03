@@ -2,7 +2,7 @@ import {
   AccountCircleRounded,
   ExitToAppRounded,
   MenuRounded,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import {
   AppBar,
   Button,

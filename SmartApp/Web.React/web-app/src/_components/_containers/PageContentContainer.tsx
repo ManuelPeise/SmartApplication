@@ -9,7 +9,6 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { ArrowBackRounded } from "@material-ui/icons";
 import React, { PropsWithChildren } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/_hooks/useAuth";
@@ -21,6 +20,7 @@ import {
   getRoutes,
   getSideMenuItems,
 } from "src/_lib/sideMenuItems";
+import { ArrowBackRounded } from "@mui/icons-material";
 
 interface IProps extends PropsWithChildren {
   sideMenuOpen: boolean;

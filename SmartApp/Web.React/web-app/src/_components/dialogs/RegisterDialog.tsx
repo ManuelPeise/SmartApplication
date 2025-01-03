@@ -1,4 +1,3 @@
-import { PermIdentityRounded } from "@material-ui/icons";
 import {
   Dialog,
   DialogActions,
@@ -15,6 +14,7 @@ import { useAuth } from "src/_hooks/useAuth";
 import { emailValidation, passwordValidation } from "src/_lib/validation";
 import { colors } from "src/_lib/colors";
 import DialogLoadingIndicator from "./DialogLoadingIndicator";
+import { PermIdentityRounded } from "@mui/icons-material";
 
 interface IProps {
   open: boolean;

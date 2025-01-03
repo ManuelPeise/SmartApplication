@@ -1,8 +1,8 @@
-import { SettingsOutlined } from "@material-ui/icons";
 import React from "react";
 
 import { UserRoleEnum } from "./_enums/UserRoleEnum";
 import { Routes } from "src/types";
+import { SettingsRounded } from "@mui/icons-material";
 
 export type SideMenuEntry = {
   displayNameRecourceKey: string;
@@ -26,7 +26,7 @@ export const getSideMenuItems = (routes: Routes): SideMenuEntry[] => [
     displayNameRecourceKey: "common.labelAdministration",
     requiredRole: UserRoleEnum.Admin,
     route: "#",
-    icon: <SettingsOutlined style={{ width: "30px", height: "30px" }} />,
+    icon: <SettingsRounded style={{ width: "30px", height: "30px" }} />,
     childItems: [
       {
         displayNameRecourceKey: "common.labelLogging",
