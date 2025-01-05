@@ -1,27 +1,31 @@
-﻿using Data.Shared.Identity.Entities;
+﻿using Data.Shared;
+using Data.Shared.Identity.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Options;
+using Shared.Models.Identity;
 using System.Text;
 
 namespace Data.Identity.Seeds
 {
     public class UserCredentialsSeed : IEntityTypeConfiguration<UserCredentials>
     {
-        public UserCredentialsSeed()
-        {
+        private readonly IOptions<SecurityData> _options;
 
+        public UserCredentialsSeed(IOptions<SecurityData> options)
+        {
+            _options = options;
         }
 
         public void Configure(EntityTypeBuilder<UserCredentials> builder)
         {
             var timeStamp = DateTime.Now;
-            var salt = Guid.NewGuid().ToString();
+            var passwordHandler = new PasswordHandler(_options);
 
             builder.HasData(new UserCredentials
             {
                 Id = 1,
-                Salt = salt,
-                Password = GetEncodedPassword("SuperSecret", salt),
+                Password = passwordHandler.Encrypt("SuperSecret"),
                 ExpiresAt = timeStamp.AddMonths(3),
                 CreatedBy = "System",
                 CreatedAt = timeStamp,

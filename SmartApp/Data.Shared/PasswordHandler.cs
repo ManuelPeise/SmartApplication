@@ -3,7 +3,7 @@ using Shared.Models.Identity;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Logic.Shared
+namespace Data.Shared
 {
     public class PasswordHandler
     {
@@ -61,4 +61,3 @@ namespace Logic.Shared
         }
     }
 }
-

@@ -53,6 +53,7 @@ namespace Logic.Administration
             {
                 await _logRepository.DeleteMessages(messageIds);
 
+                await _logRepository.SaveChanges();
             }
             catch (Exception exception)
             {
@@ -67,6 +68,7 @@ namespace Logic.Administration
 
             }
         }
+
         #region dispose
         protected virtual void Dispose(bool disposing)
         {

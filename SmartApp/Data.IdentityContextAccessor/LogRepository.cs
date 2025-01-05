@@ -1,6 +1,8 @@
 ﻿using Data.AppContext;
 using Data.ContextAccessor.Interfaces;
+using Data.Shared;
 using Data.Shared.Logging;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.ContextAccessor
@@ -9,19 +11,19 @@ namespace Data.ContextAccessor
     {
         private bool disposedValue;
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public LogRepository(ApplicationDbContext context)
+        public LogRepository(ApplicationDbContext context, IHttpContextAccessor contextAccessor)
         {
             _applicationDbContext = context;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task AddMessage(LogMessageEntity message)
         {
             var table = _applicationDbContext.Set<LogMessageEntity>();
 
-            table.Add(message);
-
-            await _applicationDbContext.SaveChangesAsync();
+            await table.AddAsync(message);
         }
 
         public async Task DeleteMessages(DateTime from, DateTime? to)
@@ -36,7 +38,6 @@ namespace Data.ContextAccessor
                 table.RemoveRange(messagesToDelete);
             }
 
-            await _applicationDbContext.SaveChangesAsync();
         }
 
         public async Task<List<LogMessageEntity>> GetAll()
@@ -63,9 +64,39 @@ namespace Data.ContextAccessor
             var messagesToDelete = await table.Where(x => messageIds.Contains(x.Id)).ToListAsync();
 
             table.RemoveRange(messagesToDelete);
+        }
+
+        public async Task SaveChanges()
+        {
+            var currentUser = _contextAccessor?.HttpContext.User.Identity;
+
+            var modifiedEntries = _applicationDbContext.ChangeTracker.Entries()
+              .Where(x => x.State == EntityState.Modified ||
+              x.State == EntityState.Added);
+
+            foreach (var entry in modifiedEntries)
+            {
+                if (entry != null)
+                {
+                    if (entry.State == EntityState.Added)
+                    {
+                        ((AEntityBase)entry.Entity).CreatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).CreatedAt = DateTime.Now;
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+
+                    }
+                    else if (entry.State == EntityState.Modified)
+                    {
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+                    }
+                }
+            }
 
             await _applicationDbContext.SaveChangesAsync();
         }
+
 
         #region dispose
 

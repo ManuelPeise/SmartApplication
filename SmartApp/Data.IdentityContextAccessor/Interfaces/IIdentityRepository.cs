@@ -1,5 +1,4 @@
 ﻿using Data.Shared.Identity.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Data.ContextAccessor.Interfaces
 {
@@ -8,5 +7,7 @@ namespace Data.ContextAccessor.Interfaces
         public RepositoryBase<UserIdentity> UserIdentityRepository { get; }
         public RepositoryBase<UserCredentials> UserCredentialsRepository { get; }
         public RepositoryBase<UserRole> UserRoleRepository { get; }
+        public IClaimsAccessor ClaimsAccessor { get; }
+        Task SaveChanges();
     }
 }

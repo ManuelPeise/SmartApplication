@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models.Administration.Log;
-using Shared.Models.Response;
 
 namespace Service.Api.Administration
 {

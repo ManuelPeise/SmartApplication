@@ -43,6 +43,7 @@ namespace Web.Core.Startup
             });
 
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<IClaimsAccessor, ClaimsAccessor>();
             builder.Services.AddScoped<ILogRepository, LogRepository>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
             builder.Services.AddScoped<ILogMessageService, LogMessageService>();

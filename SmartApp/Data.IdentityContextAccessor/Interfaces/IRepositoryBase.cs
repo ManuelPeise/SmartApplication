@@ -13,5 +13,6 @@ namespace Data.ContextAccessor.Interfaces
         Task Add(T entity);
         Task AddRange(IEnumerable<T> entities);
         Task<bool> Delete(int id);
+        Task SaveChanges();
     }
 }

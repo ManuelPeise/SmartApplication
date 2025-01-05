@@ -101,7 +101,7 @@ const RegisterPage: React.FC = () => {
           </Box>
           <Box marginTop="10px">
             <TextInput
-              label={getResource("common.labelLastName")}
+              label={getResource("common.labelFirstName")}
               value={registerModel.firstName}
               fullwidth={true}
               onChange={(value) => onModelChanged({ firstName: value })}

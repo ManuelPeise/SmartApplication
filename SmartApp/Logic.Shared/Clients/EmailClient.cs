@@ -1,8 +1,8 @@
-﻿using Logic.Shared.Interfaces;
+﻿using Data.Shared;
+using Logic.Shared.Interfaces;
 using MailKit.Net.Imap;
 using Microsoft.Extensions.Options;
 using Shared.Models.Identity;
-using Shared.Models.Settings.EmailAccountSettings;
 
 
 namespace Logic.Shared.Clients

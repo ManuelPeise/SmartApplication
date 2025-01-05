@@ -18,6 +18,5 @@ namespace Data.Shared.Identity.Entities
         [ForeignKey(nameof(RoleId))]
         public UserRole? UserRole { get; set; }
 
-        public List<ModuleEntity> Modules { get; set; } = [];
     }
 }

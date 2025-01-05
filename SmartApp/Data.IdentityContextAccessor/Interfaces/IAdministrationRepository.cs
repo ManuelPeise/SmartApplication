@@ -10,5 +10,7 @@ namespace Data.ContextAccessor.Interfaces
         public RepositoryBase<UserAccessRightEntity> UserAccessRightRepository { get; }
         public IIdentityRepository IdentityRepository { get;  }
         public ILogRepository LogRepository { get; }
+        public IClaimsAccessor ClaimsAccessor { get; }
+        public Task SaveChanges();
     }
 }

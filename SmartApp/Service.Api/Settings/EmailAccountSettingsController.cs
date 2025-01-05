@@ -1,8 +1,6 @@
 ﻿using Logic.Settings.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Enums;
-using Shared.Models.Response;
 using Shared.Models.Settings.EmailAccountSettings;
 
 namespace Service.Api.Settings

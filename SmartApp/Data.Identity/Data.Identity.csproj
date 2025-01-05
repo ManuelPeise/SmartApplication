@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Data.Shared\Data.Shared.csproj" />
     <ProjectReference Include="..\Shared.Configuration\Shared.Configuration.csproj" />
+    <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
   </ItemGroup>
 
 </Project>

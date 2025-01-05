@@ -1,8 +1,6 @@
 ﻿using Data.Shared;
-using Logic.Shared;
 using Newtonsoft.Json;
 using Shared.Models.Settings.EmailAccountSettings;
-using System.Net.Http.Json;
 
 namespace Logic.Settings.Extensions
 {

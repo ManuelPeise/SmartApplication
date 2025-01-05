@@ -1,5 +1,6 @@
 ﻿using Data.ContextAccessor.Interfaces;
 using Data.Shared;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -8,12 +9,13 @@ namespace Data.ContextAccessor
     public class RepositoryBase<T> : IRepositoryBase<T> where T : AEntityBase
     {
         private DbContext _context;
+        private IHttpContextAccessor _contextAccessor;
         private bool disposedValue;
 
-        public RepositoryBase(DbContext context)
+        public RepositoryBase(DbContext context, IHttpContextAccessor contextAccessor)
         {
             _context = context;
-
+            _contextAccessor = contextAccessor;
         }
 
 
@@ -99,6 +101,37 @@ namespace Data.ContextAccessor
             var result = _context.Remove(entityToDelete);
 
             return result.Entity != null ? true : false;
+        }
+
+        public async Task SaveChanges()
+        {
+            var currentUser = _contextAccessor?.HttpContext.User.Identity;
+
+            var modifiedEntries = _context.ChangeTracker.Entries()
+              .Where(x => x.State == EntityState.Modified ||
+              x.State == EntityState.Added);
+
+            foreach (var entry in modifiedEntries)
+            {
+                if (entry != null)
+                {
+                    if (entry.State == EntityState.Added)
+                    {
+                        ((AEntityBase)entry.Entity).CreatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).CreatedAt = DateTime.Now;
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+
+                    }
+                    else if (entry.State == EntityState.Modified)
+                    {
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         #region dispose
