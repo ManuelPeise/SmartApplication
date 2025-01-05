@@ -8,12 +8,7 @@ import {
   JwtTokenData,
   LoginData,
 } from "src/_lib/_types/auth";
-import {
-  ApiResponse,
-  AuthTokenResponse,
-  LogoutResponse,
-  SuccessResponse,
-} from "src/_lib/_types/response";
+import { ApiResponse, LogoutResponse } from "src/_lib/_types/response";
 
 export const AuthContext = React.createContext<AuthContextProps>(
   {} as AuthContextProps
@@ -51,10 +46,10 @@ const AuthContextProvider: React.FC<PropsWithChildren> = (props) => {
         }
       ).then((res) => {
         if (res.status === 200) {
-          const tokenResponse: ApiResponse<AuthTokenResponse> = res.data;
+          const tokenResponse: string = res.data;
 
-          if (tokenResponse.success) {
-            decodeAndSetToken(tokenResponse.data.token);
+          if (tokenResponse) {
+            decodeAndSetToken(tokenResponse);
 
             return true;
           }
@@ -109,12 +104,9 @@ const AuthContextProvider: React.FC<PropsWithChildren> = (props) => {
         headers: { "Content-Type": "application/json" },
       }).then((res) => {
         if (res.status === 200) {
-          const registrationResponse: ApiResponse<SuccessResponse> = res.data;
+          const registrationResponse: boolean = res.data;
 
-          if (
-            registrationResponse.success &&
-            registrationResponse.data.success
-          ) {
+          if (registrationResponse) {
             return true;
           }
 

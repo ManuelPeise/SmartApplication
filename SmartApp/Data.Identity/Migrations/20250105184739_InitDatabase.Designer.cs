@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20241208064544_InitializeDatabase")]
-    partial class InitializeDatabase
+    [Migration("20250105184739_InitDatabase")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,20 +45,28 @@ namespace Data.Identity.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.ToTable("Credentials");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318),
+                            CreatedBy = "System",
+                            ExpiresAt = new DateTime(2025, 4, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318),
+                            Password = "Am1I3JdgO3aS/VUSZ8kfKQ==",
+                            RefreshToken = "",
+                            UpdatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318),
+                            UpdatedBy = "System"
+                        });
                 });
 
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserIdentity", b =>
@@ -95,11 +103,10 @@ namespace Data.Identity.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -109,6 +116,22 @@ namespace Data.Identity.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 641, DateTimeKind.Local).AddTicks(218),
+                            CreatedBy = "System",
+                            CredentialsId = 1,
+                            Email = "admin.user@gmx.de",
+                            FirstName = "Admin",
+                            IsActive = true,
+                            LastName = "User",
+                            RoleId = 2,
+                            UpdatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 641, DateTimeKind.Local).AddTicks(218),
+                            UpdatedBy = "System"
+                        });
                 });
 
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserRole", b =>
@@ -135,11 +158,10 @@ namespace Data.Identity.Migrations
                     b.Property<int>("RoleType")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");

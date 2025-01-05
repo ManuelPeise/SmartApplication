@@ -30,7 +30,6 @@
     <ProjectReference Include="..\Logic.Identity\Logic.Identity.csproj" />
     <ProjectReference Include="..\Logic.Settings\Logic.Settings.csproj" />
     <ProjectReference Include="..\Service.Api\Service.Api.csproj" />
-    <ProjectReference Include="..\Shared.Configuration\Shared.Configuration.csproj" />
   </ItemGroup>
 
   <ItemGroup>

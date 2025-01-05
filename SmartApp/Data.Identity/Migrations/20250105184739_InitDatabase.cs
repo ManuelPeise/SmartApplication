@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Data.Identity.Migrations
 {
     /// <inheritdoc />
-    public partial class InitializeDatabase : Migration
+    public partial class InitDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,14 +21,13 @@ namespace Data.Identity.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Salt = table.Column<string>(type: "longtext", nullable: false),
                     Password = table.Column<string>(type: "longtext", nullable: false),
                     RefreshToken = table.Column<string>(type: "longtext", nullable: true),
                     ExpiresAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,8 +46,8 @@ namespace Data.Identity.Migrations
                     RoleType = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -70,8 +69,8 @@ namespace Data.Identity.Migrations
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -90,6 +89,18 @@ namespace Data.Identity.Migrations
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
+
+            Sql.SeedUserRoles(migrationBuilder.Sql);
+
+            migrationBuilder.InsertData(
+                table: "Credentials",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "ExpiresAt", "Password", "RefreshToken", "UpdatedAt", "UpdatedBy" },
+                values: new object[] { 1, new DateTime(2025, 1, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318), "System", new DateTime(2025, 4, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318), "Am1I3JdgO3aS/VUSZ8kfKQ==", "", new DateTime(2025, 1, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318), "System" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "CredentialsId", "Email", "FirstName", "IsActive", "LastName", "RoleId", "UpdatedAt", "UpdatedBy" },
+                values: new object[] { 1, new DateTime(2025, 1, 5, 19, 47, 39, 641, DateTimeKind.Local).AddTicks(218), "System", 1, "admin.user@gmx.de", "Admin", true, "User", 2, new DateTime(2025, 1, 5, 19, 47, 39, 641, DateTimeKind.Local).AddTicks(218), "System" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_CredentialsId",

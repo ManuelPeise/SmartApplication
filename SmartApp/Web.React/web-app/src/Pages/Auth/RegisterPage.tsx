@@ -62,10 +62,11 @@ const RegisterPage: React.FC = () => {
     });
   }, []);
 
-  const loginDisabled =
+  const registerDisabled =
     !emailValidation(registerModel.email) ||
-    (!passwordValidation(registerModel.password) &&
-      registerModel.password !== registerModel.passwordValidation);
+    !passwordValidation(registerModel.password) ||
+    !registerModel.password.length ||
+    registerModel.password !== registerModel.passwordValidation;
 
   return (
     <Box
@@ -155,7 +156,7 @@ const RegisterPage: React.FC = () => {
             />
             <FormButton
               label={getResource("common.labelRegister")}
-              disabled={loginDisabled}
+              disabled={registerDisabled}
               onAction={handleRegistration}
             />
           </Box>

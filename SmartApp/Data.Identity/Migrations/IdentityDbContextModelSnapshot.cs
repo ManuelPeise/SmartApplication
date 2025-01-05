@@ -19,37 +19,6 @@ namespace Data.Identity.Migrations
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Data.Shared.Identity.Entities.ModuleEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ModuleName")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("ModuleType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Modules");
-                });
-
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserCredentials", b =>
                 {
                     b.Property<int>("Id")
@@ -73,15 +42,10 @@ namespace Data.Identity.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -92,13 +56,12 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 14, 19, 38, 32, 637, DateTimeKind.Local).AddTicks(7462),
+                            CreatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318),
                             CreatedBy = "System",
-                            ExpiresAt = new DateTime(2025, 3, 14, 19, 38, 32, 637, DateTimeKind.Local).AddTicks(7462),
-                            Password = "U3VwZXJTZWNyZXQxMWJlYTFhZS0yMTJhLTQwM2ItODg4OS1jYzE1Y2Q3MGNiZGE=",
+                            ExpiresAt = new DateTime(2025, 4, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318),
+                            Password = "Am1I3JdgO3aS/VUSZ8kfKQ==",
                             RefreshToken = "",
-                            Salt = "11bea1ae-212a-403b-8889-cc15cd70cbda",
-                            UpdatedAt = new DateTime(2024, 12, 14, 19, 38, 32, 637, DateTimeKind.Local).AddTicks(7462),
+                            UpdatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318),
                             UpdatedBy = "System"
                         });
                 });
@@ -137,11 +100,10 @@ namespace Data.Identity.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -156,7 +118,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 14, 19, 38, 32, 637, DateTimeKind.Local).AddTicks(7908),
+                            CreatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 641, DateTimeKind.Local).AddTicks(218),
                             CreatedBy = "System",
                             CredentialsId = 1,
                             Email = "admin.user@gmx.de",
@@ -164,67 +126,8 @@ namespace Data.Identity.Migrations
                             IsActive = true,
                             LastName = "User",
                             RoleId = 2,
-                            UpdatedAt = new DateTime(2024, 12, 14, 19, 38, 32, 637, DateTimeKind.Local).AddTicks(7908),
+                            UpdatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 641, DateTimeKind.Local).AddTicks(218),
                             UpdatedBy = "System"
-                        });
-                });
-
-            modelBuilder.Entity("Data.Shared.Identity.Entities.UserModuleEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("Deny")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("HasReadAccess")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("HasWriteAccess")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("ModuleId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModuleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserModules");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 14, 19, 38, 32, 637, DateTimeKind.Local).AddTicks(9235),
-                            CreatedBy = "System",
-                            Deny = false,
-                            HasReadAccess = true,
-                            HasWriteAccess = true,
-                            ModuleId = 1,
-                            UpdatedAt = new DateTime(2024, 12, 14, 19, 38, 32, 637, DateTimeKind.Local).AddTicks(9235),
-                            UpdatedBy = "System",
-                            UserId = 1
                         });
                 });
 
@@ -252,11 +155,10 @@ namespace Data.Identity.Migrations
                     b.Property<int>("RoleType")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -281,25 +183,6 @@ namespace Data.Identity.Migrations
                     b.Navigation("UserCredentials");
 
                     b.Navigation("UserRole");
-                });
-
-            modelBuilder.Entity("Data.Shared.Identity.Entities.UserModuleEntity", b =>
-                {
-                    b.HasOne("Data.Shared.Identity.Entities.ModuleEntity", "Module")
-                        .WithMany()
-                        .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Shared.Identity.Entities.UserIdentity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Module");
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

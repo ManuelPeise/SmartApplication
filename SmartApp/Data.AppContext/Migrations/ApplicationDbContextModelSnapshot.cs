@@ -50,28 +50,28 @@ namespace Data.AppContext.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4610),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(382),
                             CreatedBy = "System",
                             Name = "Administration"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4613),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(389),
                             CreatedBy = "System",
                             Name = "UserAdministration"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4614),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(390),
                             CreatedBy = "System",
                             Name = "Settings"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4615),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(390),
                             CreatedBy = "System",
                             Name = "EmailAccountSettings"
                         });
@@ -122,7 +122,7 @@ namespace Data.AppContext.Migrations
                         {
                             Id = 1,
                             AccessRightId = 1,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4740),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(481),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -133,7 +133,7 @@ namespace Data.AppContext.Migrations
                         {
                             Id = 2,
                             AccessRightId = 2,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4742),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(485),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -144,7 +144,7 @@ namespace Data.AppContext.Migrations
                         {
                             Id = 3,
                             AccessRightId = 3,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4743),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(486),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -155,7 +155,7 @@ namespace Data.AppContext.Migrations
                         {
                             Id = 4,
                             AccessRightId = 4,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4744),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(487),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,

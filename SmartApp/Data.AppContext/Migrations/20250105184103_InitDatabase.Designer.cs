@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.AppContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250105120243_SeedAccessRights")]
-    partial class SeedAccessRights
+    [Migration("20250105184103_InitDatabase")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,28 +53,28 @@ namespace Data.AppContext.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 5, 12, 2, 43, 181, DateTimeKind.Utc).AddTicks(6536),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(382),
                             CreatedBy = "System",
                             Name = "Administration"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 1, 5, 12, 2, 43, 181, DateTimeKind.Utc).AddTicks(6539),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(389),
                             CreatedBy = "System",
                             Name = "UserAdministration"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 1, 5, 12, 2, 43, 181, DateTimeKind.Utc).AddTicks(6540),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(390),
                             CreatedBy = "System",
                             Name = "Settings"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 1, 5, 12, 2, 43, 181, DateTimeKind.Utc).AddTicks(6540),
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(390),
                             CreatedBy = "System",
                             Name = "EmailAccountSettings"
                         });
@@ -119,6 +119,52 @@ namespace Data.AppContext.Migrations
                     b.HasIndex("AccessRightId");
 
                     b.ToTable("UserAccessRights");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessRightId = 1,
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(481),
+                            CreatedBy = "System",
+                            Deny = false,
+                            Edit = true,
+                            UserId = 1,
+                            View = true
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessRightId = 2,
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(485),
+                            CreatedBy = "System",
+                            Deny = false,
+                            Edit = true,
+                            UserId = 1,
+                            View = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccessRightId = 3,
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(486),
+                            CreatedBy = "System",
+                            Deny = false,
+                            Edit = true,
+                            UserId = 1,
+                            View = true
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AccessRightId = 4,
+                            CreatedAt = new DateTime(2025, 1, 5, 18, 41, 1, 265, DateTimeKind.Utc).AddTicks(487),
+                            CreatedBy = "System",
+                            Deny = false,
+                            Edit = true,
+                            UserId = 1,
+                            View = true
+                        });
                 });
 
             modelBuilder.Entity("Data.Shared.EmailAccountEntity", b =>
