@@ -3,7 +3,6 @@ using Data.Shared;
 using Data.Shared.AccessRights;
 using Data.Shared.Identity.Entities;
 using Logic.Identity.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Shared.Enums;
 using Shared.Models.Identity;
