@@ -1,0 +1,95 @@
+import { AxiosInstance } from "axios";
+import { AxiosClient } from "./AxiosClient";
+
+type StatelessApiOptions = {
+  serviceUrl: string;
+  parameters?: { [key: string]: string };
+  body?: any;
+};
+
+type StatelessApiResult = {
+  get: <TModel>(options: StatelessApiOptions, token: string) => Promise<TModel>;
+  post: <TModel>(
+    options: StatelessApiOptions,
+    token: string
+  ) => Promise<TModel>;
+};
+
+export class StatelessApi {
+  static create = (): StatelessApiResult => {
+    return {
+      get: sendGetRequest,
+      post: sendPostRequest,
+    } as StatelessApiResult;
+  };
+}
+
+function setToken(client: AxiosInstance, token: string): void {
+  client.defaults.headers.common["Authorization"] = `bearer ${token}`;
+}
+
+function getRequestUrl(
+  url: string,
+  params?: { [key: string]: string }
+): string {
+  if (!params) {
+    return url;
+  }
+
+  const uri = new URL(url);
+
+  Object.keys(params).forEach((key) =>
+    uri.searchParams.append(key, params[key])
+  );
+
+  return uri.toString();
+}
+
+function sendGetRequest<TModel>(
+  options: StatelessApiOptions,
+  token: string
+): Promise<TModel> {
+  return new Promise<TModel>(async (resolve, reject) => {
+    try {
+      setToken(AxiosClient, token);
+
+      AxiosClient.get(getRequestUrl(options.serviceUrl, options.parameters), {
+        headers: { "Content-Type": "application/json" },
+      }).then((res) => {
+        if (res.status === 200) {
+          const responseModel: TModel = res.data;
+
+          return resolve(responseModel);
+        } else {
+          throw new Error(`Request failed with status: ${res.status}`);
+        }
+      });
+    } catch (err) {
+      reject(err.message);
+    }
+  });
+}
+
+function sendPostRequest<TModel>(
+  options: StatelessApiOptions,
+  token: string
+): Promise<TModel> {
+  return new Promise<TModel>(async (resolve, reject) => {
+    try {
+      setToken(AxiosClient, token);
+      AxiosClient.post(options.serviceUrl, options.body, {
+        headers: { "Content-Type": "application/json" },
+      }).then((res) => {
+        if (res.status === 200) {
+          const responseModel: TModel = res.data;
+
+          return resolve(responseModel);
+        } else {
+          throw new Error(`Request failed with status: ${res.status}`);
+        }
+      });
+    } catch (err) {
+      reject(err.message);
+    }
+  });
+}

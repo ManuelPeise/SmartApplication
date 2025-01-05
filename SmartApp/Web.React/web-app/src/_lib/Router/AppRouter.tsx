@@ -2,11 +2,12 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PageLayout from "./PageLayout";
 import LoginPage from "src/Pages/Auth/LoginPage";
-import AdminRoute from "./AdminRoute";
+import ProtectedRoute from "./ProtectedRoute";
 import LogPageContainer from "src/_Stacks/_Administration/_Logging/LogPageContainer";
 import { UserRoleEnum } from "../_enums/UserRoleEnum";
 import { browserRoutes } from "./RouterUtils";
 import Home from "src/_Stacks/PublicStack/Home";
+import EmailAccountSettingsPageInitializationContainer from "src/Pages/Settings/EmailAccountSettings/EmailAccountSettingsPageContainer";
 
 const AppRouter: React.FC = () => {
   return (
@@ -18,7 +19,7 @@ const AppRouter: React.FC = () => {
           <Route
             path="/"
             element={
-              <AdminRoute
+              <ProtectedRoute
                 redirectUri={browserRoutes.login}
                 requiredRole={UserRoleEnum.User}
               />
@@ -29,13 +30,17 @@ const AppRouter: React.FC = () => {
           <Route
             path={browserRoutes.home}
             element={
-              <AdminRoute
+              <ProtectedRoute
                 redirectUri={browserRoutes.login}
                 requiredRole={UserRoleEnum.Admin}
               />
             }
           >
             <Route path={browserRoutes.log} Component={LogPageContainer} />
+            <Route
+              path={browserRoutes.emailAccountSettings}
+              Component={EmailAccountSettingsPageInitializationContainer}
+            />
           </Route>
         </Routes>
       </PageLayout>

@@ -2,8 +2,7 @@ import { ArrowBackRounded } from "@mui/icons-material";
 import { Box, Drawer, IconButton, List } from "@mui/material";
 import React from "react";
 import DrawerListItem from "./DrawerListItem";
-import { getSideMenuItems } from "../sideMenuItems";
-import { getRoutes } from "./RouterUtils";
+import { getSideMenuItems } from "./sideMenuItems";
 import { useI18n } from "src/_hooks/useI18n";
 import { UserRoleEnum } from "../_enums/UserRoleEnum";
 import { useAuth } from "src/_hooks/useAuth";
@@ -19,7 +18,7 @@ const AppDrawer: React.FC<IProps> = (props) => {
   const { authenticationState } = useAuth();
 
   const sideMenuItems = React.useMemo(() => {
-    return getSideMenuItems(getRoutes());
+    return getSideMenuItems();
   }, []);
 
   return (

@@ -36,6 +36,11 @@ export const useFormState = <T>(
     React.Reducer<T, FormActionTypes<T>>
   >(formReducer, initialState);
 
+  React.useEffect(() => {
+    originalState.current = initialState;
+    dispatch({ type: "UPDATE", payload: initialState });
+  }, [initialState]);
+
   const isModified = React.useMemo((): boolean => {
     const keys = Object.keys(state) as Array<keyof T>;
 

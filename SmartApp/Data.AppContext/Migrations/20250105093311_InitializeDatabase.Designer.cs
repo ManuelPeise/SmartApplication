@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.AppContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250103155157_InitializeDatabase")]
+    [Migration("20250105093311_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />
@@ -28,8 +28,9 @@ namespace Data.AppContext.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<bool>("ConnectionEstablished")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("AccountName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -46,7 +47,13 @@ namespace Data.AppContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("MessageLogJson")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("Port")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProviderType")
                         .HasColumnType("int");
 
                     b.Property<string>("Server")

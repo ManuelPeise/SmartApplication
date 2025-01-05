@@ -29,7 +29,7 @@ const PageLayout: React.FC<PropsWithChildren> = (props) => {
           onClose={setSideMenuOpen.bind(null, false)}
         />
         <Box width="100%" height="100%">
-          {children}
+          <Box height="100%">{children}</Box>
         </Box>
       </Box>
     </Box>

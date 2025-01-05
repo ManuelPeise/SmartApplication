@@ -14,3 +14,8 @@ export type ApiResult<T> = {
   sendPostRequest: (options?: Partial<ApiOptions>) => Promise<void>;
   sendPost: <TResponse>(options?: Partial<ApiOptions>) => Promise<TResponse>;
 };
+
+export type ApiResponse<T> = {
+  statusCode: number;
+  data: T;
+};

@@ -24,7 +24,7 @@ const TextInput: React.FC<IProps> = (props) => {
     <TextField
       autoComplete="off"
       variant="standard"
-      value={value}
+      value={value === null && isPassword ? "**********" : value}
       disabled={disabled}
       type={isPassword ? "password" : "text"}
       fullWidth={fullwidth}

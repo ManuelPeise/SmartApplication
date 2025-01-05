@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { colors } from "../colors";
 import { Link } from "react-router-dom";
-import { SideMenuEntry } from "../sideMenuItems";
+import { SideMenuEntry } from "./sideMenuItems";
 
 interface ISideMenuItemProps extends SideMenuEntry {
   userRole: UserRoleEnum;
@@ -43,7 +43,7 @@ const DrawerListItem: React.FC<ISideMenuItemProps> = (props) => {
         flexDirection: "column",
         color: "#fff",
       }}
-      onClick={onClickHandler.bind(null, !expanded)}
+      onClick={onClickHandler && onClickHandler.bind(null, !expanded)}
     >
       <Box display="flex" flexDirection="row" alignItems="center" width="100%">
         <ListItemIcon
@@ -57,7 +57,15 @@ const DrawerListItem: React.FC<ISideMenuItemProps> = (props) => {
           {icon}
         </ListItemIcon>
         {childItems == null ? (
-          <Link style={{ height: "30xp" }} to={route} />
+          <Link
+            onClick={onCloseMenu}
+            style={{ height: "30xp", color: "#fff", textDecoration: "none" }}
+            to={route}
+          >
+            <Typography sx={{ fontSize: "1rem" }}>
+              {getResource(displayNameRecourceKey)}
+            </Typography>
+          </Link>
         ) : (
           <ListItemText style={{ display: "flex", alignItems: "center" }}>
             <Typography sx={{ fontSize: "1rem" }}>
@@ -71,6 +79,7 @@ const DrawerListItem: React.FC<ISideMenuItemProps> = (props) => {
           {expanded &&
             childItems.map((item, key) => (
               <ListItem
+                key={key}
                 sx={{
                   paddingLeft: "2rem",
                   paddingTop: 1,

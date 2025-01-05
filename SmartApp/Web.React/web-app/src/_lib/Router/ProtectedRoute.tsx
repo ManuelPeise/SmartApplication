@@ -4,7 +4,7 @@ import { useAuth } from "src/_hooks/useAuth";
 import { Navigate, Outlet } from "react-router-dom";
 import { UserRoleEnum } from "../_enums/UserRoleEnum";
 
-const AdminRoute: React.FC<RouteProps> = (props) => {
+const ProtectedRoute: React.FC<RouteProps> = (props) => {
   const { redirectUri, requiredRole } = props;
   const auth = useAuth();
 
@@ -24,4 +24,4 @@ const AdminRoute: React.FC<RouteProps> = (props) => {
   return <Outlet />;
 };
 
-export default AdminRoute;
+export default ProtectedRoute;
