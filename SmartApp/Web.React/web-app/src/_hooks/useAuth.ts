@@ -1,5 +1,5 @@
 import React from "react";
-import { AuthContext } from "src/_providers/AuthContextProvider";
+import { AuthContext } from "src/Providers/AuthContextProvider";
 
 export const useAuth = () => {
   const context = React.useContext(AuthContext);

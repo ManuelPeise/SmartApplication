@@ -15,7 +15,7 @@ import { LogTableColumnDefinition, LogTableFilter } from "./Types/logTable";
 import { useI18n } from "src/_hooks/useI18n";
 import { utils } from "src/_lib/utils";
 import { DateFormatEnum } from "src/_lib/_enums/DateFormatEnum";
-import FormButton from "src/_components/_buttons/FormButton";
+import FormButton from "src/_components/Buttons/FormButton";
 import LogMessageFilter from "./Components/LogMessageFilter";
 
 interface IProps {

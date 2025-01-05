@@ -1,5 +1,5 @@
 import React from "react";
-import { AccessRightContext } from "src/_providers/AccessRightProvider";
+import { AccessRightContext } from "src/Providers/AccessRightProvider";
 
 export const useAccessRights = () => {
   const context = React.useContext(AccessRightContext);

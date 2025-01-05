@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import React, { PropsWithChildren } from "react";
-import AppHeaderBar from "src/_components/_toolbars/AppHeaderBar";
+import AppHeaderBar from "src/_components/Toolbars/AppHeaderBar";
 import { colors } from "../colors";
 import AppDrawer from "./AppDrawer";
 

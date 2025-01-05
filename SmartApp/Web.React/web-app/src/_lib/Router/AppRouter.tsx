@@ -8,6 +8,7 @@ import { UserRoleEnum } from "../_enums/UserRoleEnum";
 import { browserRoutes } from "./RouterUtils";
 import Home from "src/_Stacks/PublicStack/Home";
 import EmailAccountSettingsPageInitializationContainer from "src/Pages/Settings/EmailAccountSettings/EmailAccountSettingsPageContainer";
+import RegisterPage from "src/Pages/Auth/RegisterPage";
 
 const AppRouter: React.FC = () => {
   return (
@@ -15,7 +16,7 @@ const AppRouter: React.FC = () => {
       <PageLayout>
         <Routes>
           <Route path={browserRoutes.login} Component={LoginPage} />
-          <Route path={browserRoutes.register} element={<div></div>} />
+          <Route path={browserRoutes.register} Component={RegisterPage} />
           <Route
             path="/"
             element={

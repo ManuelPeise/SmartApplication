@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import AuthContextProvider from "./_providers/AuthContextProvider";
-import AccessRightsContextProvider from "./_providers/AccessRightProvider";
+import AuthContextProvider from "./Providers/AuthContextProvider";
+import AccessRightsContextProvider from "./Providers/AccessRightProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
