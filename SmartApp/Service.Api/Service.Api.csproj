@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Logic.Administration\Logic.Administration.csproj" />
     <ProjectReference Include="..\Logic.Identity\Logic.Identity.csproj" />
-    <ProjectReference Include="..\Logic.Modules\Logic.Modules.csproj" />
     <ProjectReference Include="..\Logic.Settings\Logic.Settings.csproj" />
   </ItemGroup>
 

@@ -1,8 +1,8 @@
 ﻿using Data.AppContext;
+using Data.ContextAccessor.Interfaces;
 using Data.Identity;
 using Data.Shared;
 using Data.Shared.Logging;
-using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;

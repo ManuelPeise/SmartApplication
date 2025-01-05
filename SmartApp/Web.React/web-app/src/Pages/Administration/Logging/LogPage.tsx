@@ -10,13 +10,13 @@ import {
   Tooltip,
 } from "@mui/material";
 import React from "react";
-import { LogMessage, LogmessageTypeEnum } from "../_types/logMessage";
-import { LogTableColumnDefinition, LogTableFilter } from "../_types/logTable";
+import { LogMessage, LogmessageTypeEnum } from "./Types/logMessage";
+import { LogTableColumnDefinition, LogTableFilter } from "./Types/logTable";
 import { useI18n } from "src/_hooks/useI18n";
 import { utils } from "src/_lib/utils";
 import { DateFormatEnum } from "src/_lib/_enums/DateFormatEnum";
 import FormButton from "src/_components/_buttons/FormButton";
-import LogMessageFilter from "./_components/LogMessageFilter";
+import LogMessageFilter from "./Components/LogMessageFilter";
 
 interface IProps {
   logMessages: LogMessage[];

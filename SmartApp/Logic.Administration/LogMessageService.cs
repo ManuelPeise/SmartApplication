@@ -1,4 +1,5 @@
-﻿using Data.Shared.Logging;
+﻿using Data.ContextAccessor.Interfaces;
+using Data.Shared.Logging;
 using Logic.Shared.Interfaces;
 using Shared.Enums;
 using Shared.Models.Administration.Log;

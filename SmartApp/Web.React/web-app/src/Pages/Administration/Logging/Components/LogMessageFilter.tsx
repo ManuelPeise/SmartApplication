@@ -1,9 +1,9 @@
 import { Grid2 } from "@mui/material";
 import React from "react";
 import FilterTextInput from "src/_components/_filter/FilterTextInput";
-import { LogTableFilter } from "../../_types/logTable";
+import { LogTableFilter } from "../Types/logTable";
 import { FilterDropdownItem } from "src/_lib/_types/filter";
-import { LogmessageTypeEnum } from "../../_types/logMessage";
+import { LogmessageTypeEnum } from "../Types/logMessage";
 import { useI18n } from "src/_hooks/useI18n";
 import FilterDropdown from "src/_components/_filter/FilterDropdown";
 

@@ -3,6 +3,7 @@ using System;
 using Data.AppContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.AppContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250105111913_AddAccessRightsTables")]
+    partial class AddAccessRightsTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,45 +39,16 @@ namespace Data.AppContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.ToTable("AccessRights");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4610),
-                            CreatedBy = "System",
-                            Name = "Administration"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4613),
-                            CreatedBy = "System",
-                            Name = "UserAdministration"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4614),
-                            CreatedBy = "System",
-                            Name = "Settings"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4615),
-                            CreatedBy = "System",
-                            Name = "EmailAccountSettings"
-                        });
                 });
 
             modelBuilder.Entity("Data.Shared.AccessRights.UserAccessRightEntity", b =>
@@ -99,10 +73,11 @@ namespace Data.AppContext.Migrations
                     b.Property<bool>("Edit")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("UserId")
@@ -116,52 +91,6 @@ namespace Data.AppContext.Migrations
                     b.HasIndex("AccessRightId");
 
                     b.ToTable("UserAccessRights");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccessRightId = 1,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4740),
-                            CreatedBy = "System",
-                            Deny = false,
-                            Edit = true,
-                            UserId = 1,
-                            View = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccessRightId = 2,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4742),
-                            CreatedBy = "System",
-                            Deny = false,
-                            Edit = true,
-                            UserId = 1,
-                            View = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccessRightId = 3,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4743),
-                            CreatedBy = "System",
-                            Deny = false,
-                            Edit = true,
-                            UserId = 1,
-                            View = true
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AccessRightId = 4,
-                            CreatedAt = new DateTime(2025, 1, 5, 13, 5, 48, 219, DateTimeKind.Utc).AddTicks(4744),
-                            CreatedBy = "System",
-                            Deny = false,
-                            Edit = true,
-                            UserId = 1,
-                            View = true
-                        });
                 });
 
             modelBuilder.Entity("Data.Shared.EmailAccountEntity", b =>
@@ -202,10 +131,11 @@ namespace Data.AppContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("UserId")
@@ -244,10 +174,11 @@ namespace Data.AppContext.Migrations
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");

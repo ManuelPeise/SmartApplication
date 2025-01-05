@@ -1,9 +1,9 @@
 ﻿using Data.AppContext;
+using Data.ContextAccessor.Interfaces;
 using Data.Shared.Logging;
-using Logic.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Logic.Shared.Repositories
+namespace Data.ContextAccessor
 {
     public class LogRepository : ILogRepository
     {
@@ -66,6 +66,7 @@ namespace Logic.Shared.Repositories
 
             await _applicationDbContext.SaveChangesAsync();
         }
+
         #region dispose
 
         protected virtual void Dispose(bool disposing)

@@ -7,6 +7,7 @@ namespace Data.ContextAccessor
     public class SettingsRepository : ISettingsRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        
 
         public SettingsRepository(ApplicationDbContext applicationDbContext)
         {

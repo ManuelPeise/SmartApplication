@@ -1,11 +1,11 @@
 ﻿using Data.AppContext;
 using Data.ContextAccessor;
+using Data.ContextAccessor.Interfaces;
 using Data.Shared;
 using Data.Shared.Logging;
 using Logic.Settings.Extensions;
 using Logic.Settings.Interfaces;
 using Logic.Shared;
-using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;

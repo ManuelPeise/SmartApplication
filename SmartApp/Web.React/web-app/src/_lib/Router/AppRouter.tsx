@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PageLayout from "./PageLayout";
 import LoginPage from "src/Pages/Auth/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
-import LogPageContainer from "src/_Stacks/_Administration/_Logging/LogPageContainer";
+import LogPageContainer from "src/Pages/Administration/Logging/LogPageContainer";
 import { UserRoleEnum } from "../_enums/UserRoleEnum";
 import { browserRoutes } from "./RouterUtils";
 import Home from "src/_Stacks/PublicStack/Home";

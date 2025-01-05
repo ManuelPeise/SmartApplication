@@ -1,6 +1,6 @@
 import React from "react";
 import LogPage from "./LogPage";
-import { LogMessage } from "../_types/logMessage";
+import { LogMessage } from "./Types/logMessage";
 import { useApi } from "src/_hooks/useApi";
 
 const LogPageContainer: React.FC = (props) => {

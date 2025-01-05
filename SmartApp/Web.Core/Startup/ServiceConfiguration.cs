@@ -3,13 +3,13 @@ using Data.ContextAccessor;
 using Data.ContextAccessor.Interfaces;
 using Data.Identity;
 using Logic.Administration;
+using Logic.Administration.Interfaces;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
 using Logic.Settings;
 using Logic.Settings.Interfaces;
 using Logic.Shared.Clients;
 using Logic.Shared.Interfaces;
-using Logic.Shared.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -47,8 +47,11 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<IIdentityService, IdentityService>();
             builder.Services.AddScoped<ILogMessageService, LogMessageService>();
             builder.Services.AddScoped<IEmailClient, EmailClient>();
+            builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
             builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
+            builder.Services.AddScoped<IAdministrationRepository, AdministrationRepository>();
             builder.Services.AddScoped<IEmailAccountSettingsService, EmailAccountSettingsService>();
+            builder.Services.AddScoped<IAccessRightAdministrationService, AccessRightAdministrationService>();
 
             ConfigureOptions(builder);
 
