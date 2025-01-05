@@ -32,3 +32,32 @@ export type AuthContextProps = {
   onLogout: (userId: number) => Promise<boolean>;
   onRegister: (model: AccountRequest) => Promise<boolean>;
 };
+
+export type UserAccessRightModel = {
+  userId: number;
+  userName?: string;
+  accessRights: AccessRight[];
+};
+
+export type AccessRight = {
+  id: number;
+  name: string;
+  canView: boolean;
+  canEdit: boolean;
+  deny: boolean;
+};
+
+export type AccessRightValues = Pick<
+  AccessRight,
+  "canView" | "deny" | "canEdit"
+>;
+
+export type AccessRightContextProps = {
+  accessRights: UserAccessRightModel | null;
+  userHasAssess: (name: string, value: keyof AccessRightValues) => boolean;
+  getAccessRight: (name: string) => {
+    deny: boolean;
+    canView: boolean;
+    canEdit: boolean;
+  };
+};

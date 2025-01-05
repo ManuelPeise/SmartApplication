@@ -36,13 +36,13 @@ function getRequestUrl(
     return url;
   }
 
-  const uri = new URL(url);
+  let requestParameter = "";
 
-  Object.keys(params).forEach((key) =>
-    uri.searchParams.append(key, params[key])
+  Object.keys(params).forEach(
+    (key) => (requestParameter += `${key}=${params[key]}`)
   );
 
-  return uri.toString();
+  return `${url}?${requestParameter}`;
 }
 
 function sendGetRequest<TModel>(

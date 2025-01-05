@@ -11,7 +11,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public bool CanViev { get; set; }
+        public bool CanView { get; set; }
         public bool CanEdit { get; set; }
         public bool Deny { get; set; }
     }

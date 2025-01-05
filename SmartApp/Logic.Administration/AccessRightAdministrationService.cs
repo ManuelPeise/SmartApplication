@@ -48,7 +48,7 @@ namespace Logic.Administration
                         Id = right.AccessRightId,
                         Name = accessRight.Name,
                         Deny = right.Deny,
-                        CanViev = right.View,
+                        CanView = right.View,
                         CanEdit = right.Edit
                     });
                 }
@@ -118,7 +118,7 @@ namespace Logic.Administration
                             Id = right.AccessRightId,
                             Name = accessRight.Name,
                             Deny = right.Deny,
-                            CanViev = right.View,
+                            CanView = right.View,
                             CanEdit = right.Edit
                         });
                     }
