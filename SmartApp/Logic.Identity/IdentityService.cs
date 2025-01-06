@@ -52,8 +52,9 @@ namespace Logic.Identity
 
                 await _administrationRepository.IdentityRepository.UserCredentialsRepository.AddOrUpdate(user.UserCredentials, x => x.Id == user.UserCredentials.Id);
 
-                await _administrationRepository.SaveChanges();
+                await _administrationRepository.IdentityRepository.SaveChanges();
 
+                response = jwt;
                 return response;
             }
 
@@ -109,21 +110,22 @@ namespace Logic.Identity
                     RoleId = (int)userRoleId,
                 }, usr => usr.Email.ToLower() == request.Email.ToLower());
 
+                await _administrationRepository.IdentityRepository.SaveChanges();
 
                 if (entity != null)
                 {
-                    var accessRightEntities = await _administrationRepository.AccessRightRepository.GetAllAsync();
+                    var accessRightEntities = await _administrationRepository.IdentityRepository.AccessRightRepository.GetAllAsync();
 
                     foreach (var right in AccessRights.AvailableAccessRights)
                     {
-                        var accessRight = accessRightEntities.FirstOrDefault(r => r.Name == right);
+                        var accessRight = accessRightEntities.FirstOrDefault(r => r.Name == right.Key);
 
                         if (accessRight == null)
                         {
                             continue;
                         }
 
-                        await _administrationRepository.UserAccessRightRepository.Add(new UserAccessRightEntity
+                        await _administrationRepository.IdentityRepository.UserAccessRightRepository.Add(new UserAccessRightEntity
                         {
                             UserId = entity.Id,
                             AccessRightId = accessRight.Id,
@@ -134,7 +136,8 @@ namespace Logic.Identity
                     }
                 }
 
-                await _administrationRepository.SaveChanges();
+                await _administrationRepository.IdentityRepository.SaveChanges();
+               
 
                 return true;
             }

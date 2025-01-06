@@ -19,6 +19,140 @@ namespace Data.Identity.Migrations
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("Data.Shared.AccessRights.AccessRightEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Group")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccessRights");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(6118),
+                            CreatedBy = "System",
+                            Group = "Administration",
+                            Name = "UserAdministration"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(6124),
+                            CreatedBy = "System",
+                            Group = "Administration",
+                            Name = "MessageLog"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(6126),
+                            CreatedBy = "System",
+                            Group = "Settings",
+                            Name = "EmailAccountSettings"
+                        });
+                });
+
+            modelBuilder.Entity("Data.Shared.AccessRights.UserAccessRightEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccessRightId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Deny")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Edit")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("View")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccessRightId");
+
+                    b.ToTable("UserAccessRights");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessRightId = 1,
+                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(8228),
+                            CreatedBy = "System",
+                            Deny = false,
+                            Edit = true,
+                            UserId = 1,
+                            View = true
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessRightId = 2,
+                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(8234),
+                            CreatedBy = "System",
+                            Deny = false,
+                            Edit = true,
+                            UserId = 1,
+                            View = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccessRightId = 3,
+                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(8236),
+                            CreatedBy = "System",
+                            Deny = false,
+                            Edit = true,
+                            UserId = 1,
+                            View = true
+                        });
+                });
+
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserCredentials", b =>
                 {
                     b.Property<int>("Id")
@@ -56,12 +190,12 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318),
+                            CreatedAt = new DateTime(2025, 1, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(6209),
                             CreatedBy = "System",
-                            ExpiresAt = new DateTime(2025, 4, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318),
+                            ExpiresAt = new DateTime(2025, 4, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(6209),
                             Password = "Am1I3JdgO3aS/VUSZ8kfKQ==",
                             RefreshToken = "",
-                            UpdatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 640, DateTimeKind.Local).AddTicks(8318),
+                            UpdatedAt = new DateTime(2025, 1, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(6209),
                             UpdatedBy = "System"
                         });
                 });
@@ -118,7 +252,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 641, DateTimeKind.Local).AddTicks(218),
+                            CreatedAt = new DateTime(2025, 1, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(8150),
                             CreatedBy = "System",
                             CredentialsId = 1,
                             Email = "admin.user@gmx.de",
@@ -126,7 +260,7 @@ namespace Data.Identity.Migrations
                             IsActive = true,
                             LastName = "User",
                             RoleId = 2,
-                            UpdatedAt = new DateTime(2025, 1, 5, 19, 47, 39, 641, DateTimeKind.Local).AddTicks(218),
+                            UpdatedAt = new DateTime(2025, 1, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(8150),
                             UpdatedBy = "System"
                         });
                 });
@@ -164,6 +298,17 @@ namespace Data.Identity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("Data.Shared.AccessRights.UserAccessRightEntity", b =>
+                {
+                    b.HasOne("Data.Shared.AccessRights.AccessRightEntity", "AccessRight")
+                        .WithMany()
+                        .HasForeignKey("AccessRightId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AccessRight");
                 });
 
             modelBuilder.Entity("Data.Shared.Identity.Entities.UserIdentity", b =>

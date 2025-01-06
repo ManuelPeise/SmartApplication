@@ -28,6 +28,12 @@ export const getSideMenuItems = (): SideMenuEntry[] => {
           requiredRole: UserRoleEnum.Admin,
           childItems: null,
         },
+        {
+          displayNameRecourceKey: "common.labelUserAdministration",
+          route: browserRoutes.userAdministration,
+          requiredRole: UserRoleEnum.Admin,
+          childItems: null,
+        },
       ],
     },
     {

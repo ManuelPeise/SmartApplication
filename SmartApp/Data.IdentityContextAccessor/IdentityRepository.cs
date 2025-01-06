@@ -1,6 +1,7 @@
 ﻿using Data.ContextAccessor.Interfaces;
 using Data.Identity;
 using Data.Shared;
+using Data.Shared.AccessRights;
 using Data.Shared.Identity.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ namespace Data.ContextAccessor
         public RepositoryBase<UserIdentity> UserIdentityRepository => new RepositoryBase<UserIdentity>(_identityDbContext, _contextAccessor);
         public RepositoryBase<UserCredentials> UserCredentialsRepository => new RepositoryBase<UserCredentials>(_identityDbContext, _contextAccessor);
         public RepositoryBase<UserRole> UserRoleRepository => new RepositoryBase<UserRole>(_identityDbContext, _contextAccessor);
+        public RepositoryBase<AccessRightEntity> AccessRightRepository => new RepositoryBase<AccessRightEntity>(_identityDbContext, _contextAccessor);
+        public RepositoryBase<UserAccessRightEntity> UserAccessRightRepository => new RepositoryBase<UserAccessRightEntity>(_identityDbContext, _contextAccessor);
         public IClaimsAccessor ClaimsAccessor => _claimsAccessor;
         public async Task SaveChanges()
         {

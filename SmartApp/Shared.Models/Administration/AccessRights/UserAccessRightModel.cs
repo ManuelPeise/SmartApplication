@@ -10,6 +10,7 @@
     public class AccessRight
     {
         public int Id { get; set; }
+        public string Group { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public bool CanView { get; set; }
         public bool CanEdit { get; set; }

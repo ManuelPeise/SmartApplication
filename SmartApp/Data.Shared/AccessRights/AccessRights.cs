@@ -2,16 +2,18 @@
 {
     public static class AccessRights
     {
-        public static List<string> AvailableAccessRights = new List<string>
+        public static Dictionary<string, string> AvailableAccessRights = new Dictionary<string, string>
         {
-            Administration,
-            UserAdministration,
-            Settings,
-            EmailAccountSettings
+            { UserAdministration,  Administration },
+            { MessageLog,  Administration },
+            { EmailAccountSettings,  Settings }
+
+
         };
 
         public const string Administration = "Administration";
         public const string UserAdministration = "UserAdministration";
+        public const string MessageLog = "MessageLog";
         public const string Settings = "Settings";
         public const string EmailAccountSettings = "EmailAccountSettings";
     }

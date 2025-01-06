@@ -9,6 +9,7 @@ import { browserRoutes } from "./RouterUtils";
 import Home from "src/_Stacks/PublicStack/Home";
 import EmailAccountSettingsPageInitializationContainer from "src/Pages/Settings/EmailAccountSettings/EmailAccountSettingsPageContainer";
 import RegisterPage from "src/Pages/Auth/RegisterPage";
+import UserAdministrationPageContainer from "src/Pages/Administration/UserAdministration/UserAdministrationPageContainer";
 
 const AppRouter: React.FC = () => {
   return (
@@ -38,6 +39,10 @@ const AppRouter: React.FC = () => {
             }
           >
             <Route path={browserRoutes.log} Component={LogPageContainer} />
+            <Route
+              path={browserRoutes.userAdministration}
+              Component={UserAdministrationPageContainer}
+            />
             <Route
               path={browserRoutes.emailAccountSettings}
               Component={EmailAccountSettingsPageInitializationContainer}

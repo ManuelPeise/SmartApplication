@@ -1,9 +1,11 @@
 ﻿using Logic.Administration.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models.Administration.AccessRights;
 
 namespace Service.Api.Administration
 {
+    [Authorize]
     public class UserAccessRightController: ApiControllerBase
     {
         private readonly IAccessRightAdministrationService _accessRightAdministrationService;

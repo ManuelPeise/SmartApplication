@@ -3,5 +3,6 @@ export const browserRoutes = {
   login: "/login",
   register: "/register",
   log: "/administration/log",
+  userAdministration: "/administration/user",
   emailAccountSettings: "/settings/email-account-settings",
 };

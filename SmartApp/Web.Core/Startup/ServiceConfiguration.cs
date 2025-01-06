@@ -52,6 +52,7 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
             builder.Services.AddScoped<IAdministrationRepository, AdministrationRepository>();
             builder.Services.AddScoped<IEmailAccountSettingsService, EmailAccountSettingsService>();
+            builder.Services.AddScoped<IUserAdministrationService, UserAdministrationService>();
             builder.Services.AddScoped<IAccessRightAdministrationService, AccessRightAdministrationService>();
 
             ConfigureOptions(builder);

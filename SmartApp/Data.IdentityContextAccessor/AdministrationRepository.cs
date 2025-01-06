@@ -1,5 +1,6 @@
 ﻿using Data.AppContext;
 using Data.ContextAccessor.Interfaces;
+using Data.Identity;
 using Data.Shared;
 using Data.Shared.AccessRights;
 using Data.Shared.Logging;
@@ -11,13 +12,15 @@ namespace Data.ContextAccessor
     public class AdministrationRepository: IAdministrationRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IdentityDbContext _identityDbContext;
         private readonly IIdentityRepository _identityRepository;
         private readonly ILogRepository _logRepository;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IClaimsAccessor _claimsAccessor;
-        public AdministrationRepository(ApplicationDbContext applicationDbContext, IIdentityRepository identityRepository, ILogRepository logRepository, IHttpContextAccessor contectAccessor, IClaimsAccessor claimsAccessor)
+        public AdministrationRepository(ApplicationDbContext applicationDbContext, IdentityDbContext identityDbContext, IIdentityRepository identityRepository, ILogRepository logRepository, IHttpContextAccessor contectAccessor, IClaimsAccessor claimsAccessor)
         {
             _applicationDbContext = applicationDbContext;
+            _identityDbContext = identityDbContext;
             _identityRepository = identityRepository;
             _logRepository = logRepository;
             _contextAccessor = contectAccessor;
@@ -25,8 +28,6 @@ namespace Data.ContextAccessor
         }
 
         public RepositoryBase<LogMessageEntity> LogMessageRepository =>  new RepositoryBase<LogMessageEntity>(_applicationDbContext, _contextAccessor);
-        public RepositoryBase<AccessRightEntity> AccessRightRepository => new RepositoryBase<AccessRightEntity>(_applicationDbContext, _contextAccessor);
-        public RepositoryBase<UserAccessRightEntity> UserAccessRightRepository => new RepositoryBase<UserAccessRightEntity>(_applicationDbContext, _contextAccessor);
         public IIdentityRepository IdentityRepository => _identityRepository;
         public ILogRepository LogRepository => _logRepository;
         public IClaimsAccessor ClaimsAccessor => _claimsAccessor;

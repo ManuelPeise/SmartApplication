@@ -41,6 +41,7 @@ export type UserAccessRightModel = {
 
 export type AccessRight = {
   id: number;
+  group: string;
   name: string;
   canView: boolean;
   canEdit: boolean;

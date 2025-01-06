@@ -4,6 +4,7 @@
   "labelConfiguration": "Configuration",
   "labelCreateAccount": "Create your account",
   "labelEmail": "Email",
+  "labelEmailAccountSettings": "Email Account Settings",
   "labelFirstName": "Firstname",
   "labelLastName": "Lastname",
   "labelLogging": "Logging",
@@ -14,5 +15,5 @@
   "labelRegister": "Register",
   "labelSave": "Save",
   "labelSettings": "Settings",
-  "labelEmailAccountSettings": "Email Account Settings"
+  "labelUserAdministration": "User Administration"
 }

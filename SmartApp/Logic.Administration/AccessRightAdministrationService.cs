@@ -27,7 +27,7 @@ namespace Logic.Administration
 
             try
             {
-                var userAccessRights = await _administrationRepository.UserAccessRightRepository.GetAll(x => x.UserId == userId) ?? new List<UserAccessRightEntity>();
+                var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAll(x => x.UserId == userId) ?? new List<UserAccessRightEntity>();
 
                 if (!userAccessRights.Any())
                 {
@@ -36,7 +36,7 @@ namespace Logic.Administration
 
                 foreach (var right in userAccessRights)
                 {
-                    var accessRight = await _administrationRepository.AccessRightRepository.GetSingle(x => x.Id == right.AccessRightId);
+                    var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetSingle(x => x.Id == right.AccessRightId);
 
                     if (accessRight == null)
                     {
@@ -47,6 +47,7 @@ namespace Logic.Administration
                     {
                         Id = right.AccessRightId,
                         Name = accessRight.Name,
+                        Group = accessRight.Group,
                         Deny = right.Deny,
                         CanView = right.View,
                         CanEdit = right.Edit
@@ -95,7 +96,7 @@ namespace Logic.Administration
                         AccessRights = new List<AccessRight>()
                     };
 
-                    var userAccessRights = await _administrationRepository.UserAccessRightRepository.GetAll(x => x.UserId == userEntity.Id) ?? new List<UserAccessRightEntity>();
+                    var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAll(x => x.UserId == userEntity.Id) ?? new List<UserAccessRightEntity>();
 
                     if (!userAccessRights.Any())
                     {
@@ -106,7 +107,7 @@ namespace Logic.Administration
 
                     foreach (var right in userAccessRights)
                     {
-                        var accessRight = await _administrationRepository.AccessRightRepository.GetSingle(x => x.Id == right.AccessRightId);
+                        var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetSingle(x => x.Id == right.AccessRightId);
 
                         if (accessRight == null)
                         {
@@ -116,6 +117,7 @@ namespace Logic.Administration
                         model.AccessRights.Add(new AccessRight
                         {
                             Id = right.AccessRightId,
+                            Group = accessRight.Group,
                             Name = accessRight.Name,
                             Deny = right.Deny,
                             CanView = right.View,

@@ -16,7 +16,9 @@ namespace Service.Api.Identity
         [HttpPost(Name = "Authenticate")]
         public async Task<string> Authenticate([FromBody] AuthenticationRequest request)
         {
-            return await _identityService.AuthenticateAsync(request);
+            var response = await _identityService.AuthenticateAsync(request);
+
+            return response;
         }
 
         [HttpGet(Name = "Logout")]

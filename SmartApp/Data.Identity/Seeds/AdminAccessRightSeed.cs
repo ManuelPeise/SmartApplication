@@ -1,23 +1,28 @@
 ﻿using Data.Shared.AccessRights;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Data.AppContext.Configurations
+namespace Data.Identity.Seeds
 {
-
-    public class AdminAccessRightConfiguration : IEntityTypeConfiguration<UserAccessRightEntity>
+    public class AdminAccessRightSeed : IEntityTypeConfiguration<UserAccessRightEntity>
     {
         public void Configure(EntityTypeBuilder<UserAccessRightEntity> builder)
         {
             var entities = new List<UserAccessRightEntity>();
+            var keys = AccessRights.AvailableAccessRights.Keys.ToList();
 
-            for (int i = 0; i < AccessRights.AvailableAccessRights.Count; i++)
+            foreach (var key in keys)
             {
                 entities.Add(new UserAccessRightEntity
                 {
-                    Id = i + 1,
+                    Id = keys.IndexOf(key) + 1,
                     UserId = 1,
-                    AccessRightId = i + 1,
+                    AccessRightId = keys.IndexOf(key) + 1,
                     Deny = false,
                     View = true,
                     Edit = true,
