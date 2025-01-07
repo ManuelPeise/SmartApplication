@@ -38,7 +38,7 @@ export const useFormState = <T>(
 
   React.useEffect(() => {
     originalState.current = initialState;
-    dispatch({ type: "UPDATE", payload: initialState });
+    // dispatch({ type: "UPDATE", payload: initialState });
   }, [initialState]);
 
   const isModified = React.useMemo((): boolean => {
@@ -86,9 +86,9 @@ export const useFormState = <T>(
   }, [originalState, dispatch]);
 
   React.useEffect(() => {
-    if (initialState) {
-      dispatch({ type: "UPDATE", payload: initialState });
-    }
+    // if (initialState) {
+    //   dispatch({ type: "UPDATE", payload: initialState });
+    // }
   }, [initialState]);
 
   return {

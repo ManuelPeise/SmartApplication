@@ -5,5 +5,6 @@ namespace Logic.Administration.Interfaces
     public interface IUserAdministrationService
     {
         Task<List<UserAdministrationUserModel>> LoadUsers();
+        Task<bool> UpdateUser(UserAdministrationUserModel model);
     }
 }

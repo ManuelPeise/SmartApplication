@@ -1,6 +1,15 @@
 import React from "react";
 import { UserAdministrationUserModel } from "../Types/UserAdministrationUserModel";
-import { Box, List, Switch } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  List,
+  Switch,
+} from "@mui/material";
 import ListItemInput from "src/_components/Lists/ListItemInput";
 import FormButton from "src/_components/Buttons/FormButton";
 import { useI18n } from "src/_hooks/useI18n";
@@ -9,57 +18,84 @@ import { AccessRight } from "src/_lib/_types/auth";
 import UserRightList from "./UserRightList";
 import { groupByKey, sortBy } from "src/_lib/utils";
 import { useAccessRights } from "src/_hooks/useAccessRights";
+import { useAuth } from "src/_hooks/useAuth";
+import { useEditFormState } from "src/_hooks/useEditFormState";
 
 interface IProps {
   selectedUserId: number;
+  tempUserId: number;
   user: UserAdministrationUserModel;
-  isOwnAccount: boolean;
+  onResetTempUserId: React.Dispatch<React.SetStateAction<number>>;
+  onSelectedUserChanged: (id: number) => void;
+  onUpdateUser: (model: UserAdministrationUserModel) => Promise<boolean>;
+  onUpdateUsersState: (models: UserAdministrationUserModel) => void;
 }
 
 const UserDataDetails: React.FC<IProps> = (props) => {
-  const { selectedUserId, user, isOwnAccount } = props;
+  const {
+    selectedUserId,
+    tempUserId,
+    user,
+    onResetTempUserId,
+    onUpdateUser,
+    onUpdateUsersState,
+    onSelectedUserChanged,
+  } = props;
+
+  const { authenticationState } = useAuth();
   const { getResource } = useI18n();
   const originalState = React.useRef(user);
+
+  const {
+    modelState,
+    formState,
+    handleRevertChangesAndCloseDialog,
+    handleModelStateChanged,
+    handleCloseDialog,
+  } = useEditFormState<UserAdministrationUserModel>(user, tempUserId);
+
   const { getAccessRight } = useAccessRights();
 
-  const readOnly = getAccessRight("UserAdministration").canEdit || isOwnAccount;
-  const [intermediateState, setInterMediateState] =
-    React.useState<UserAdministrationUserModel>(user);
-
-  const handleChanged = React.useCallback(
-    (update: Partial<UserAdministrationUserModel>) => {
-      setInterMediateState({ ...intermediateState, ...update });
-    },
-    [intermediateState]
-  );
+  const readOnly =
+    authenticationState.jwtData.userId.toString() === user.userId.toString() ||
+    !getAccessRight("UserAdministration").canEdit;
 
   const handleAccessRightChanged = React.useCallback(
     (accessRightUpdate: AccessRight, id: number) => {
-      const accessRights = intermediateState.accessRights.slice();
+      const accessRights = modelState.accessRights.slice();
 
       const index = accessRights.findIndex((x) => x.id === id);
 
       if (index !== -1) {
         accessRights[index] = accessRightUpdate;
 
-        setInterMediateState({
-          ...intermediateState,
+        handleModelStateChanged({
+          ...modelState,
           accessRights: accessRights,
         });
       }
     },
-    [intermediateState]
+    [modelState, handleModelStateChanged]
   );
 
   const handleReset = React.useCallback(() => {
-    setInterMediateState(originalState.current);
-  }, [originalState]);
+    handleModelStateChanged(originalState.current);
+  }, [originalState, handleModelStateChanged]);
+
+  const handleSave = React.useCallback(async () => {
+    await onUpdateUser(modelState).then((res) => {
+      if (res === true) {
+        originalState.current = modelState;
+        onUpdateUsersState(modelState);
+      }
+    });
+  }, [modelState, onUpdateUser, onUpdateUsersState]);
 
   const userRights = React.useMemo(() => {
-    const sortedRights = sortBy(intermediateState.accessRights, "group", "dsc");
+    const sortedRights = sortBy(modelState.accessRights, "group", "dsc");
 
     return groupByKey(sortedRights, "group");
-  }, [intermediateState?.accessRights]);
+  }, [modelState?.accessRights]);
 
   if (selectedUserId !== user.userId) {
     return null;
@@ -93,20 +129,20 @@ const UserDataDetails: React.FC<IProps> = (props) => {
         >
           <Switch
             disabled={readOnly}
-            checked={intermediateState.isActive}
+            checked={modelState.isActive}
             color="success"
             onChange={(e) =>
-              handleChanged({ isActive: e.currentTarget.checked })
+              handleModelStateChanged({ isActive: e.currentTarget.checked })
             }
           />
         </ListItemInput>
         <ListItemInput label={getResource("administration.descriptionIsAdmin")}>
           <Switch
             disabled={readOnly}
-            checked={intermediateState.isAdmin}
+            checked={modelState.isAdmin}
             color="success"
             onChange={(e) =>
-              handleChanged({ isAdmin: e.currentTarget.checked })
+              handleModelStateChanged({ isAdmin: e.currentTarget.checked })
             }
           />
         </ListItemInput>
@@ -134,16 +170,39 @@ const UserDataDetails: React.FC<IProps> = (props) => {
         >
           <FormButton
             label={getResource("common.labelCancel")}
-            disabled={isEqual(originalState.current, intermediateState)}
+            disabled={isEqual(originalState.current, modelState)}
             onAction={handleReset}
           />
           <FormButton
             label={getResource("common.labelSave")}
-            disabled={isEqual(originalState.current, intermediateState)}
-            onAction={() => {}}
+            disabled={isEqual(originalState.current, modelState)}
+            onAction={handleSave}
           />
         </Box>
       </Box>
+      <Dialog open={formState.isModified && user.userId !== tempUserId}>
+        <DialogContent>
+          <DialogContentText>
+            {getResource("administration.labelUnsavedChanges")}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() =>
+              handleCloseDialog(onResetTempUserId.bind(null, user.userId))
+            }
+          >
+            {getResource("administration.labelClose")}
+          </Button>
+          <Button
+            onClick={() =>
+              handleRevertChangesAndCloseDialog(onSelectedUserChanged)
+            }
+          >
+            {getResource("administration.labelRevertChangesAndClose")}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

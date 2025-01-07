@@ -1,5 +1,6 @@
 ﻿using Data.ContextAccessor.Interfaces;
 using Data.Shared.AccessRights;
+using Data.Shared.Identity.Entities;
 using Data.Shared.Logging;
 using Logic.Administration.Interfaces;
 using Shared.Enums;
@@ -146,6 +147,7 @@ namespace Logic.Administration
                 return accessRightModels;
             }
         }
+
 
         #region dispose
 

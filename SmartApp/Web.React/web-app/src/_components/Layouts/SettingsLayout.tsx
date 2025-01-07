@@ -15,6 +15,7 @@ export type SettingsListItem = {
   selected: boolean;
   readonly: boolean;
   onSectionChanged: (id: number) => void;
+  onMouseOver?: (id: number) => void;
 };
 
 interface IProps extends PropsWithChildren {
@@ -24,6 +25,7 @@ interface IProps extends PropsWithChildren {
 
 const SettingsLayout: React.FC<IProps> = (props) => {
   const { children, listItems, selectedItem } = props;
+
   return (
     <Paper
       elevation={4}
@@ -47,6 +49,9 @@ const SettingsLayout: React.FC<IProps> = (props) => {
               disabled={item.selected}
               selected={item.id === selectedItem}
               onClick={item.onSectionChanged.bind(null, item.id)}
+              onMouseDown={(e) => {
+                item.onMouseOver && item.onMouseOver(item.id);
+              }}
             >
               <Typography variant="body1" sx={{ padding: "2px 4px" }}>
                 {item.label}

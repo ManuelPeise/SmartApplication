@@ -11,6 +11,7 @@
   "labelAddConfiguration": "Add Configuration",
   "labelAdministration": "Administration",
   "labelCancel": "Cancel",
+  "labelClose": "Close",
   "labelDeleteLogMessages": "Delete log messages",
   "labelDeny": "Deny",
   "labelDetails": "Details",
@@ -30,10 +31,12 @@
   "labelNone": "None",
   "labelPassword": "Password",
   "labelProviderConnectionEstablishedAtBy": "Connection established by {user} at {at} (UTC)",
+  "labelRevertChangesAndClose": "Revert changes and close",
   "labelSave": "Save",
   "labelSaveConnection": "Save Connection",
   "labelSettings": "Settings",
   "labelTestConnection": "Test Connection",
   "labelTimeStampFilter": "Date filter",
+  "labelUnsavedChanges": "Caution, there are one or more unsaved changes!",
   "labelView": "Can View"
 }

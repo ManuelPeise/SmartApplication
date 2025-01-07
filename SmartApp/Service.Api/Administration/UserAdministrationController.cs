@@ -18,5 +18,11 @@ namespace Service.Api.Administration
         {
             return await _userAdministrationService.LoadUsers();
         }
+
+        [HttpPost(Name = "UpdateUser")]
+        public async Task<bool> UpdateUser([FromBody] UserAdministrationUserModel model)
+        {
+            return await _userAdministrationService.UpdateUser(model);
+        }
     }
 }
