@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20250106082409_SeedData")]
-    partial class SeedData
+    [Migration("20250108152844_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,7 +57,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(6118),
+                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(5189),
                             CreatedBy = "System",
                             Group = "Administration",
                             Name = "UserAdministration"
@@ -65,7 +65,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(6124),
+                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(5193),
                             CreatedBy = "System",
                             Group = "Administration",
                             Name = "MessageLog"
@@ -73,7 +73,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(6126),
+                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(5195),
                             CreatedBy = "System",
                             Group = "Settings",
                             Name = "EmailAccountSettings"
@@ -125,7 +125,7 @@ namespace Data.Identity.Migrations
                         {
                             Id = 1,
                             AccessRightId = 1,
-                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(8228),
+                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(7302),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -136,7 +136,7 @@ namespace Data.Identity.Migrations
                         {
                             Id = 2,
                             AccessRightId = 2,
-                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(8234),
+                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(7306),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -147,7 +147,7 @@ namespace Data.Identity.Migrations
                         {
                             Id = 3,
                             AccessRightId = 3,
-                            CreatedAt = new DateTime(2025, 1, 6, 8, 24, 9, 671, DateTimeKind.Utc).AddTicks(8236),
+                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(7307),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -193,12 +193,12 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(6209),
+                            CreatedAt = new DateTime(2025, 1, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(5267),
                             CreatedBy = "System",
-                            ExpiresAt = new DateTime(2025, 4, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(6209),
+                            ExpiresAt = new DateTime(2025, 4, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(5267),
                             Password = "Am1I3JdgO3aS/VUSZ8kfKQ==",
                             RefreshToken = "",
-                            UpdatedAt = new DateTime(2025, 1, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(6209),
+                            UpdatedAt = new DateTime(2025, 1, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(5267),
                             UpdatedBy = "System"
                         });
                 });
@@ -230,6 +230,9 @@ namespace Data.Identity.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsNewUserRegistration")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -255,15 +258,16 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(8150),
+                            CreatedAt = new DateTime(2025, 1, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(7201),
                             CreatedBy = "System",
                             CredentialsId = 1,
                             Email = "admin.user@gmx.de",
                             FirstName = "Admin",
                             IsActive = true,
+                            IsNewUserRegistration = false,
                             LastName = "User",
                             RoleId = 2,
-                            UpdatedAt = new DateTime(2025, 1, 6, 9, 24, 9, 671, DateTimeKind.Local).AddTicks(8150),
+                            UpdatedAt = new DateTime(2025, 1, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(7201),
                             UpdatedBy = "System"
                         });
                 });

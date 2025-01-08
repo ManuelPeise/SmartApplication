@@ -5,14 +5,15 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Logic.Identity
+
+namespace Logic.Shared
 {
     public class JwtTokenGenerator
     {
         private readonly SecurityData _jwtData;
         public JwtTokenGenerator(SecurityData jwtData)
         {
-            _jwtData = jwtData; 
+            _jwtData = jwtData;
         }
 
         public (string jwtToken, string refreshToken) GenerateToken(List<Claim> claims, int expireInDays)
@@ -23,7 +24,7 @@ namespace Logic.Identity
         public ClaimsPrincipal GetPrincipalFromJwt(string jwt)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtData.Key));
-           
+
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -71,4 +72,3 @@ namespace Logic.Identity
         }
     }
 }
-

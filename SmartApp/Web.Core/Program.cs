@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Shared.Models.Identity;
 using Web.Core.Startup;
 
 var identityContext = "IdentityContext";
@@ -23,7 +24,10 @@ var baseUrl = builder.Configuration.GetRequiredSection("BaseUrl").Value ?? null;
 
 if(baseUrl != null)
 {
-    Scheduler.ExecuteScheduler(baseUrl);
+    var jwtIssuer = builder.Configuration.GetSection("Security:issuer").Get<string>();
+    var jwtKey = builder.Configuration.GetSection("Security:key").Get<string>();
+
+    Scheduler.ExecuteScheduler(baseUrl, new SecurityData { Key = jwtKey, Issuer = jwtIssuer});
 }
 
 app.Run();

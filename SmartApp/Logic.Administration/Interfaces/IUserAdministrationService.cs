@@ -6,5 +6,6 @@ namespace Logic.Administration.Interfaces
     {
         Task<List<UserAdministrationUserModel>> LoadUsers();
         Task<bool> UpdateUser(UserAdministrationUserModel model);
+        Task ActivateUsers(Func<string, string, string, Task> sendMail);
     }
 }

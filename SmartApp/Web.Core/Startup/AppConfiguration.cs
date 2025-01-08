@@ -1,4 +1,8 @@
-﻿namespace Web.Core.Startup
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+
+namespace Web.Core.Startup
 {
     public static class AppConfiguration
     {
@@ -12,6 +16,7 @@
             app.UseCors(corsPolicy);
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.Use(async (context, next) =>
             {

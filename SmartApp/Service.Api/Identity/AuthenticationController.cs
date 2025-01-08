@@ -1,4 +1,5 @@
 ﻿using Logic.Identity.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models.Identity;
 
@@ -13,6 +14,7 @@ namespace Service.Api.Identity
             _identityService = identityService;
         }
 
+        [AllowAnonymous]
         [HttpPost(Name = "Authenticate")]
         public async Task<string> Authenticate([FromBody] AuthenticationRequest request)
         {

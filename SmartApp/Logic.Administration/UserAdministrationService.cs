@@ -1,10 +1,15 @@
 ﻿using Data.ContextAccessor.Interfaces;
+using Data.Shared;
 using Data.Shared.AccessRights;
 using Data.Shared.Identity.Entities;
 using Data.Shared.Logging;
 using Logic.Administration.Interfaces;
+using Microsoft.Extensions.Options;
 using Shared.Enums;
 using Shared.Models.Administration;
+using Shared.Models.Administration.AccessRights;
+using Shared.Models.Identity;
+using System.Text;
 
 namespace Logic.Administration
 {
@@ -12,11 +17,13 @@ namespace Logic.Administration
     {
         private readonly IAccessRightAdministrationService _accessRightAdministrationService;
         private readonly IAdministrationRepository _administrationRepository;
-
-        public UserAdministrationService(IAccessRightAdministrationService accessRightAdministrationService, IAdministrationRepository administrationRepository)
+        private readonly IOptions<SecurityData> _securityData;
+       
+        public UserAdministrationService(IOptions<SecurityData> securityData, IAccessRightAdministrationService accessRightAdministrationService, IAdministrationRepository administrationRepository)
         {
             _accessRightAdministrationService = accessRightAdministrationService;
             _administrationRepository = administrationRepository;
+            _securityData = securityData;
         }
 
         public async Task<List<UserAdministrationUserModel>> LoadUsers()
@@ -64,7 +71,6 @@ namespace Logic.Administration
             return userModels;
         }
 
-
         public async Task<bool> UpdateUser(UserAdministrationUserModel model)
         {
             try
@@ -78,9 +84,9 @@ namespace Logic.Administration
                 entity.RoleId = await LoadUserRoleId(_administrationRepository.IdentityRepository.UserRoleRepository,
                     model.IsAdmin ? UserRoleEnum.Admin : UserRoleEnum.User);
 
-                var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAll(x => x.UserId == entity.Id)?? new List<UserAccessRightEntity>();
+                var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAll(x => x.UserId == entity.Id) ?? new List<UserAccessRightEntity>();
 
-                foreach(var right in model.AccessRights)
+                foreach (var right in model.AccessRights)
                 {
                     var rightEntity = userAccessRights.FirstOrDefault(x => x.UserId == entity.Id && x.AccessRightId == right.Id);
 
@@ -98,7 +104,7 @@ namespace Logic.Administration
                     Message = $"User data and rights of user id [{model.UserId}] updated.",
                     ExceptionMessage = string.Empty,
                     MessageType = LogMessageTypeEnum.Info,
-                    Module = nameof(AccessRightAdministrationService),
+                    Module = nameof(UserAdministrationService),
                     TimeStamp = DateTime.UtcNow,
                     CreatedBy = "System",
                     CreatedAt = DateTime.UtcNow,
@@ -115,7 +121,7 @@ namespace Logic.Administration
                     Message = $"Could not update user rights of user {model.UserId}.",
                     ExceptionMessage = exception.Message,
                     MessageType = LogMessageTypeEnum.Error,
-                    Module = nameof(AccessRightAdministrationService),
+                    Module = nameof(UserAdministrationService),
                     TimeStamp = DateTime.UtcNow,
                     CreatedBy = "System",
                     CreatedAt = DateTime.UtcNow,
@@ -126,6 +132,72 @@ namespace Logic.Administration
                 return false;
             }
         }
+
+        public async Task ActivateUsers(Func<string, string, string, Task> sendMail)
+        {
+            try
+            {
+                var userEntities = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetAll(x => x.IsNewUserRegistration) ?? new List<UserIdentity>();
+                
+                var defaultActivatedUserRights = AccessRights.DefaultActivatedUserAccessRights;
+
+                if (userEntities.Any())
+                {
+                    var passwordHandler = new PasswordHandler(_securityData);
+
+                    foreach (var entity in userEntities)
+                    {
+                        await LoadCredentials(_administrationRepository.IdentityRepository.UserCredentialsRepository, entity.CredentialsId);
+
+                        if (entity.UserCredentials != null)
+                        {
+                            var generatedPassword = GenerateRandomPassword(12);
+
+                            entity.UserCredentials.Password = passwordHandler.Encrypt(generatedPassword);
+                            entity.IsNewUserRegistration = false;
+
+                            var userRightEntities = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAll(x => x.UserId == entity.Id);
+
+                            if (userRightEntities != null && userRightEntities.Any())
+                            {
+                                foreach (var right in userRightEntities)
+                                {
+                                    var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetSingle(x => x.Id == right.AccessRightId);
+
+                                    if (accessRight != null && defaultActivatedUserRights.ContainsKey(accessRight.Name))
+                                    {
+                                        right.Deny = defaultActivatedUserRights[accessRight.Name].Deny;
+                                        right.View = defaultActivatedUserRights[accessRight.Name].CanView;
+                                        right.Edit = defaultActivatedUserRights[accessRight.Name].CanEdit;
+                                    }
+                                }
+                            }
+
+                            await _administrationRepository.IdentityRepository.SaveChanges();
+
+                            await sendMail(entity.Email, "Your account is activated now!", GetAccountActivationBody(entity.FirstName, entity.Email, generatedPassword));
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                await _administrationRepository.LogRepository.AddMessage(new LogMessageEntity
+                {
+                    Message = $"Could not activate users.",
+                    ExceptionMessage = exception.Message,
+                    MessageType = LogMessageTypeEnum.Error,
+                    Module = nameof(UserAdministrationService),
+                    TimeStamp = DateTime.UtcNow,
+                    CreatedBy = "System",
+                    CreatedAt = DateTime.UtcNow,
+                });
+
+                await _administrationRepository.SaveChanges();
+            }
+        }
+
+
         private async Task LoadUserRole(IRepositoryBase<UserRole> repository, int roleId)
         {
             await repository.GetSingle(x => x.Id == roleId);
@@ -136,6 +208,37 @@ namespace Logic.Administration
             var role = await repository.GetSingle(x => x.RoleType == roleType);
 
             return role.Id;
+        }
+
+        private async Task LoadCredentials(IRepositoryBase<UserCredentials> credentialsRepository, int credentialsId)
+        {
+            await credentialsRepository.GetFirstOrDefault(cred => cred.Id == credentialsId);
+        }
+
+        private string GenerateRandomPassword(int length)
+        {
+            const string validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+            StringBuilder password = new StringBuilder();
+            Random random = new Random();
+
+            for (int i = 0; i < length; i++)
+            {
+                int index = random.Next(validChars.Length);
+                password.Append(validChars[index]);
+            }
+
+            return password.ToString();
+        }
+
+        private string GetAccountActivationBody(string name, string email, string password)
+        {
+            return $"Dear {name},{Environment.NewLine}{Environment.NewLine}" +
+                $"your Smart-Application account was been activated now!{Environment.NewLine}{Environment.NewLine}" +
+                $"Your credentials:{Environment.NewLine}{Environment.NewLine}" +
+                $"Username: {email}{Environment.NewLine}" +
+                $"Password: {password}{Environment.NewLine}{Environment.NewLine}" +
+                $"Best regards{Environment.NewLine}{Environment.NewLine}" +
+                $"Your Smart-Application Team";
         }
     }
 }

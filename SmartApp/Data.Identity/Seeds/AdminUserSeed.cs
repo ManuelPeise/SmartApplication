@@ -21,6 +21,7 @@ namespace Data.Identity.Seeds
                 FirstName = "Admin",
                 LastName = "User",
                 Email = "admin.user@gmx.de",
+                IsNewUserRegistration = false,
                 IsActive = true,
                 CredentialsId = 1,
                 RoleId = 2,

@@ -1,28 +1,38 @@
 ﻿using Quartz.Impl;
 using Quartz;
 using System.Net;
+using System.Security.Claims;
+using Logic.Shared;
+using Microsoft.Extensions.Options;
+using Shared.Models.Identity;
+using System.Net.Http.Headers;
 
 namespace Web.Core.Startup
 {
     public static class Scheduler
     {
-        private static string EmailClassificationTrainingDataCollector = "email-classification-training-data-collector";
+        //private static string EmailClassificationTrainingDataCollector = "email-classification-training-data-collector";
+        private static string UserActivationTask = "user-activation-task";
 
-        public static void ExecuteScheduler(string baseUrl)
+        public static void ExecuteScheduler(string baseUrl, SecurityData securityData)
         {
             var scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
 
+#if !DEBUG
             AddJob(scheduler,
-                GetJobDetails(
-                    EmailClassificationTrainingDataCollector,
-                    new Dictionary<string, object>
-                    {
-                        { "Url", $"{baseUrl}api/EmailClassification/CollectTrainingData"}
-                    }),
-                GetTrigger(
-                    $"{EmailClassificationTrainingDataCollector}-trigger",
-                    24,
-                    "5 6 * * * ?"));
+               GetJobDetails(
+                   UserActivationTask,
+                   new Dictionary<string, object>
+                   {
+                        { "Url", $"{baseUrl}api/UserActivation/ActivateUsers"},
+                        { "SecurityData", securityData}
+                   }),
+               GetTrigger(
+                   $"{UserActivationTask}-trigger",
+                   1,
+                   "* 15 * * * ?"));
+#endif
+          
 
 
             scheduler.Start();
@@ -46,11 +56,8 @@ namespace Web.Core.Startup
         {
             return TriggerBuilder.Create()
                 .WithIdentity(name)
-# if DEBUG
-                .WithSimpleSchedule(x => x.WithIntervalInMinutes(5))
-#else
+                //.WithSimpleSchedule(x => x.WithIntervalInMinutes(1))
                 .WithCronSchedule(cronExpression)
-#endif
                 .StartNow()
                 .Build();
 
@@ -61,22 +68,40 @@ namespace Web.Core.Startup
 
     public class WebJob : IJob
     {
+        public SecurityData SecurityData { get; set; }
         public string Url { get; set; } = string.Empty;
         public string Params { get; set; } = string.Empty;
 
         public async Task Execute(IJobExecutionContext context)
         {
+            var jtw = GetMaintananceUserToken(SecurityData);
+
             using (var client = new HttpClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", $"{jtw}");
+
                 var requestMessage = new HttpRequestMessage
                 {
-                    Method = HttpMethod.Get,
+                    Method = HttpMethod.Post,
                     RequestUri = new Uri(Url + Params),
                     Version = HttpVersion.Version11
                 };
 
                 await client.SendAsync(requestMessage);
             }
+        }
+
+        private string GetMaintananceUserToken(SecurityData securityData)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "MaintananceUser"),
+                new Claim("userRole", "MaintananceUser")
+            };
+
+            var tokenGenerator = new JwtTokenGenerator(securityData);
+
+            return tokenGenerator.GenerateJwtToken(claims, 1);
         }
     }
 }

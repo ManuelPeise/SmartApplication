@@ -8,12 +8,15 @@ using Logic.Identity;
 using Logic.Identity.Interfaces;
 using Logic.Settings;
 using Logic.Settings.Interfaces;
+using Logic.Shared;
 using Logic.Shared.Clients;
 using Logic.Shared.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Models.Identity;
+using Shared.Models.Settings;
 using System.Text;
 
 namespace Web.Core.Startup
@@ -41,6 +44,8 @@ namespace Web.Core.Startup
 
                 opt.UseMySQL(applicationContextConnectionString);
             });
+
+            builder.Services.AddScoped<WebJob>();
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IClaimsAccessor, ClaimsAccessor>();
@@ -108,6 +113,7 @@ namespace Web.Core.Startup
         private static void ConfigureOptions(WebApplicationBuilder builder)
         {
             builder.Services.Configure<SecurityData>(builder.Configuration.GetSection("Security"));
+            builder.Services.Configure<AppSettingsModel>(builder.Configuration.GetSection("AppSettings"));
         }
     }
 }

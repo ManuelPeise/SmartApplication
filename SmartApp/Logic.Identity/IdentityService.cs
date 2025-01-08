@@ -3,6 +3,7 @@ using Data.Shared;
 using Data.Shared.AccessRights;
 using Data.Shared.Identity.Entities;
 using Logic.Identity.Interfaces;
+using Logic.Shared;
 using Microsoft.Extensions.Options;
 using Shared.Enums;
 using Shared.Models.Identity;
@@ -102,10 +103,11 @@ namespace Logic.Identity
                     LastName = request.LastName,
                     Email = request.Email,
                     IsActive = false,
+                    IsNewUserRegistration = true,
                     UserCredentials = new UserCredentials
                     {
                         RefreshToken = "",
-                        Password = _passwordHandler.Encrypt(request.Password)
+                        Password = string.Empty
                     },
                     RoleId = (int)userRoleId,
                 }, usr => usr.Email.ToLower() == request.Email.ToLower());
