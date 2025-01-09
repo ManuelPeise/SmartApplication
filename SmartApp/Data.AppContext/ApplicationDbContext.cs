@@ -1,5 +1,5 @@
-﻿using Data.Shared;
-using Data.Shared.Logging;
+﻿using Data.Shared.Logging;
+using Data.Shared.Tools;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.AppContext
@@ -11,11 +11,15 @@ namespace Data.AppContext
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-           
+            builder.Entity<EmailAddressMapping>()
+                 .HasOne<EmailCleanerSettingsEntity>(s => s.EmailCleanerSettings)
+                 .WithMany(m => m.EmailAddressMappings)
+                 .HasForeignKey(m => m.EmailCleanerSettingsId);
         }
 
         public DbSet<LogMessageEntity> LogMessages { get; set; }
-       
         public DbSet<EmailAccountEntity> EmailAccounts { get; set; }
+        public DbSet<EmailCleanerSettingsEntity> EmailCleanerSettings { get; set; }
+        public DbSet<EmailAddressMapping> EmailAddressMappings { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Data.Shared;
+﻿using Data.Shared.Tools;
 
 namespace Data.ContextAccessor.Interfaces
 {

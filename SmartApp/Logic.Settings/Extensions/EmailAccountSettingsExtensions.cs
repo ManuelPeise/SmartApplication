@@ -1,4 +1,5 @@
 ﻿using Data.Shared;
+using Data.Shared.Tools;
 using Newtonsoft.Json;
 using Shared.Models.Settings.EmailAccountSettings;
 

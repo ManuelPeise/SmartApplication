@@ -1,6 +1,7 @@
 ﻿using Shared.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Data.Shared
+namespace Data.Shared.Tools
 {
     public class EmailAccountEntity : AEntityBase
     {
@@ -12,6 +13,9 @@ namespace Data.Shared
         public string EmailAddress { get; set; } = string.Empty;
         public string EncodedPassword { get; set; } = string.Empty;
         public string? MessageLogJson { get; set; }
+        public int EmailCleanerSettingsId { get; set; }
+        [ForeignKey(nameof(EmailCleanerSettingsId))]
+        public EmailCleanerSettingsEntity? EmailCleanerSettings { get; set; }
 
     }
 }

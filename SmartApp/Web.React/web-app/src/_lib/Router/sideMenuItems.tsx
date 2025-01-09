@@ -74,5 +74,19 @@ export const getSettingsSideMenuItem = (
     });
   }
 
+  const emailCleanerEmailCleanerSettingsAccessRight =
+    accessRights.find((x) => x.name === "EmailAccountSettings") ?? null;
+
+  if (
+    emailCleanerEmailCleanerSettingsAccessRight != null &&
+    emailCleanerEmailCleanerSettingsAccessRight.canView
+  ) {
+    item.childItems.push({
+      displayNameRecourceKey: "common.labelEmailCleanerSettings",
+      route: browserRoutes.emailCleanerSettings,
+      childItems: null,
+    });
+  }
+
   return item;
 };
