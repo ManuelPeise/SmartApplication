@@ -4,12 +4,12 @@ import PageLayout from "./PageLayout";
 import LoginPage from "src/Pages/Auth/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
 import LogPageContainer from "src/Pages/Administration/Logging/LogPageContainer";
-import { UserRoleEnum } from "../_enums/UserRoleEnum";
 import { browserRoutes } from "./RouterUtils";
 import Home from "src/_Stacks/PublicStack/Home";
 import EmailAccountSettingsPageInitializationContainer from "src/Pages/Settings/EmailAccountSettings/EmailAccountSettingsPageContainer";
-import RegisterPage from "src/Pages/Auth/RegisterPage";
+import RequestAccountPage from "src/Pages/Auth/RequestAccountPage";
 import UserAdministrationPageContainer from "src/Pages/Administration/UserAdministration/UserAdministrationPageContainer";
+import { UserRightTypeEnum } from "./routeTypes";
 
 const AppRouter: React.FC = () => {
   return (
@@ -17,32 +17,45 @@ const AppRouter: React.FC = () => {
       <PageLayout>
         <Routes>
           <Route path={browserRoutes.login} Component={LoginPage} />
-          <Route path={browserRoutes.register} Component={RegisterPage} />
+
           <Route
-            path="/"
+            path={browserRoutes.requestAccount}
+            Component={RequestAccountPage}
+          />
+
+          <Route path="/" element={<ProtectedRoute />}>
+            <Route path={browserRoutes.home} Component={Home} />
+          </Route>
+
+          <Route
+            path={browserRoutes.home}
             element={
-              <ProtectedRoute
-                redirectUri={browserRoutes.login}
-                requiredRole={UserRoleEnum.User}
-              />
+              <ProtectedRoute requiredRight={UserRightTypeEnum.MessageLog} />
             }
           >
-            <Route path={browserRoutes.home} Component={Home} />
+            <Route path={browserRoutes.log} Component={LogPageContainer} />
           </Route>
           <Route
             path={browserRoutes.home}
             element={
               <ProtectedRoute
-                redirectUri={browserRoutes.login}
-                requiredRole={UserRoleEnum.Admin}
+                requiredRight={UserRightTypeEnum.UserAdministration}
               />
             }
           >
-            <Route path={browserRoutes.log} Component={LogPageContainer} />
             <Route
               path={browserRoutes.userAdministration}
               Component={UserAdministrationPageContainer}
             />
+          </Route>
+          <Route
+            path={browserRoutes.home}
+            element={
+              <ProtectedRoute
+                requiredRight={UserRightTypeEnum.EmailAccountSettings}
+              />
+            }
+          >
             <Route
               path={browserRoutes.emailAccountSettings}
               Component={EmailAccountSettingsPageInitializationContainer}

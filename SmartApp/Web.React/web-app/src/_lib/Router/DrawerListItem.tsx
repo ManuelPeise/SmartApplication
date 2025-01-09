@@ -1,5 +1,4 @@
 import React from "react";
-import { UserRoleEnum } from "../_enums/UserRoleEnum";
 import {
   Box,
   List,
@@ -14,7 +13,6 @@ import { Link } from "react-router-dom";
 import { SideMenuEntry } from "./sideMenuItems";
 
 interface ISideMenuItemProps extends SideMenuEntry {
-  userRole: UserRoleEnum;
   getResource: (key: string) => string;
   onCloseMenu: () => void;
 }
@@ -23,8 +21,6 @@ const DrawerListItem: React.FC<ISideMenuItemProps> = (props) => {
   const {
     displayNameRecourceKey,
     route,
-    requiredRole,
-    userRole,
     icon,
     childItems,
     getResource,
@@ -37,7 +33,7 @@ const DrawerListItem: React.FC<ISideMenuItemProps> = (props) => {
 
   return (
     <ListItemButton
-      disabled={userRole === undefined || userRole !== requiredRole}
+      disabled={false}
       sx={{
         display: "flex",
         flexDirection: "column",

@@ -12,8 +12,9 @@
   "labelNoAccount": "No account?",
   "labelPassword": "Password",
   "labelPasswordValidation": "Password validation",
-  "labelRegister": "Register",
+  "labelRequestAccount": "Request account",
   "labelSave": "Save",
   "labelSettings": "Settings",
-  "labelUserAdministration": "User Administration"
+  "labelUserAdministration": "User Administration",
+  "descriptionAccountRequest": "You will receive an email with the access data approx 15 minutes after requesting the account."
 }

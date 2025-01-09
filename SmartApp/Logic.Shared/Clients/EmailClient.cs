@@ -62,8 +62,8 @@ namespace Logic.Shared.Clients
                 message.Subject = subject;
                 message.Body = new BodyBuilder
                 {
-                    TextBody = body,
-                    HtmlBody = html
+                    TextBody = "",
+                    HtmlBody = body
                 }.ToMessageBody();
 
                 await client.SendAsync(message);

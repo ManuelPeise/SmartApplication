@@ -5,14 +5,14 @@ import { useAuth } from "src/_hooks/useAuth";
 import { useI18n } from "src/_hooks/useI18n";
 import background from "../../_lib/_img/pier.jpg";
 import { AccountRequest } from "src/_lib/_types/auth";
-import { emailValidation, passwordValidation } from "src/_lib/validation";
+import { emailValidation } from "src/_lib/validation";
 import { PermIdentityRounded } from "@mui/icons-material";
 import { colors } from "src/_lib/colors";
 import LoadingIndicator from "src/_components/Loading/LoadingIndicator";
 import TextInput from "src/_components/Input/TextInput";
 import FormButton from "src/_components/Buttons/FormButton";
 
-const RegisterPage: React.FC = () => {
+const RequestAccountPage: React.FC = () => {
   const { getResource } = useI18n();
   const { isLoading, onRegister } = useAuth();
   const navigate = useNavigate();
@@ -21,8 +21,6 @@ const RegisterPage: React.FC = () => {
     firstName: "",
     lastName: "",
     email: "",
-    password: "",
-    passwordValidation: "",
   });
 
   const onModelChanged = React.useCallback(
@@ -37,8 +35,6 @@ const RegisterPage: React.FC = () => {
       firstName: "",
       lastName: "",
       email: "",
-      password: "",
-      passwordValidation: "",
     });
     navigate("/");
   }, [navigate]);
@@ -57,16 +53,13 @@ const RegisterPage: React.FC = () => {
       firstName: "",
       lastName: "",
       email: "",
-      password: "",
-      passwordValidation: "",
     });
   }, []);
 
   const registerDisabled =
-    !emailValidation(registerModel.email) ||
-    !passwordValidation(registerModel.password) ||
-    !registerModel.password.length ||
-    registerModel.password !== registerModel.passwordValidation;
+    !emailValidation(registerModel.email) &&
+    registerModel.firstName === "" &&
+    registerModel.lastName === "";
 
   return (
     <Box
@@ -124,34 +117,25 @@ const RegisterPage: React.FC = () => {
               onChange={(value) => onModelChanged({ email: value })}
             />
           </Box>
-          <Box marginTop="10px">
-            <TextInput
-              label={getResource("common.labelPassword")}
-              value={registerModel.password}
-              isPassword
-              fullwidth={true}
-              onChange={(value) => onModelChanged({ password: value })}
-            />
-          </Box>
-          <Box marginTop="10px">
-            <TextInput
-              label={getResource("common.labelPasswordValidation")}
-              value={registerModel.passwordValidation}
-              isPassword
-              fullwidth={true}
-              onChange={(value) =>
-                onModelChanged({ passwordValidation: value })
-              }
-            />
+          <Box
+            marginTop="2rem"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Typography variant="body1">
+              {getResource("common.descriptionAccountRequest")}
+            </Typography>
           </Box>
           <Box
-            marginTop="1.5rem"
+            marginTop="2rem"
             display="flex"
             justifyContent="flex-end"
             gap={2}
           >
             <FormButton
               label={getResource("common.labelCancel")}
+              disabled={false}
               onAction={handleCancel}
             />
             <FormButton
@@ -166,4 +150,4 @@ const RegisterPage: React.FC = () => {
   );
 };
 
-export default RegisterPage;
+export default RequestAccountPage;

@@ -7,8 +7,6 @@ export type AccountRequest = {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
-  passwordValidation: string;
 };
 
 export type JwtTokenData = {

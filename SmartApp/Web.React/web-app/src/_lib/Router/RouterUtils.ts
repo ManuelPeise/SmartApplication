@@ -1,7 +1,7 @@
 export const browserRoutes = {
   home: "/",
   login: "/login",
-  register: "/register",
+  requestAccount: "/request-account",
   log: "/administration/log",
   userAdministration: "/administration/user",
   emailAccountSettings: "/settings/email-account-settings",

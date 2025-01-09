@@ -2,23 +2,43 @@ import React from "react";
 import { RouteProps } from "./routeTypes";
 import { useAuth } from "src/_hooks/useAuth";
 import { Navigate, Outlet } from "react-router-dom";
-import { UserRoleEnum } from "../_enums/UserRoleEnum";
+import { browserRoutes } from "./RouterUtils";
+import { useAccessRights } from "src/_hooks/useAccessRights";
+import { AccessRight } from "../_types/auth";
 
 const ProtectedRoute: React.FC<RouteProps> = (props) => {
-  const { redirectUri, requiredRole } = props;
+  const { requiredRight } = props;
   const auth = useAuth();
+  const { accessRights } = useAccessRights();
 
-  const roleKey =
-    (auth.authenticationState.jwtData.userRole as UserRoleEnum) ===
-    UserRoleEnum.Admin
-      ? 1
-      : 0;
+  let hasAccess = false;
 
-  if (
-    !auth.authenticationState.isAuthenticated ||
-    (requiredRole === UserRoleEnum.Admin && roleKey === 0)
-  ) {
-    return <Navigate to={redirectUri} />;
+  const accessRight = React.useMemo((): AccessRight => {
+    if (requiredRight === undefined) {
+      return {
+        id: -1,
+        name: "",
+        group: "",
+        canEdit: true,
+        canView: true,
+        deny: false,
+      };
+    }
+    return accessRights.accessRights.find((x) => x.name === requiredRight);
+  }, [requiredRight, accessRights]);
+
+  if (auth.authenticationState.isAuthenticated) {
+    hasAccess = true;
+  }
+
+  if (accessRight.canView) {
+    hasAccess = true;
+  } else {
+    hasAccess = false;
+  }
+
+  if (!hasAccess) {
+    <Navigate to={browserRoutes.home} />;
   }
 
   return <Outlet />;

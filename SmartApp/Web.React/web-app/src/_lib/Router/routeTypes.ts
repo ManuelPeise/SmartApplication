@@ -1,6 +1,9 @@
-import { UserRoleEnum } from "../_enums/UserRoleEnum";
+export enum UserRightTypeEnum {
+  UserAdministration = "UserAdministration",
+  MessageLog = "MessageLog",
+  EmailAccountSettings = "EmailAccountSettings",
+}
 
 export type RouteProps = {
-  requiredRole: UserRoleEnum;
-  redirectUri: string;
+  requiredRight?: UserRightTypeEnum;
 };

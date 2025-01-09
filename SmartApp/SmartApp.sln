@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logic.Administration", "Log
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logic.Settings", "Logic.Settings\Logic.Settings.csproj", "{0FEB06B4-C779-4F6E-B578-CF350A4192C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Resources", "Data.Resources\Data.Resources.csproj", "{4C38E811-08CB-46EB-914A-0103AD423C83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{0FEB06B4-C779-4F6E-B578-CF350A4192C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FEB06B4-C779-4F6E-B578-CF350A4192C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FEB06B4-C779-4F6E-B578-CF350A4192C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C38E811-08CB-46EB-914A-0103AD423C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C38E811-08CB-46EB-914A-0103AD423C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C38E811-08CB-46EB-914A-0103AD423C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C38E811-08CB-46EB-914A-0103AD423C83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{75672113-BAC7-499A-8105-6BEAC189639D} = {9C5971B8-D565-42C0-98F9-7032A88EE46A}
 		{88757383-709C-49FB-A17B-C5F8CD409183} = {2CA7213F-E2CB-4592-ABFA-508DACE1B1A4}
 		{0FEB06B4-C779-4F6E-B578-CF350A4192C8} = {2CA7213F-E2CB-4592-ABFA-508DACE1B1A4}
+		{4C38E811-08CB-46EB-914A-0103AD423C83} = {25E76C30-D293-42D7-9043-6D1ADF718ECB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9805E008-BD81-43F0-AD26-5A3514B6E3CC}

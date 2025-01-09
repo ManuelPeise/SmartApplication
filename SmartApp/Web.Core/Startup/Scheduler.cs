@@ -3,7 +3,6 @@ using Quartz;
 using System.Net;
 using System.Security.Claims;
 using Logic.Shared;
-using Microsoft.Extensions.Options;
 using Shared.Models.Identity;
 using System.Net.Http.Headers;
 
@@ -30,9 +29,9 @@ namespace Web.Core.Startup
                GetTrigger(
                    $"{UserActivationTask}-trigger",
                    1,
-                   "* 15 * * * ?"));
+                   "* 1 * * * ?"));
+   
 #endif
-          
 
 
             scheduler.Start();
@@ -52,12 +51,12 @@ namespace Web.Core.Startup
                 .Build();
         }
 
-        private static ITrigger GetTrigger(string name, int intervallHours, string cronExpression)
+        private static ITrigger GetTrigger(string name, int intervallMinutes, string cronExpression)
         {
             return TriggerBuilder.Create()
                 .WithIdentity(name)
-                //.WithSimpleSchedule(x => x.WithIntervalInMinutes(1))
-                .WithCronSchedule(cronExpression)
+                .WithSimpleSchedule(x => x.WithIntervalInMinutes(intervallMinutes))
+                // .WithCronSchedule(cronExpression)
                 .StartNow()
                 .Build();
 

@@ -35,8 +35,10 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
         return `${process.env.REACT_APP_Name} - Home`;
       case browserRoutes.login:
         return `${process.env.REACT_APP_Name} - Login`;
-      case browserRoutes.register:
-        return `${process.env.REACT_APP_Name} - Register`;
+      case browserRoutes.requestAccount:
+        return `${process.env.REACT_APP_Name} - ${getResource(
+          "common.labelRequestAccount"
+        )}`;
       case browserRoutes.log:
         return `${process.env.REACT_APP_Name} - Log`;
       case browserRoutes.emailAccountSettings:
@@ -46,7 +48,7 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
       default:
         return "";
     }
-  }, [location.pathname]);
+  }, [location.pathname, getResource]);
 
   return (
     <AppBar
@@ -94,28 +96,22 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
           </Grid2>
         ) : (
           <Grid2 display="flex" alignItems="baseline" flexDirection="row">
-            {!location.pathname.endsWith("register") && (
+            {!location.pathname.endsWith("request-account") && (
               <Button
                 style={{
                   color: "#fff",
                   textDecoration: "none",
                   padding: "5px 10px",
                 }}
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/request-account")}
               >
                 <Typography
                   sx={{ fontSize: "1.1rem", "&:hover": { opacity: 0.6 } }}
                 >
-                  {getResource("common.labelRegister")}
+                  {getResource("common.labelRequestAccount")}
                 </Typography>
               </Button>
             )}
-            {!location.pathname.endsWith("login") &&
-              !location.pathname.endsWith("register") && (
-                <Typography variant="h5" sx={{ fontSize: "1.1rem" }}>
-                  |
-                </Typography>
-              )}
             {!location.pathname.endsWith("login") && (
               <Button
                 style={{

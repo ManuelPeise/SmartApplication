@@ -2,10 +2,13 @@ import { ArrowBackRounded } from "@mui/icons-material";
 import { Box, Drawer, IconButton, List } from "@mui/material";
 import React from "react";
 import DrawerListItem from "./DrawerListItem";
-import { getSideMenuItems } from "./sideMenuItems";
+import {
+  getAdministrationSideMenuItem,
+  getSettingsSideMenuItem,
+  SideMenuEntry,
+} from "./sideMenuItems";
 import { useI18n } from "src/_hooks/useI18n";
-import { UserRoleEnum } from "../_enums/UserRoleEnum";
-import { useAuth } from "src/_hooks/useAuth";
+import { useAccessRights } from "src/_hooks/useAccessRights";
 
 interface IProps {
   open: boolean;
@@ -15,11 +18,28 @@ interface IProps {
 const AppDrawer: React.FC<IProps> = (props) => {
   const { open, onClose } = props;
   const { getResource } = useI18n();
-  const { authenticationState } = useAuth();
+  const { accessRights } = useAccessRights();
 
-  const sideMenuItems = React.useMemo(() => {
-    return getSideMenuItems();
-  }, []);
+  const sideMenueListItems = React.useMemo((): SideMenuEntry[] => {
+    const items: SideMenuEntry[] = [];
+
+    const administrationSideMenuItem = getAdministrationSideMenuItem(
+      accessRights?.accessRights.filter((x) => x.group === "Administration")
+    );
+
+    if (administrationSideMenuItem != null) {
+      items.push(administrationSideMenuItem);
+    }
+
+    const settingsSideMenuItem = getSettingsSideMenuItem(
+      accessRights?.accessRights.filter((x) => x.group === "Settings")
+    );
+    if (settingsSideMenuItem != null) {
+      items.push(settingsSideMenuItem);
+    }
+
+    return items;
+  }, [accessRights]);
 
   return (
     <Drawer
@@ -56,12 +76,11 @@ const AppDrawer: React.FC<IProps> = (props) => {
             width: "100%",
           }}
         >
-          {sideMenuItems.map((item, key) => {
+          {sideMenueListItems.map((item, key) => {
             return (
               <DrawerListItem
                 key={key}
                 {...item}
-                userRole={authenticationState.jwtData.userRole as UserRoleEnum}
                 onCloseMenu={onClose.bind(null, false)}
                 getResource={getResource}
               />

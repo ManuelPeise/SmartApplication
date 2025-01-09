@@ -1,4 +1,5 @@
 ﻿using Data.ContextAccessor.Interfaces;
+using Data.Resources.Properties;
 using Data.Shared;
 using Data.Shared.AccessRights;
 using Data.Shared.Identity.Entities;
@@ -7,9 +8,10 @@ using Logic.Administration.Interfaces;
 using Microsoft.Extensions.Options;
 using Shared.Enums;
 using Shared.Models.Administration;
-using Shared.Models.Administration.AccessRights;
 using Shared.Models.Identity;
 using System.Text;
+
+
 
 namespace Logic.Administration
 {
@@ -232,13 +234,7 @@ namespace Logic.Administration
 
         private string GetAccountActivationBody(string name, string email, string password)
         {
-            return $"Dear {name},{Environment.NewLine}{Environment.NewLine}" +
-                $"your Smart-Application account was been activated now!{Environment.NewLine}{Environment.NewLine}" +
-                $"Your credentials:{Environment.NewLine}{Environment.NewLine}" +
-                $"Username: {email}{Environment.NewLine}" +
-                $"Password: {password}{Environment.NewLine}{Environment.NewLine}" +
-                $"Best regards{Environment.NewLine}{Environment.NewLine}" +
-                $"Your Smart-Application Team";
+            return Resources.AccountActivationEmailBody.Replace("{USER}", name).Replace("{EMAIL}", email).Replace("{PASSWORD}", password);
         }
     }
 }

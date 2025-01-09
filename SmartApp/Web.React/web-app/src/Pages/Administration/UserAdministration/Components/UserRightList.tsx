@@ -15,7 +15,7 @@ interface IProps {
   accessRights: Record<string, AccessRight[]>;
   handleAccessRightChanged: (
     accessRightUpdate: AccessRight,
-    id: number
+    name: string
   ) => void;
 }
 
@@ -61,13 +61,10 @@ const UserRightList: React.FC<IProps> = (props) => {
                               {
                                 ...r,
                                 canView: e.currentTarget.checked,
-                                canEdit:
-                                  e.currentTarget.checked === false
-                                    ? false
-                                    : r.canEdit,
+                                canEdit: r.canEdit,
                                 deny: false,
                               },
-                              r.id
+                              r.name
                             )
                           }
                         />
@@ -83,14 +80,11 @@ const UserRightList: React.FC<IProps> = (props) => {
                             handleAccessRightChanged(
                               {
                                 ...r,
-                                canView:
-                                  e.currentTarget.checked === true
-                                    ? true
-                                    : r.canView,
+                                canView: r.canView,
                                 canEdit: e.currentTarget.checked,
                                 deny: false,
                               },
-                              r.id
+                              r.name
                             )
                           }
                         />
@@ -108,9 +102,11 @@ const UserRightList: React.FC<IProps> = (props) => {
                                 ...r,
                                 deny: e.currentTarget.checked,
                                 canView: !e.currentTarget.checked,
-                                canEdit: !e.currentTarget.checked,
+                                canEdit: e.currentTarget.checked
+                                  ? false
+                                  : r.canEdit,
                               },
-                              r.id
+                              r.name
                             )
                           }
                         />

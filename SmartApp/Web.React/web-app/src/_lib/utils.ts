@@ -23,16 +23,6 @@ export const groupByKey = <T>(
   return groupedData;
 };
 
-// Array.prototype.sortByString = function <T>(key: keyof T): T[] {
-//   const sort = (arr: T[], key: keyof T): T[] => {
-//     return arr.sort((a, b) =>
-//       (a[key] as string).localeCompare(b[key] as string)
-//     );
-//   };
-
-//   return sort(this, key);
-// };
-
 export const sortBy = <T>(
   array: T[],
   key: keyof T,

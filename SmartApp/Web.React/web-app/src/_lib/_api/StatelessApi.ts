@@ -1,13 +1,13 @@
 import { AxiosInstance } from "axios";
 import { AxiosClient } from "./AxiosClient";
 
-type StatelessApiOptions = {
+export type StatelessApiOptions = {
   serviceUrl: string;
   parameters?: { [key: string]: string };
   body?: any;
 };
 
-type StatelessApiResult = {
+export type StatelessApiResult = {
   get: <TModel>(options: StatelessApiOptions, token: string) => Promise<TModel>;
   post: <TModel>(
     options: StatelessApiOptions,
