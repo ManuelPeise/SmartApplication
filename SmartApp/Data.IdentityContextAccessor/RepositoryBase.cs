@@ -105,7 +105,7 @@ namespace Data.ContextAccessor
 
         public async Task SaveChanges()
         {
-            var currentUser = _contextAccessor?.HttpContext.User.Identity;
+            var currentUser = _contextAccessor?.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
 
             var modifiedEntries = _context.ChangeTracker.Entries()
               .Where(x => x.State == EntityState.Modified ||
@@ -117,15 +117,15 @@ namespace Data.ContextAccessor
                 {
                     if (entry.State == EntityState.Added)
                     {
-                        ((AEntityBase)entry.Entity).CreatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).CreatedBy = currentUser ?? "System";
                         ((AEntityBase)entry.Entity).CreatedAt = DateTime.Now;
-                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser ?? "System";
                         ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
 
                     }
                     else if (entry.State == EntityState.Modified)
                     {
-                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser ?? "System";
                         ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
                     }
                 }

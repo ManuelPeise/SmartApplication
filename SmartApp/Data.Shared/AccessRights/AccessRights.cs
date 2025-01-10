@@ -34,6 +34,6 @@ namespace Data.Shared.AccessRights
         public const string UserAdministration = "UserAdministration";
         public const string MessageLog = "MessageLog";
         public const string EmailAccountSettings = "EmailAccountSettings";
-        public const string EmailCleanerSettings = "EmailCleanerEmailCleanerSettings";
+        public const string EmailCleanerSettings = "EmailCleanerSettings";
     }
 }

@@ -6,8 +6,6 @@ using Data.Shared.Logging;
 using Data.Shared.Tools;
 using Logic.Settings.Extensions;
 using Logic.Settings.Interfaces;
-using Logic.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Shared.Enums;
@@ -23,11 +21,8 @@ namespace Logic.Settings
         private readonly ISettingsRepository _settingsRepository;
 
         public EmailAccountSettingsService(
-            ApplicationDbContext applicationDbContext,
             ISettingsRepository settingsRepository,
-            ILogRepository logRepository,
-            IOptions<SecurityData> securityData,
-            IHttpContextAccessor httpContextAccessor)
+            IOptions<SecurityData> securityData)
         {
             _securityData = securityData;
             _settingsRepository = settingsRepository;
@@ -108,7 +103,8 @@ namespace Logic.Settings
                         Port = model.Port,
                         EmailAddress = model.EmailAddress,
                         EncodedPassword = passwordHandler.Encrypt(model.Password),
-                        MessageLogJson = GetLogMessageJson(userName)
+                        MessageLogJson = GetLogMessageJson(userName),
+                         
                     };
                 }
 

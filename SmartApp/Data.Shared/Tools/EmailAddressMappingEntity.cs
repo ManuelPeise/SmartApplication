@@ -2,7 +2,7 @@
 
 namespace Data.Shared.Tools
 {
-    public class EmailAddressMapping: AEntityBase
+    public class EmailAddressMappingEntity: AEntityBase
     {
         public int UserId { get; set; }
         public string? SourceAddress { get; set; }

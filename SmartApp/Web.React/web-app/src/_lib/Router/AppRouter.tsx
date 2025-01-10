@@ -10,6 +10,7 @@ import EmailAccountSettingsPageInitializationContainer from "src/Pages/Settings/
 import RequestAccountPage from "src/Pages/Auth/RequestAccountPage";
 import UserAdministrationPageContainer from "src/Pages/Administration/UserAdministration/UserAdministrationPageContainer";
 import { UserRightTypeEnum } from "./routeTypes";
+import EmailCleanerSettingsContainer from "src/Pages/Settings/EmailCleanerSettings/EmailCleanerSettingsContainer";
 
 const AppRouter: React.FC = () => {
   return (
@@ -59,6 +60,19 @@ const AppRouter: React.FC = () => {
             <Route
               path={browserRoutes.emailAccountSettings}
               Component={EmailAccountSettingsPageInitializationContainer}
+            />
+          </Route>
+          <Route
+            path={browserRoutes.home}
+            element={
+              <ProtectedRoute
+                requiredRight={UserRightTypeEnum.EmailCleanerSettings}
+              />
+            }
+          >
+            <Route
+              path={browserRoutes.emailCleanerSettings}
+              Component={EmailCleanerSettingsContainer}
             />
           </Route>
         </Routes>

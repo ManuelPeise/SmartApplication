@@ -11,7 +11,7 @@ namespace Data.AppContext
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<EmailAddressMapping>()
+            builder.Entity<EmailAddressMappingEntity>()
                  .HasOne<EmailCleanerSettingsEntity>(s => s.EmailCleanerSettings)
                  .WithMany(m => m.EmailAddressMappings)
                  .HasForeignKey(m => m.EmailCleanerSettingsId);
@@ -20,6 +20,6 @@ namespace Data.AppContext
         public DbSet<LogMessageEntity> LogMessages { get; set; }
         public DbSet<EmailAccountEntity> EmailAccounts { get; set; }
         public DbSet<EmailCleanerSettingsEntity> EmailCleanerSettings { get; set; }
-        public DbSet<EmailAddressMapping> EmailAddressMappings { get; set; }
+        public DbSet<EmailAddressMappingEntity> EmailAddressMappings { get; set; }
     }
 }

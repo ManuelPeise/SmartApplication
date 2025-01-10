@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20250108152844_InitDb")]
-    partial class InitDb
+    [Migration("20250109194158_InitDatabase")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,7 +57,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(5189),
+                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(3465),
                             CreatedBy = "System",
                             Group = "Administration",
                             Name = "UserAdministration"
@@ -65,7 +65,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(5193),
+                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(3469),
                             CreatedBy = "System",
                             Group = "Administration",
                             Name = "MessageLog"
@@ -73,10 +73,18 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(5195),
+                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(3470),
                             CreatedBy = "System",
                             Group = "Settings",
                             Name = "EmailAccountSettings"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(3472),
+                            CreatedBy = "System",
+                            Group = "Settings",
+                            Name = "EmailCleanerSettings"
                         });
                 });
 
@@ -125,7 +133,7 @@ namespace Data.Identity.Migrations
                         {
                             Id = 1,
                             AccessRightId = 1,
-                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(7302),
+                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(5606),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -136,7 +144,7 @@ namespace Data.Identity.Migrations
                         {
                             Id = 2,
                             AccessRightId = 2,
-                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(7306),
+                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(5609),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -147,7 +155,18 @@ namespace Data.Identity.Migrations
                         {
                             Id = 3,
                             AccessRightId = 3,
-                            CreatedAt = new DateTime(2025, 1, 8, 15, 28, 42, 901, DateTimeKind.Utc).AddTicks(7307),
+                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(5610),
+                            CreatedBy = "System",
+                            Deny = false,
+                            Edit = true,
+                            UserId = 1,
+                            View = true
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AccessRightId = 4,
+                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(5613),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -193,12 +212,12 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(5267),
+                            CreatedAt = new DateTime(2025, 1, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(3690),
                             CreatedBy = "System",
-                            ExpiresAt = new DateTime(2025, 4, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(5267),
+                            ExpiresAt = new DateTime(2025, 4, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(3690),
                             Password = "Am1I3JdgO3aS/VUSZ8kfKQ==",
                             RefreshToken = "",
-                            UpdatedAt = new DateTime(2025, 1, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(5267),
+                            UpdatedAt = new DateTime(2025, 1, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(3690),
                             UpdatedBy = "System"
                         });
                 });
@@ -258,7 +277,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(7201),
+                            CreatedAt = new DateTime(2025, 1, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(5518),
                             CreatedBy = "System",
                             CredentialsId = 1,
                             Email = "admin.user@gmx.de",
@@ -267,7 +286,7 @@ namespace Data.Identity.Migrations
                             IsNewUserRegistration = false,
                             LastName = "User",
                             RoleId = 2,
-                            UpdatedAt = new DateTime(2025, 1, 8, 16, 28, 42, 901, DateTimeKind.Local).AddTicks(7201),
+                            UpdatedAt = new DateTime(2025, 1, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(5518),
                             UpdatedBy = "System"
                         });
                 });

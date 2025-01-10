@@ -60,8 +60,8 @@ function sendGetRequest<TModel>(
           const responseModel: TModel = res.data;
 
           return resolve(responseModel);
-        } else {
-          throw new Error(`Request failed with status: ${res.status}`);
+        } else if (res.status === 204) {
+          return resolve(null);
         }
       });
     } catch (err) {

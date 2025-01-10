@@ -13,7 +13,7 @@ namespace Data.Shared.Tools
         public string EmailAddress { get; set; } = string.Empty;
         public string EncodedPassword { get; set; } = string.Empty;
         public string? MessageLogJson { get; set; }
-        public int EmailCleanerSettingsId { get; set; }
+        public int? EmailCleanerSettingsId { get; set; }
         [ForeignKey(nameof(EmailCleanerSettingsId))]
         public EmailCleanerSettingsEntity? EmailCleanerSettings { get; set; }
 

@@ -22,6 +22,8 @@ namespace Data.ContextAccessor
         }
 
         public RepositoryBase<EmailAccountEntity> EmailAccountRepository => new RepositoryBase<EmailAccountEntity>(_applicationDbContext, _contextAccessor);
+        public RepositoryBase<EmailCleanerSettingsEntity> EmailCleanerSettingsRepository => new RepositoryBase<EmailCleanerSettingsEntity>(_applicationDbContext, _contextAccessor);
+        public RepositoryBase<EmailAddressMappingEntity> EmailAddressMappingRepository => new RepositoryBase<EmailAddressMappingEntity>(_applicationDbContext, _contextAccessor);
         public ILogRepository LogRepository => _logRepository;
         public IClaimsAccessor ClaimsAccessor => _claimsAccessor;
         public async Task SaveChanges()

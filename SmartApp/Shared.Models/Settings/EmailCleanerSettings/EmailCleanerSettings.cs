@@ -1,11 +1,10 @@
-﻿namespace Data.Shared.Tools
+﻿namespace Shared.Models.Settings.EmailCleanerSettings
 {
-    public class EmailCleanerSettingsEntity: AEntityBase
+    public class EmailCleanerSettings
     {
-        public bool Enabled { get; set; }
-        public string Account { get; set; } = string.Empty;
-        public string AccountName { get; set; } = string.Empty;
+        public int SettingsId { get; set; }
         public int UserId { get; set; }
+        public bool Enabled { get; set; }
         public bool AllowReadEmails { get; set; }
         public bool AllowMoveEmails { get; set; }
         public bool AllowDeleteEmails { get; set; }
@@ -13,8 +12,8 @@
         public bool ShareEmailDataToTrainAi { get; set; }
         public bool ScheduleCleanup { get; set; }
         public int ScheduleCleanupAtHour { get; set; }
+        public bool HasMappings { get; set; }
         public DateTime? LastCleanupTime { get; set; }
-        public DateTime? NextCleanupTime { get; set; }
-        public ICollection<EmailAddressMappingEntity> EmailAddressMappings { get; set; } = new List<EmailAddressMappingEntity>();
+        public List<EmailAddressMapping> Mappings { get; set; } = new List<EmailAddressMapping>();
     }
 }

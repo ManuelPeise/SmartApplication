@@ -11,6 +11,7 @@ const ProtectedRoute: React.FC<RouteProps> = (props) => {
   const auth = useAuth();
   const { accessRights } = useAccessRights();
 
+  console.log("Rights", accessRights);
   let hasAccess = false;
 
   const accessRight = React.useMemo((): AccessRight => {

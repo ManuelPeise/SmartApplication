@@ -7,6 +7,7 @@ export const colors = {
   button: {
     disabled: "#ffffff",
     primary: "#3399ff",
+    enabled: "#00cc44",
   },
   background: {
     lightgray: "#f2f2f2",

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.AppContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250109154342_AddEmailCleanerTables")]
-    partial class AddEmailCleanerTables
+    [Migration("20250110154509_InitDatabase")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,7 +82,7 @@ namespace Data.AppContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("EmailCleanerSettingsId")
+                    b.Property<int?>("EmailCleanerSettingsId")
                         .HasColumnType("int");
 
                     b.Property<string>("EncodedPassword")
@@ -118,7 +118,7 @@ namespace Data.AppContext.Migrations
                     b.ToTable("EmailAccounts");
                 });
 
-            modelBuilder.Entity("Data.Shared.Tools.EmailAddressMapping", b =>
+            modelBuilder.Entity("Data.Shared.Tools.EmailAddressMappingEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,6 +171,14 @@ namespace Data.AppContext.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Account")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("AccountName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("AllowCreateEmailFolder")
                         .HasColumnType("tinyint(1)");
 
@@ -183,9 +191,6 @@ namespace Data.AppContext.Migrations
                     b.Property<bool>("AllowReadEmails")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("AllowUseEmailDataForSpamDetectionAiTraining")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -196,20 +201,29 @@ namespace Data.AppContext.Migrations
                     b.Property<bool>("Enabled")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastCleanupTime")
+                    b.Property<DateTime?>("LastCleanupTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("NextCleanupTime")
+                    b.Property<DateTime?>("NextCleanupTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("ScheduledCleanupAtHour")
+                    b.Property<bool>("ScheduleCleanup")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("ScheduleCleanupAtHour")
                         .HasColumnType("int");
+
+                    b.Property<bool>("ShareEmailDataToTrainAi")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -220,14 +234,12 @@ namespace Data.AppContext.Migrations
                 {
                     b.HasOne("Data.Shared.Tools.EmailCleanerSettingsEntity", "EmailCleanerSettings")
                         .WithMany()
-                        .HasForeignKey("EmailCleanerSettingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EmailCleanerSettingsId");
 
                     b.Navigation("EmailCleanerSettings");
                 });
 
-            modelBuilder.Entity("Data.Shared.Tools.EmailAddressMapping", b =>
+            modelBuilder.Entity("Data.Shared.Tools.EmailAddressMappingEntity", b =>
                 {
                     b.HasOne("Data.Shared.Tools.EmailCleanerSettingsEntity", "EmailCleanerSettings")
                         .WithMany("EmailAddressMappings")
