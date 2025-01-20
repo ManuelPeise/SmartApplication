@@ -4,14 +4,12 @@ using Data.ContextAccessor.Interfaces;
 using Data.Identity;
 using Logic.Administration;
 using Logic.Administration.Interfaces;
+using Logic.EmailCleaner;
+using Logic.EmailCleaner.Interfaces;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
-using Logic.Settings;
-using Logic.Settings.Interfaces;
-using Logic.Shared;
 using Logic.Shared.Clients;
 using Logic.Shared.Interfaces;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -55,11 +53,12 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<IEmailClient, EmailClient>();
             builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
             builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
-            builder.Services.AddScoped<IAdministrationRepository, AdministrationRepository>();
-            builder.Services.AddScoped<IEmailAccountSettingsService, EmailAccountSettingsService>();
+            builder.Services.AddScoped<IAdministrationRepository, AdministrationRepository>();     
             builder.Services.AddScoped<IUserAdministrationService, UserAdministrationService>();
             builder.Services.AddScoped<IAccessRightAdministrationService, AccessRightAdministrationService>();
-            builder.Services.AddScoped<IEmailCleanerSettingsService, EmailCleanerSettingsService>();
+            builder.Services.AddScoped<IEmailCleanerMappingService, EmailCleanerMappingService>();
+            // email cleaner
+            builder.Services.AddScoped<IEmailCleanerService, EmailCleanerService>();
 
             ConfigureOptions(builder);
 

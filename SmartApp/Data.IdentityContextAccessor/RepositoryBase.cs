@@ -21,7 +21,7 @@ namespace Data.ContextAccessor
 
         public async Task<List<T>> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public async Task<T?> GetSingle(Expression<Func<T, bool>> predicate, bool asNoTracking = false)
@@ -62,9 +62,25 @@ namespace Data.ContextAccessor
             await _context.AddAsync(entity);
         }
 
+        public async Task<bool> AddIfNotExists(T entity, Expression<Func<T, bool>> predicate)
+        {
+            var table = _context.Set<T>();
+
+            var existingEntity = table.FirstOrDefault(predicate);
+
+            if(existingEntity == null)
+            {
+                await table.AddAsync(entity);
+
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<T> AddOrUpdate(T entity, Expression<Func<T, bool>> predicate)
         {
-            var queryable = _context.Set<T>().AsQueryable();
+            var queryable = _context.Set<T>().AsNoTracking().AsQueryable();
 
             var existing = await queryable.FirstOrDefaultAsync(predicate, CancellationToken.None);
 

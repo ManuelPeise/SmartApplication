@@ -55,7 +55,7 @@ namespace Data.AppContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LogMessages");
+                    b.ToTable("LogMessageTable");
                 });
 
             modelBuilder.Entity("Data.Shared.Tools.EmailAccountEntity", b =>
@@ -68,6 +68,9 @@ namespace Data.AppContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("ConnectionTestPassed")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -78,9 +81,6 @@ namespace Data.AppContext.Migrations
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int?>("EmailCleanerSettingsId")
-                        .HasColumnType("int");
 
                     b.Property<string>("EncodedPassword")
                         .IsRequired()
@@ -99,6 +99,9 @@ namespace Data.AppContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("SettingsId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -110,9 +113,9 @@ namespace Data.AppContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmailCleanerSettingsId");
+                    b.HasIndex("SettingsId");
 
-                    b.ToTable("EmailAccounts");
+                    b.ToTable("EmailAccountsTable");
                 });
 
             modelBuilder.Entity("Data.Shared.Tools.EmailAddressMappingEntity", b =>
@@ -121,6 +124,12 @@ namespace Data.AppContext.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -128,22 +137,24 @@ namespace Data.AppContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Domain")
+                    b.Property<int>("EmailDataId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmailFolder")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("EmailCleanerSettingsId")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsSpam")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("PredictedAs")
+                    b.Property<string>("PredictedValue")
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("ShouldCleanup")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("SourceAddress")
+                    b.Property<string>("TargetFolder")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -152,14 +163,11 @@ namespace Data.AppContext.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("EmailCleanerSettingsId");
+                    b.HasIndex("EmailDataId");
 
-                    b.ToTable("EmailAddressMappings");
+                    b.ToTable("EmailAddressMappingTable");
                 });
 
             modelBuilder.Entity("Data.Shared.Tools.EmailCleanerSettingsEntity", b =>
@@ -168,25 +176,52 @@ namespace Data.AppContext.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Account")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("AccountName")
+                    b.Property<bool>("EmailCleanerAiEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("EmailCleanerEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("FolderConfigurationJson")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("AllowCreateEmailFolder")
+                    b.Property<bool>("IsAgreed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("AllowDeleteEmails")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("MessageLogJson")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<bool>("AllowMoveEmails")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int>("SettingsId")
+                        .HasColumnType("int");
 
-                    b.Property<bool>("AllowReadEmails")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailCleanerSettingsTable");
+                });
+
+            modelBuilder.Entity("Data.Shared.Tools.EmailDataEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Body")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -195,23 +230,13 @@ namespace Data.AppContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("Enabled")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("FromAddress")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("LastCleanupTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("NextCleanupTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("ScheduleCleanup")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("ScheduleCleanupAtHour")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("ShareEmailDataToTrainAi")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -219,37 +244,29 @@ namespace Data.AppContext.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.ToTable("EmailCleanerSettings");
+                    b.ToTable("EmailDataTable");
                 });
 
             modelBuilder.Entity("Data.Shared.Tools.EmailAccountEntity", b =>
                 {
                     b.HasOne("Data.Shared.Tools.EmailCleanerSettingsEntity", "EmailCleanerSettings")
                         .WithMany()
-                        .HasForeignKey("EmailCleanerSettingsId");
+                        .HasForeignKey("SettingsId");
 
                     b.Navigation("EmailCleanerSettings");
                 });
 
             modelBuilder.Entity("Data.Shared.Tools.EmailAddressMappingEntity", b =>
                 {
-                    b.HasOne("Data.Shared.Tools.EmailCleanerSettingsEntity", "EmailCleanerSettings")
-                        .WithMany("EmailAddressMappings")
-                        .HasForeignKey("EmailCleanerSettingsId")
+                    b.HasOne("Data.Shared.Tools.EmailDataEntity", "EmailData")
+                        .WithMany()
+                        .HasForeignKey("EmailDataId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EmailCleanerSettings");
-                });
-
-            modelBuilder.Entity("Data.Shared.Tools.EmailCleanerSettingsEntity", b =>
-                {
-                    b.Navigation("EmailAddressMappings");
+                    b.Navigation("EmailData");
                 });
 #pragma warning restore 612, 618
         }

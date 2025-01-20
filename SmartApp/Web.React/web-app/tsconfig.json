@@ -13,7 +13,7 @@
       "ES2023.Array"
     ],
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "esModuleInterop": true,
     "moduleResolution": "node",
     "rootDirs": ["src"],
@@ -26,7 +26,9 @@
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true
   },
   "include": ["src", "App.tsx"]
 }

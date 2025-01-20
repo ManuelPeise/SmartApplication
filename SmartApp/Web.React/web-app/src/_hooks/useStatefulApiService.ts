@@ -26,6 +26,19 @@ export const useStatefulApiService = <TModel>(
     [api, token, optionsRef]
   );
 
+  const sendGet = React.useCallback(
+    async <T>(apiOptions?: StatelessApiOptions): Promise<T> => {
+      setIsLoading(true);
+      return await api
+        .get<T>(apiOptions ?? optionsRef.current, token)
+        .then((res) => {
+          setIsLoading(false);
+          return res;
+        });
+    },
+    [api, token, optionsRef]
+  );
+
   const rebindData = React.useCallback(async () => {
     setIsLoading(true);
     await api.get<TModel>(optionsRef.current, token).then((res) => {
@@ -55,5 +68,6 @@ export const useStatefulApiService = <TModel>(
     sendGetRequest,
     rebindData,
     sendPost,
+    sendGet,
   };
 };

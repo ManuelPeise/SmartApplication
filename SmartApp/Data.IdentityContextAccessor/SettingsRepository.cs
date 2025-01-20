@@ -4,18 +4,23 @@ using Data.Shared;
 using Data.Shared.Tools;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Shared.Models.Identity;
 
 namespace Data.ContextAccessor
 {
     public class SettingsRepository : ISettingsRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IOptions<SecurityData> _securityData;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly ILogRepository _logRepository;
         private readonly IClaimsAccessor _claimsAccessor;
-        public SettingsRepository(ApplicationDbContext applicationDbContext, IHttpContextAccessor contextAccessor, ILogRepository logRepository, IClaimsAccessor claimsAccessor)
+       
+        public SettingsRepository(ApplicationDbContext applicationDbContext, IOptions<SecurityData> securityData, IHttpContextAccessor contextAccessor, ILogRepository logRepository, IClaimsAccessor claimsAccessor)
         {
             _applicationDbContext = applicationDbContext;
+            _securityData = securityData;
             _contextAccessor = contextAccessor;
             _logRepository = logRepository;
             _claimsAccessor = claimsAccessor;
@@ -23,9 +28,12 @@ namespace Data.ContextAccessor
 
         public RepositoryBase<EmailAccountEntity> EmailAccountRepository => new RepositoryBase<EmailAccountEntity>(_applicationDbContext, _contextAccessor);
         public RepositoryBase<EmailCleanerSettingsEntity> EmailCleanerSettingsRepository => new RepositoryBase<EmailCleanerSettingsEntity>(_applicationDbContext, _contextAccessor);
+        public RepositoryBase<EmailDataEntity> EmailDataRepository => new RepositoryBase<EmailDataEntity>(_applicationDbContext, _contextAccessor);
         public RepositoryBase<EmailAddressMappingEntity> EmailAddressMappingRepository => new RepositoryBase<EmailAddressMappingEntity>(_applicationDbContext, _contextAccessor);
         public ILogRepository LogRepository => _logRepository;
         public IClaimsAccessor ClaimsAccessor => _claimsAccessor;
+        public IOptions<SecurityData> SecurityData => _securityData;
+
         public async Task SaveChanges()
         {
             var currentUser = _contextAccessor?.HttpContext.User.Identity;

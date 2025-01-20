@@ -9,6 +9,7 @@ namespace Data.ContextAccessor.Interfaces
         Task<T?> GetSingle(Expression<Func<T, bool>> predicate, bool asNoTracking = false);
         Task<T?> GetFirstOrDefault(Expression<Func<T, bool>> predicate, bool asNoTracking = false);
         Task<List<T>?> GetAll(Expression<Func<T, bool>> predicate, bool asNoTracking = false);
+        Task<bool> AddIfNotExists(T entity, Expression<Func<T, bool>> predicate);
         Task<T> AddOrUpdate(T entity, Expression<Func<T, bool>> predicate);
         Task Add(T entity);
         Task AddRange(IEnumerable<T> entities);

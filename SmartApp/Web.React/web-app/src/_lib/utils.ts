@@ -38,3 +38,54 @@ export const sortBy = <T>(
       : -1
   );
 };
+
+export const distinctBy = <TModel>(
+  array: TModel[],
+  selector?: (item: TModel) => any
+): TModel[] => {
+  const selectedItems = new Set();
+
+  return array.filter((item) => {
+    const key = selector ? selector(item) : item;
+    if (selectedItems.has(key)) {
+      return false;
+    }
+
+    selectedItems.add(key);
+    return true;
+  });
+};
+
+export const getCalculatedColumnWidth = <TModel>(
+  array: TModel[],
+  key: keyof TModel,
+  unit: "px" | "rem",
+  perCharacter?: number | 3
+) => {
+  let width: number = 0;
+
+  array.forEach((item) => {
+    const keyWidth: number = (item[key] as string)?.length * perCharacter;
+
+    if (keyWidth > width) {
+      width = keyWidth;
+    }
+  });
+
+  return `${width}${unit}`;
+};
+
+export const extractValues = <TReturnType, TModel>(
+  models: TModel[],
+  key: keyof TModel
+): TReturnType[] => {
+  const array: TReturnType[] = [];
+
+  models.forEach((item) => {
+    if (!array.includes(item[key] as TReturnType)) {
+      array.push(item[key] as TReturnType);
+    }
+  });
+
+  return array;
+};

@@ -1,8 +1,8 @@
 import { Box, Paper } from "@mui/material";
 import React from "react";
 import { DropDownItem } from "src/_components/Input/Dropdown";
-import EmailCleanerSettingsToolbar from "./EmailCleanerSettingsToolbar";
-import { EmailCleanerSettings } from "./Types/EmailCleanerConfiguration";
+import EmailCleanerSettingsToolbar from "./Components/EmailCleanerSettingsToolbar";
+import { EmailCleanerSettings } from "../Types/EmailCleanerConfiguration";
 import ListItemInput from "src/_components/Lists/ListItemInput";
 import { useI18n } from "src/_hooks/useI18n";
 import SwitchInput from "src/_components/Input/SwitchInput";
@@ -11,6 +11,7 @@ import NumberInput from "src/_components/Input/NumberInput";
 import FormButton from "src/_components/Buttons/FormButton";
 import { isEqual } from "lodash";
 import { useNavigate } from "react-router-dom";
+import { browserRoutes } from "src/_lib/Router/RouterUtils";
 
 interface IProps {
   accountDropdownItems: DropDownItem[];
@@ -63,17 +64,17 @@ const EmailCleanerPage: React.FC<IProps> = (props) => {
         accountDropdownDisabled={isLoading}
         handleAccountChanged={handleAccountChanged}
       />
-      <Box maxHeight="600px" minHeight="500px" padding={2}>
+      <Box maxHeight="700px" minHeight="500px" padding={2}>
         <Paper sx={{ height: "100%", width: "100%" }} elevation={2}>
           <Box
             minHeight={{
               xs: "auto",
               sm: "auto",
               md: "auto",
-              lg: "650px",
-              xl: "650px",
+              lg: "680px",
+              xl: "680px",
             }}
-            maxHeight="600px"
+            height="100%"
             maxWidth="100%"
             padding={2}
             paddingLeft={4}
@@ -275,7 +276,11 @@ const EmailCleanerPage: React.FC<IProps> = (props) => {
                 <FormButton
                   label={getResource("settings.labelShowEmailAddressMapping")}
                   disabled={!intermediateSettings.enabled}
-                  onAction={() => navigate("/")}
+                  onAction={() =>
+                    navigate(
+                      `${browserRoutes.emailCleanerMappings}${intermediateSettings.accountId}`
+                    )
+                  }
                 />
               </Box>
             </ListItemInput>

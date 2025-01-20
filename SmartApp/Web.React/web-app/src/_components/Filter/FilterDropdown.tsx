@@ -14,11 +14,20 @@ interface IProps {
   label: string;
   disabled?: boolean;
   fullWidth?: boolean;
+  maxHeight?: number;
   onChange: (value: number) => void;
 }
 
 const FilterDropdown: React.FC<IProps> = (props) => {
-  const { selectedItem, items, label, disabled, fullWidth, onChange } = props;
+  const {
+    selectedItem,
+    items,
+    label,
+    disabled,
+    fullWidth,
+    maxHeight,
+    onChange,
+  } = props;
 
   const handleChange = React.useCallback(
     (e: SelectChangeEvent<number>) => {
@@ -33,7 +42,12 @@ const FilterDropdown: React.FC<IProps> = (props) => {
       <Select
         fullWidth={fullWidth}
         disabled={disabled}
-        value={selectedItem.value}
+        value={selectedItem?.value ?? -1}
+        MenuProps={{
+          style: {
+            maxHeight: maxHeight,
+          },
+        }}
         variant="standard"
         onChange={handleChange}
       >

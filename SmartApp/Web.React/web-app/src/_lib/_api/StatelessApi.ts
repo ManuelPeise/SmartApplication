@@ -64,7 +64,7 @@ function sendGetRequest<TModel>(
           return resolve(null);
         }
       });
-    } catch (err) {
+    } catch (err: any) {
       reject(err.message);
     }
   });
@@ -88,7 +88,7 @@ function sendPostRequest<TModel>(
           throw new Error(`Request failed with status: ${res.status}`);
         }
       });
-    } catch (err) {
+    } catch (err: any) {
       reject(err.message);
     }
   });

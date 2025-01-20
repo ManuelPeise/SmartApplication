@@ -54,7 +54,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(3465),
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 622, DateTimeKind.Utc).AddTicks(3771),
                             CreatedBy = "System",
                             Group = "Administration",
                             Name = "UserAdministration"
@@ -62,7 +62,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(3469),
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 622, DateTimeKind.Utc).AddTicks(3776),
                             CreatedBy = "System",
                             Group = "Administration",
                             Name = "MessageLog"
@@ -70,15 +70,23 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(3470),
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 622, DateTimeKind.Utc).AddTicks(3778),
+                            CreatedBy = "System",
+                            Group = "Tools",
+                            Name = "EmailCleaner"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 622, DateTimeKind.Utc).AddTicks(3780),
                             CreatedBy = "System",
                             Group = "Settings",
                             Name = "EmailAccountSettings"
                         },
                         new
                         {
-                            Id = 4,
-                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(3472),
+                            Id = 5,
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 622, DateTimeKind.Utc).AddTicks(3819),
                             CreatedBy = "System",
                             Group = "Settings",
                             Name = "EmailCleanerSettings"
@@ -130,7 +138,7 @@ namespace Data.Identity.Migrations
                         {
                             Id = 1,
                             AccessRightId = 1,
-                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(5606),
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 623, DateTimeKind.Utc).AddTicks(1629),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -141,7 +149,7 @@ namespace Data.Identity.Migrations
                         {
                             Id = 2,
                             AccessRightId = 2,
-                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(5609),
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 623, DateTimeKind.Utc).AddTicks(1633),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -152,7 +160,7 @@ namespace Data.Identity.Migrations
                         {
                             Id = 3,
                             AccessRightId = 3,
-                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(5610),
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 623, DateTimeKind.Utc).AddTicks(1634),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -163,7 +171,18 @@ namespace Data.Identity.Migrations
                         {
                             Id = 4,
                             AccessRightId = 4,
-                            CreatedAt = new DateTime(2025, 1, 9, 19, 41, 58, 249, DateTimeKind.Utc).AddTicks(5613),
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 623, DateTimeKind.Utc).AddTicks(1635),
+                            CreatedBy = "System",
+                            Deny = false,
+                            Edit = true,
+                            UserId = 1,
+                            View = true
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AccessRightId = 5,
+                            CreatedAt = new DateTime(2025, 1, 11, 18, 52, 32, 623, DateTimeKind.Utc).AddTicks(1638),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -209,12 +228,12 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(3690),
+                            CreatedAt = new DateTime(2025, 1, 11, 19, 52, 32, 622, DateTimeKind.Local).AddTicks(3981),
                             CreatedBy = "System",
-                            ExpiresAt = new DateTime(2025, 4, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(3690),
+                            ExpiresAt = new DateTime(2025, 4, 11, 19, 52, 32, 622, DateTimeKind.Local).AddTicks(3981),
                             Password = "Am1I3JdgO3aS/VUSZ8kfKQ==",
                             RefreshToken = "",
-                            UpdatedAt = new DateTime(2025, 1, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(3690),
+                            UpdatedAt = new DateTime(2025, 1, 11, 19, 52, 32, 622, DateTimeKind.Local).AddTicks(3981),
                             UpdatedBy = "System"
                         });
                 });
@@ -274,7 +293,7 @@ namespace Data.Identity.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(5518),
+                            CreatedAt = new DateTime(2025, 1, 11, 19, 52, 32, 623, DateTimeKind.Local).AddTicks(1493),
                             CreatedBy = "System",
                             CredentialsId = 1,
                             Email = "admin.user@gmx.de",
@@ -283,7 +302,7 @@ namespace Data.Identity.Migrations
                             IsNewUserRegistration = false,
                             LastName = "User",
                             RoleId = 2,
-                            UpdatedAt = new DateTime(2025, 1, 9, 20, 41, 58, 249, DateTimeKind.Local).AddTicks(5518),
+                            UpdatedAt = new DateTime(2025, 1, 11, 19, 52, 32, 623, DateTimeKind.Local).AddTicks(1493),
                             UpdatedBy = "System"
                         });
                 });

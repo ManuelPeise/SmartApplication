@@ -3,11 +3,11 @@ import { StatelessApi } from "src/_lib/_api/StatelessApi";
 import {
   EmailCleanerConfiguration,
   EmailCleanerSettings,
-} from "./Types/EmailCleanerConfiguration";
+} from "../Types/EmailCleanerConfiguration";
 import { useStatefulApiService } from "src/_hooks/useStatefulApiService";
 import { useAuth } from "src/_hooks/useAuth";
 import { DropDownItem } from "src/_components/Input/Dropdown";
-import EmailCleanerPlaceholder from "./EmailCleanerPlaceHolder";
+import EmailCleanerPlaceholder from "./Components/EmailCleanerPlaceHolder";
 import EmailCleanerPage from "./EmailCleanerPage";
 
 const EmailCleanerSettingsContainer: React.FC = () => {
@@ -62,7 +62,6 @@ const EmailCleanerSettingsContainer: React.FC = () => {
     return <EmailCleanerPlaceholder />;
   }
 
-  console.log(data);
   return (
     <EmailCleanerPage
       accountDropdownItems={accountDropDownItems}

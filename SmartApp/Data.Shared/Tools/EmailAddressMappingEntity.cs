@@ -2,16 +2,17 @@
 
 namespace Data.Shared.Tools
 {
-    public class EmailAddressMappingEntity: AEntityBase
+    public class EmailAddressMappingEntity:AEntityBase
     {
-        public int UserId { get; set; }
-        public string? SourceAddress { get; set; }
-        public string? Domain { get; set; }
-        public bool ShouldCleanup { get; set; }
+        public bool IsActive { get; set; }
+        public int AccountId { get; set; }
+        public string EmailFolder { get; set; } = string.Empty;
         public bool IsSpam { get; set; }
-        public string? PredictedAs { get; set; }
-        public int EmailCleanerSettingsId { get; set; }
-        [ForeignKey(nameof(EmailCleanerSettingsId))]
-        public EmailCleanerSettingsEntity EmailCleanerSettings { get; set; } = new EmailCleanerSettingsEntity();
+        public string? PredictedValue { get; set; }
+        public string TargetFolder { get; set; } = string.Empty;
+        public int Action { get; set; } 
+        public int EmailDataId { get; set; }
+        [ForeignKey(nameof(EmailDataId))]
+        public EmailDataEntity EmailData { get; set; } = new EmailDataEntity();
     }
 }

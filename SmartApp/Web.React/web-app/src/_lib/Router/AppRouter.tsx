@@ -6,11 +6,13 @@ import ProtectedRoute from "./ProtectedRoute";
 import LogPageContainer from "src/Pages/Administration/Logging/LogPageContainer";
 import { browserRoutes } from "./RouterUtils";
 import Home from "src/_Stacks/PublicStack/Home";
-import EmailAccountSettingsPageInitializationContainer from "src/Pages/Settings/EmailAccountSettings/EmailAccountSettingsPageContainer";
 import RequestAccountPage from "src/Pages/Auth/RequestAccountPage";
 import UserAdministrationPageContainer from "src/Pages/Administration/UserAdministration/UserAdministrationPageContainer";
 import { UserRightTypeEnum } from "./routeTypes";
 import EmailCleanerSettingsContainer from "src/Pages/Settings/EmailCleanerSettings/EmailCleanerSettingsContainer";
+import EmailAddressMappingPageContainer from "src/Pages/Settings/EmailAddressMapping/EmailAddressMappingPageContainer";
+import EmailCleanerPageContainer from "src/Pages/EmailCleaner/EmailCleanerPage";
+import SandboxPage from "src/Pages/Sandbox/SandboxPage";
 
 const AppRouter: React.FC = () => {
   return (
@@ -57,10 +59,10 @@ const AppRouter: React.FC = () => {
               />
             }
           >
-            <Route
+            {/* <Route
               path={browserRoutes.emailAccountSettings}
-              Component={EmailAccountSettingsPageInitializationContainer}
-            />
+              Component={EmailAccountSettingsPageContainer}
+            /> */}
           </Route>
           <Route
             path={browserRoutes.home}
@@ -74,7 +76,25 @@ const AppRouter: React.FC = () => {
               path={browserRoutes.emailCleanerSettings}
               Component={EmailCleanerSettingsContainer}
             />
+            <Route
+              path={`${browserRoutes.emailCleanerMappings}:id`}
+              Component={EmailAddressMappingPageContainer}
+            />
           </Route>
+          <Route
+            path={browserRoutes.home}
+            element={
+              <ProtectedRoute
+                requiredRight={UserRightTypeEnum.EmailCleanerSettings}
+              />
+            }
+          >
+            <Route
+              path={browserRoutes.emailCleaner}
+              Component={EmailCleanerPageContainer}
+            />
+          </Route>
+          <Route path="/sandbox" Component={SandboxPage} />
         </Routes>
       </PageLayout>
     </BrowserRouter>

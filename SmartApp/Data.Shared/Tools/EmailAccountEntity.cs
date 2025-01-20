@@ -12,10 +12,11 @@ namespace Data.Shared.Tools
         public int Port { get; set; } = 993;
         public string EmailAddress { get; set; } = string.Empty;
         public string EncodedPassword { get; set; } = string.Empty;
+        public bool ConnectionTestPassed { get; set; }
         public string? MessageLogJson { get; set; }
-        public int? EmailCleanerSettingsId { get; set; }
-        [ForeignKey(nameof(EmailCleanerSettingsId))]
+        public int? SettingsId { get; set; }
+        [ForeignKey(nameof(SettingsId))]
         public EmailCleanerSettingsEntity? EmailCleanerSettings { get; set; }
-
+       
     }
 }

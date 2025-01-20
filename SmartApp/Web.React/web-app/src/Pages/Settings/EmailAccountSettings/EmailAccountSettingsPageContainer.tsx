@@ -1,12 +1,7 @@
 import React from "react";
-import {
-  EmailAccountInitializationSettingsProps,
-  EmailAccountSettingsModel,
-  EmailAccountSettingsProps,
-} from "../types";
+import { EmailAccountSettingsModel, EmailAccountSettingsProps } from "../types";
 import { StatelessApi } from "src/_lib/_api/StatelessApi";
 import { useAuth } from "src/_hooks/useAuth";
-import { useComponentInitialization } from "src/_hooks/useComponentInitialization";
 import SettingsLayout, {
   SettingsListItem,
 } from "src/_components/Layouts/SettingsLayout";
@@ -14,89 +9,24 @@ import { Box } from "@mui/material";
 import { useI18n } from "src/_hooks/useI18n";
 import EmailAccountSettingsForm from "./Components/EmailAccountSettingsForm";
 import { EmailProviderTypeEnum } from "src/_lib/_enums/EmailProviderTypeEnum";
-
-const initializeAsync = async (
-  token: string
-): Promise<EmailAccountInitializationSettingsProps> => {
-  const api = StatelessApi.create();
-
-  const loadSettings = async (): Promise<EmailAccountSettingsModel[]> => {
-    return api.get<EmailAccountSettingsModel[]>(
-      { serviceUrl: "EmailAccountSettings/GetEmailAccountSettings" },
-      token
-    );
-  };
-
-  const onSave = async (model: EmailAccountSettingsModel) => {
-    return api.post<EmailAccountSettingsModel>(
-      {
-        serviceUrl: "EmailAccountSettings/SaveEmailAccountSettings",
-        body: model,
-      },
-      token
-    );
-  };
-
-  const [settings] = await Promise.all([loadSettings()]);
-
-  return {
-    items: settings,
-    onSave: onSave,
-  };
-};
-
-const EmailAccountSettingsPageInitializationContainer: React.FC = () => {
-  const { authenticationState } = useAuth();
-
-  const { initProps, isInitialized } =
-    useComponentInitialization<EmailAccountInitializationSettingsProps>(
-      authenticationState.token,
-      initializeAsync
-    );
-
-  const [accountSettings, setAccountSettings] = React.useState<
-    EmailAccountSettingsModel[] | null
-  >(initProps?.items);
-
-  const handleAddAccount = React.useCallback(
-    (
-      account: EmailAccountSettingsModel,
-      initModel: EmailAccountSettingsModel,
-      index: number
-    ) => {
-      const accounts = accountSettings.slice();
-      accounts[index] = account;
-
-      setAccountSettings(accounts);
-    },
-    [accountSettings]
-  );
-
-  React.useEffect(() => {
-    if (initProps?.items != null) {
-      setAccountSettings(initProps?.items);
-    }
-  }, [initProps?.items]);
-
-  if (!isInitialized || accountSettings == null) {
-    return null;
-  }
-
-  return (
-    <EmailAccountSettingsPageContainer
-      authenticationState={authenticationState}
-      items={accountSettings}
-      handleAddAccount={handleAddAccount}
-      onSave={initProps.onSave}
-    />
-  );
-};
+import { useStatefulApiService } from "src/_hooks/useStatefulApiService";
 
 const EmailAccountSettingsPageContainer: React.FC<EmailAccountSettingsProps> = (
   props
 ) => {
-  const { authenticationState, items, handleAddAccount, onSave } = props;
+  const { authenticationState } = useAuth();
+  const api = StatelessApi.create();
   const { getResource } = useI18n();
+
+  const { data, sendPost, rebindData } = useStatefulApiService<
+    EmailAccountSettingsModel[]
+  >(
+    api,
+    {
+      serviceUrl: "EmailAccountSettings/GetEmailAccountSettings",
+    },
+    authenticationState.token
+  );
 
   const initializationModel = React.useMemo((): EmailAccountSettingsModel => {
     return {
@@ -118,13 +48,24 @@ const EmailAccountSettingsPageContainer: React.FC<EmailAccountSettingsProps> = (
     setSelectedAccountId(id);
   }, []);
 
+  const onSave = async (model: EmailAccountSettingsModel) => {
+    return sendPost<boolean>({
+      serviceUrl: "EmailAccountSettings/SaveEmailAccountSettings",
+      body: model,
+    }).then(async (res) => {
+      if (res) {
+        await rebindData();
+      }
+    });
+  };
+
   const accountItems = React.useMemo((): EmailAccountSettingsModel[] => {
-    const accountSettings = [...items];
+    const accountSettings = data != null ? [...data] : [];
 
     accountSettings.push(initializationModel);
 
     return accountSettings;
-  }, [initializationModel, items]);
+  }, [initializationModel, data]);
 
   const listItems = React.useMemo((): SettingsListItem[] => {
     if (!accountItems?.length) {
@@ -166,6 +107,10 @@ const EmailAccountSettingsPageContainer: React.FC<EmailAccountSettingsProps> = (
     return listItems;
   }, [accountItems, selectedAccountId, onSecectedAccountChanged, getResource]);
 
+  if (data == null) {
+    return null;
+  }
+
   return (
     <Box width="100%" height="100%">
       <Box padding={4}>
@@ -178,9 +123,7 @@ const EmailAccountSettingsPageContainer: React.FC<EmailAccountSettingsProps> = (
                 selectedIndex={selectedAccountId}
                 mode={acc.id === -1 ? "edit" : "view"}
                 model={acc}
-                initModel={initializationModel}
                 onSave={onSave}
-                updateAccountSettings={handleAddAccount}
               />
             ))}
           </Box>
@@ -190,4 +133,4 @@ const EmailAccountSettingsPageContainer: React.FC<EmailAccountSettingsProps> = (
   );
 };
 
-export default EmailAccountSettingsPageInitializationContainer;
+export default EmailAccountSettingsPageContainer;

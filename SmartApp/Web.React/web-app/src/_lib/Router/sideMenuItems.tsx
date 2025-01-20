@@ -49,6 +49,35 @@ export const getAdministrationSideMenuItem = (
   return item;
 };
 
+export const getToolsSideMenuItem = (
+  accessRights: AccessRight[]
+): SideMenuEntry | null => {
+  if (accessRights == null || !accessRights.some((x) => x.canView)) {
+    return null;
+  }
+
+  const item: SideMenuEntry = {
+    displayNameRecourceKey: "common.labelTools",
+    route: "#",
+    icon: (
+      <HomeRepairServiceRounded style={{ width: "30px", height: "30px" }} />
+    ),
+    childItems: [],
+  };
+
+  const emailCleanerRight =
+    accessRights.find((x) => x.name === "EmailCleaner") ?? null;
+
+  if (emailCleanerRight != null && emailCleanerRight.canView) {
+    item.childItems.push({
+      displayNameRecourceKey: "common.labelEmailCleaner",
+      route: browserRoutes.emailCleaner,
+      childItems: null,
+    });
+  }
+  return item;
+};
+
 export const getSettingsSideMenuItem = (
   accessRights: AccessRight[]
 ): SideMenuEntry | null => {

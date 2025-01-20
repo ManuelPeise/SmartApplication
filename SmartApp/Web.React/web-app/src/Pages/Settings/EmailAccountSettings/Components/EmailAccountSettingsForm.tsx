@@ -1,6 +1,5 @@
 import { Box, List } from "@mui/material";
 import React from "react";
-import { useFormState } from "src/_hooks/useFormState";
 import { EmailAccountSettingsModel } from "../../types";
 import ListItemInput from "src/_components/Lists/ListItemInput";
 import { useI18n } from "src/_hooks/useI18n";
@@ -12,67 +11,64 @@ import { emailProviderSettings } from "src/_lib/Settings/EmailProviderSettings";
 import EmailAccountHeaderListItem from "./EmailAccountHeaderListItem";
 import { emailValidation } from "src/_lib/validation";
 import EmailAccountModificationLog from "./EmailAccountModificationLog";
+import { isEqual } from "lodash";
 
 interface IProps {
   index: number;
   selectedIndex: number;
   model?: EmailAccountSettingsModel;
-  initModel: EmailAccountSettingsModel;
   mode: "view" | "edit";
-  onSave: (
-    settings: EmailAccountSettingsModel
-  ) => Promise<EmailAccountSettingsModel>;
-  updateAccountSettings: (
-    account: EmailAccountSettingsModel,
-    initModel: EmailAccountSettingsModel,
-    index: number
-  ) => void;
+  onSave: (settings: EmailAccountSettingsModel) => Promise<void>;
 }
 
 const EmailAccountSettingsForm: React.FC<IProps> = (props) => {
-  const {
-    index,
-    selectedIndex,
-    model,
-    initModel,
-    mode,
-    onSave,
-    updateAccountSettings,
-  } = props;
+  const { index, selectedIndex, model, mode, onSave } = props;
   const { getResource } = useI18n();
 
   const [formMode, setFormMode] = React.useState(mode);
+  const [formState, setFormState] =
+    React.useState<EmailAccountSettingsModel>(model);
 
+  React.useEffect(() => {
+    if (model) {
+      setFormState(model);
+    }
+  }, [model]);
+
+  const isModified = React.useMemo(() => {
+    return isEqual(model, formState);
+  }, [model, formState]);
+
+  const handleChange = React.useCallback(
+    (partialModel: Partial<EmailAccountSettingsModel>) => {
+      setFormState({ ...formState, ...partialModel });
+    },
+    [formState]
+  );
+
+  const handleReset = React.useCallback(() => {
+    setFormState(model);
+  }, [model]);
   const toggleMode = React.useCallback((mode: "view" | "edit") => {
     setFormMode(mode);
   }, []);
 
-  const validationCallback = React.useCallback(
-    (model: EmailAccountSettingsModel): boolean => {
-      const isValidAuthData =
-        model.providerType !== EmailProviderTypeEnum.None
-          ? emailValidation(model.emailAddress) &&
-            model.password !== "" &&
-            model.accountName !== ""
-          : model.emailAddress === "" &&
-            model.password === "" &&
-            model.accountName !== "";
+  const isValid = React.useMemo((): boolean => {
+    const isValidAuthData =
+      formState.providerType !== EmailProviderTypeEnum.None &&
+      emailValidation(formState.emailAddress) &&
+      formState.password !== "" &&
+      formState.accountName !== "";
 
-      return isValidAuthData;
-    },
-    []
-  );
-
-  const form = useFormState<EmailAccountSettingsModel>(
-    model,
-    validationCallback
-  );
+    return isValidAuthData;
+  }, [
+    formState.accountName,
+    formState.emailAddress,
+    formState.password,
+    formState.providerType,
+  ]);
 
   const isReadonly = formMode !== "edit";
-
-  const { formState, isDirty, isValid } = React.useMemo(() => {
-    return form.subScribe();
-  }, [form]);
 
   const providerDropdownItems = React.useMemo((): DropDownItem[] => {
     const items: DropDownItem[] = emailProviderSettings.map((s, index) => {
@@ -91,7 +87,7 @@ const EmailAccountSettingsForm: React.FC<IProps> = (props) => {
         (x) => x.type === type
       );
 
-      form.handleUpdatePartial({
+      handleChange({
         server: providerSettings.server,
         port: providerSettings.port,
         providerType: providerSettings.type,
@@ -100,17 +96,12 @@ const EmailAccountSettingsForm: React.FC<IProps> = (props) => {
         password: type === EmailProviderTypeEnum.None ? "" : formState.password,
       });
     },
-    [form, formState]
+    [formState, handleChange]
   );
 
   const handleSaveSettings = React.useCallback(async () => {
-    await onSave(formState).then((res) => {
-      if (res !== null) {
-        form.handleUpdate(model);
-        updateAccountSettings(res, initModel, index);
-      }
-    });
-  }, [form, model, formState, initModel, index, onSave, updateAccountSettings]);
+    await onSave(formState).then((res) => {});
+  }, [formState, onSave]);
 
   if (index !== selectedIndex) {
     return null;
@@ -160,9 +151,7 @@ const EmailAccountSettingsForm: React.FC<IProps> = (props) => {
               formState.providerType === EmailProviderTypeEnum.None
             }
             value={formState.accountName}
-            onChange={(value) =>
-              form.handleUpdatePartial({ accountName: value })
-            }
+            onChange={(value) => handleChange({ accountName: value })}
           />
         </ListItemInput>
         <ListItemInput label={getResource("settings.descriptionEmail")}>
@@ -174,9 +163,7 @@ const EmailAccountSettingsForm: React.FC<IProps> = (props) => {
               formState.providerType === EmailProviderTypeEnum.None
             }
             value={formState.emailAddress}
-            onChange={(value) =>
-              form.handleUpdatePartial({ emailAddress: value })
-            }
+            onChange={(value) => handleChange({ emailAddress: value })}
           />
         </ListItemInput>
         <ListItemInput label={getResource("settings.descriptionPassword")}>
@@ -189,7 +176,7 @@ const EmailAccountSettingsForm: React.FC<IProps> = (props) => {
               formState.providerType === EmailProviderTypeEnum.None
             }
             value={formState.password}
-            onChange={(value) => form.handleUpdatePartial({ password: value })}
+            onChange={(value) => handleChange({ password: value })}
           />
         </ListItemInput>
         {formState.messageLog && (
@@ -212,12 +199,12 @@ const EmailAccountSettingsForm: React.FC<IProps> = (props) => {
         >
           <FormButton
             label={getResource("common.labelCancel")}
-            disabled={!isDirty}
-            onAction={form.handleReset}
+            disabled={isModified}
+            onAction={handleReset}
           />
           <FormButton
             label={getResource("common.labelSave")}
-            disabled={!isDirty || !isValid}
+            disabled={isModified || !isValid}
             onAction={handleSaveSettings}
           />
         </Box>

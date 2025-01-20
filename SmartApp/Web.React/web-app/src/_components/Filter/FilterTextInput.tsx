@@ -6,11 +6,12 @@ interface IProps {
   label: string;
   filterText: string;
   disabled?: boolean;
+  fullWidth?: boolean;
   onChange: (value: string) => void;
 }
 
 const FilterTextInput: React.FC<IProps> = (props) => {
-  const { filterText, label, disabled, onChange } = props;
+  const { filterText, label, disabled, fullWidth, onChange } = props;
 
   const handleChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +24,7 @@ const FilterTextInput: React.FC<IProps> = (props) => {
     <TextField
       type="text"
       label={label}
+      fullWidth={fullWidth}
       disabled={disabled}
       value={filterText}
       variant="standard"

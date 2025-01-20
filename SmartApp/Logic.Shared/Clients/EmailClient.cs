@@ -1,11 +1,11 @@
 ﻿using Data.Shared;
 using Logic.Shared.Interfaces;
+using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Shared.Models.Identity;
-
 
 namespace Logic.Shared.Clients
 {
@@ -31,6 +31,70 @@ namespace Logic.Shared.Clients
             await _imapClient.AuthenticateAsync(email, decodedPassword);
 
             return _imapClient.IsAuthenticated;
+        }
+
+        public async Task<List<string>> GetEmailFolders()
+        {
+            var folders = new List<string>();
+
+            if (_imapClient.IsConnected && _imapClient.IsAuthenticated) 
+            {
+                var inbox = _imapClient.Inbox;
+
+                await inbox.OpenAsync(FolderAccess.ReadOnly);
+
+                if (!inbox.IsOpen)
+                {
+                    return folders;
+                }
+
+                var foldersResult = await _imapClient.GetFoldersAsync(_imapClient.PersonalNamespaces[0]);
+
+                var test = from folder in foldersResult
+                          select folder.ToDictionary(x => x.From);
+
+                folders = (from folder in foldersResult
+                          select folder.Name).ToList();
+
+            }
+
+            return folders;
+        }
+
+        public async Task<List<IMessageSummary>> LoadEnvelopeData(MessageSummaryItems messageSummaryItem, List<string>? foldernames = null)
+        {
+            var messageSummaryCollection = new List<IMessageSummary>();
+
+            if (_imapClient.IsAuthenticated && _imapClient.IsConnected)
+            {
+                var inbox = _imapClient.Inbox;
+
+                await inbox.OpenAsync(FolderAccess.ReadOnly);
+
+                if (!inbox.IsOpen)
+                {
+                    return messageSummaryCollection;
+                }
+
+                var folders = await _imapClient.GetFoldersAsync(_imapClient.PersonalNamespaces[0]);
+               
+                foreach(var folder in folders) 
+                {
+                    if(foldernames != null && !foldernames.Contains(folder.Name)) { continue; }
+
+                    await folder.OpenAsync(FolderAccess.ReadOnly);
+
+                    if (folder.IsOpen)
+                    {
+                        messageSummaryCollection.AddRange(await folder.FetchAsync(0, folder.Count - 1, messageSummaryItem));
+
+                        folder.Close();
+                    }
+                }
+
+            }
+
+            return messageSummaryCollection;
         }
 
         public async Task SendMailViaSmtp(string smtpServer, int port, string from, string password, string to, string subject, string body, string? html = null)
@@ -72,6 +136,10 @@ namespace Logic.Shared.Clients
             }
         }
 
+        public async Task Disconnect()
+        {
+            await _imapClient.DisconnectAsync(true);
+        }
 
         #region private members
 

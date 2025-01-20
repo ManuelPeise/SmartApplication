@@ -5,6 +5,7 @@ import DrawerListItem from "./DrawerListItem";
 import {
   getAdministrationSideMenuItem,
   getSettingsSideMenuItem,
+  getToolsSideMenuItem,
   SideMenuEntry,
 } from "./sideMenuItems";
 import { useI18n } from "src/_hooks/useI18n";
@@ -38,6 +39,13 @@ const AppDrawer: React.FC<IProps> = (props) => {
       items.push(settingsSideMenuItem);
     }
 
+    const toolsSideMenuItem = getToolsSideMenuItem(
+      accessRights?.accessRights.filter((x) => x.group === "Tools")
+    );
+    if (toolsSideMenuItem != null) {
+      items.push(toolsSideMenuItem);
+    }
+
     return items;
   }, [accessRights]);
 
@@ -45,6 +53,7 @@ const AppDrawer: React.FC<IProps> = (props) => {
     <Drawer
       anchor="left"
       open={open}
+      sx={{ width: "100%", zIndex: 1000 }}
       slotProps={{
         backdrop: {
           sx: {
@@ -53,7 +62,6 @@ const AppDrawer: React.FC<IProps> = (props) => {
           },
         },
       }}
-      sx={{ zIndex: 1000 }}
     >
       <Box
         display="flex"
@@ -61,19 +69,15 @@ const AppDrawer: React.FC<IProps> = (props) => {
         padding={2}
         bgcolor="primary.dark"
       >
-        <IconButton
-          size="small"
-          color="secondary"
-          onClick={onClose.bind(null, false)}
-        >
+        <IconButton size="small" color="secondary" onClick={onClose}>
           <ArrowBackRounded />
         </IconButton>
       </Box>
-      <Box height="100%" width="300px" bgcolor="primary.dark">
+      <Box height="100%" bgcolor="primary.dark">
         <List
-          disablePadding
           style={{
             width: "100%",
+            backgroundColor: "primary.dark",
           }}
         >
           {sideMenueListItems.map((item, key) => {
@@ -81,7 +85,7 @@ const AppDrawer: React.FC<IProps> = (props) => {
               <DrawerListItem
                 key={key}
                 {...item}
-                onCloseMenu={onClose.bind(null, false)}
+                onCloseMenu={onClose}
                 getResource={getResource}
               />
             );

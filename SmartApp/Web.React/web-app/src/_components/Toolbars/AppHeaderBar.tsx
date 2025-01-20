@@ -41,6 +41,8 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
         )}`;
       case browserRoutes.log:
         return `${process.env.REACT_APP_Name} - Log`;
+      case browserRoutes.emailCleaner:
+        return `${process.env.REACT_APP_Name} - Email Cleaner`;
       case browserRoutes.emailAccountSettings:
         return `${process.env.REACT_APP_Name} - Email Account Settings`;
       case browserRoutes.emailCleanerSettings:
@@ -54,8 +56,9 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
 
   return (
     <AppBar
+      id="app-tool-bar"
       position="relative"
-      style={{ backgroundColor: "#00004d", width: "100%" }}
+      style={{ height: "6vh", backgroundColor: "#00004d", width: "100%" }}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box>

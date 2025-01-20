@@ -13,11 +13,13 @@ interface IProps {
   minWidth?: number;
   items: DropDownItem[];
   value: number;
+  maxHeight?: number;
   onChange: (value: number) => void;
 }
 
 const Dropdown: React.FC<IProps> = (props) => {
-  const { disabled, items, fullWidth, minWidth, value, onChange } = props;
+  const { disabled, items, fullWidth, minWidth, value, maxHeight, onChange } =
+    props;
 
   const handleChange = React.useCallback(
     (e: SelectChangeEvent<number>) => {
@@ -32,6 +34,11 @@ const Dropdown: React.FC<IProps> = (props) => {
       fullWidth={fullWidth}
       sx={{ minWidth: minWidth }}
       value={value}
+      MenuProps={{
+        style: {
+          maxHeight: maxHeight,
+        },
+      }}
       variant="standard"
       onChange={handleChange}
     >

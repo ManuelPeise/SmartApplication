@@ -38,6 +38,7 @@ const DrawerListItem: React.FC<ISideMenuItemProps> = (props) => {
         display: "flex",
         flexDirection: "column",
         color: "#fff",
+        minWidth: "250px",
       }}
       onClick={onClickHandler && onClickHandler.bind(null, !expanded)}
     >
@@ -70,8 +71,8 @@ const DrawerListItem: React.FC<ISideMenuItemProps> = (props) => {
           </ListItemText>
         )}
       </Box>
-      <Box display="flex" flexDirection="column" width="100%">
-        <List sx={{ paddingLeft: "1.5rem", width: "100%" }}>
+      <Box display="flex" flexDirection="column">
+        <List sx={{ paddingLeft: "1.5rem" }}>
           {expanded &&
             childItems.map((item, key) => (
               <ListItem

@@ -1,5 +1,5 @@
 import { AccountCircleRounded } from "@mui/icons-material";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Grid2, Paper, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import FormButton from "src/_components/Buttons/FormButton";
@@ -58,9 +58,11 @@ const LoginPage: React.FC = () => {
     !passwordValidation(loginModel.password);
 
   return (
-    <Box
+    <Grid2
+      container
+      id="login-page-container"
       width="100%"
-      height="100%"
+      overflow="hidden"
       display="flex"
       justifyContent="center"
       alignItems="center"
@@ -70,7 +72,7 @@ const LoginPage: React.FC = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Box width="30%" height="30%">
+      <Grid2 width="25rem">
         <Paper sx={{ padding: 4, opacity: 0.7 }}>
           <Box
             width="100%"
@@ -128,8 +130,8 @@ const LoginPage: React.FC = () => {
             />
           </Box>
         </Paper>
-      </Box>
-    </Box>
+      </Grid2>
+    </Grid2>
   );
 };
 

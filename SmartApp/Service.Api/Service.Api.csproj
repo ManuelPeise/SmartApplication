@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Logic.Administration\Logic.Administration.csproj" />
+    <ProjectReference Include="..\Logic.EmailCleaner\Logic.EmailCleaner.csproj" />
     <ProjectReference Include="..\Logic.Identity\Logic.Identity.csproj" />
     <ProjectReference Include="..\Logic.Settings\Logic.Settings.csproj" />
     <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />

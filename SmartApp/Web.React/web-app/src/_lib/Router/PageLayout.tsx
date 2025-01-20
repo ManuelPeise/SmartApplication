@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import React, { PropsWithChildren } from "react";
 import AppHeaderBar from "src/_components/Toolbars/AppHeaderBar";
 import { colors } from "../colors";
@@ -9,30 +9,30 @@ const PageLayout: React.FC<PropsWithChildren> = (props) => {
   const [sideMenuOpen, setSideMenuOpen] = React.useState<boolean>(false);
 
   return (
-    <Box
-      width="100vw"
+    <Grid2
+      id="page-layout-container"
+      container
       height="100vh"
-      padding={0}
-      margin={0}
+      width="100%"
       display="flex"
       flexDirection="column"
+      bgcolor={colors.background}
     >
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="100%"
-        bgcolor={colors.background}
+      <AppHeaderBar onOpenSideMenu={setSideMenuOpen} />
+      <AppDrawer
+        open={sideMenuOpen}
+        onClose={setSideMenuOpen.bind(null, false)}
+      />
+      <Grid2
+        id="page-layout-child-container"
+        width="100%"
+        height="94vh"
+        container
+        size={12}
       >
-        <AppHeaderBar onOpenSideMenu={setSideMenuOpen} />
-        <AppDrawer
-          open={sideMenuOpen}
-          onClose={setSideMenuOpen.bind(null, false)}
-        />
-        <Box width="100%" height="100%">
-          <Box height="100%">{children}</Box>
-        </Box>
-      </Box>
-    </Box>
+        {children}
+      </Grid2>
+    </Grid2>
   );
 };
 
