@@ -5,6 +5,7 @@ namespace Data.ContextAccessor.Interfaces
 {
     public interface IRepositoryBase<T> : IDisposable where T : AEntityBase
     {
+        int GetEntityCount(Expression<Func<T, bool>>? predicate);
         Task<List<T>> GetAllAsync();
         Task<T?> GetSingle(Expression<Func<T, bool>> predicate, bool asNoTracking = false);
         Task<T?> GetFirstOrDefault(Expression<Func<T, bool>> predicate, bool asNoTracking = false);

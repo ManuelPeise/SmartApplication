@@ -18,6 +18,17 @@ namespace Data.ContextAccessor
             _contextAccessor = contextAccessor;
         }
 
+        public int GetEntityCount(Expression<Func<T, bool>>? predicate)
+        {
+            var table = _context.Set<T>();
+
+            if(predicate != null)
+            {
+                return table.Where(predicate).Count();
+            }
+
+            return table.Count();
+        }
 
         public async Task<List<T>> GetAllAsync()
         {
