@@ -186,7 +186,7 @@ namespace Logic.Ai.SpamPrediction
 
         private async Task SaveMetrics(CalibratedBinaryClassificationMetrics metrics)
         {
-            await _aiRepository.AiScoreRepository.Add(new AiScore
+            await _aiRepository.AiScoreRepository.AddAsync(new AiScore
             {
                 TimeStamp = DateTime.UtcNow,
                 Accuracy = metrics.Accuracy,
@@ -197,14 +197,15 @@ namespace Logic.Ai.SpamPrediction
                 Type = SpamPrediction
             });
 
-            await _aiRepository.AiScoreRepository.SaveChanges();
+            await _aiRepository.AiScoreRepository.SaveChangesAsync();
         }
 
         private async Task<List<SpamPredictionMetric>> GetSpamPredictionMetrics()
         {
-            var metrics = await _aiRepository.AiScoreRepository.GetAll(x => x.TimeStamp.Date > DateTime.UtcNow.AddDays(-30).Date);
+            var metrics = await _aiRepository.AiScoreRepository.GetAllAsync();
 
-            return metrics?.GroupBy(x => x.TimeStamp)
+            return metrics?
+                .Where(x => x.TimeStamp.Date > DateTime.UtcNow.AddDays(-30).Date).GroupBy(x => x.TimeStamp)
                 .Select(grp => new SpamPredictionMetric
                 {
                     TimeStamp = grp.Key.ToString("dd.MM.yyyy"),

@@ -1,4 +1,4 @@
-﻿using Logic.Shared.Interfaces;
+﻿using Data.ContextAccessor.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models.Administration.Log;
@@ -8,23 +8,36 @@ namespace Service.Api.Administration
     [Authorize]
     public class LogController : ApiControllerBase
     {
-        private readonly ILogMessageService _logMessageService;
+        private readonly IAdministrationRepository _administrationRepository;
 
-        public LogController(ILogMessageService logMessageService)
+        public LogController(IAdministrationRepository administrationRepository)
         {
-            _logMessageService = logMessageService;
+            _administrationRepository = administrationRepository;
         }
 
         [HttpGet(Name = "GetLogMessages")]
         public async Task<List<LogMessageExportModel>> GetLogMessages()
         {
-            return await _logMessageService.GetLogmessages();
+            var entities = await _administrationRepository.LogMessageRepository.GetAllAsync();
+
+            return entities.Select(x => new LogMessageExportModel
+            {
+                Id = x.Id,
+                Message = x.Message,
+                ExceptionMessage = x.ExceptionMessage,
+                MessageType = x.MessageType,
+                TimeStamp = x.TimeStamp,
+            }).ToList();
         }
 
         [HttpPost(Name = "DeleteMessages")]
-        public async Task DeleteMessages([FromBody]List<int> messageIds)
+        public async Task DeleteMessages([FromBody] List<int> messageIds)
         {
-            await _logMessageService.DeleteMessages(messageIds);
+            //foreach (var messageId in messageIds) {
+            //{
+            //    await _administrationRepository.LogMessageRepository.Delete(messageId);
+            //})
+            //await _administrationRepository.LogMessageRepository.Delete.DeleteMessages(messageIds);
 
         }
     }

@@ -29,7 +29,7 @@ namespace Logic.Identity
         {
             var response = string.Empty;
 
-            var user = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetSingle(usr => usr.Email == request.Email) ?? null;
+            var user = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetFirstOrDefault(usr => usr.Email == request.Email) ?? null;
 
             if (user == null)
             {
@@ -51,9 +51,9 @@ namespace Logic.Identity
 
                 user.UserCredentials.RefreshToken = refreshToken;
 
-                await _administrationRepository.IdentityRepository.UserCredentialsRepository.AddOrUpdate(user.UserCredentials, x => x.Id == user.UserCredentials.Id);
+                 _administrationRepository.IdentityRepository.UserCredentialsRepository.Update(user.UserCredentials);
 
-                await _administrationRepository.IdentityRepository.SaveChanges();
+                await _administrationRepository.IdentityRepository.UserAccessRightRepository.SaveChangesAsync();
 
                 response = jwt;
                 return response;
@@ -77,9 +77,9 @@ namespace Logic.Identity
 
                 user.UserCredentials.RefreshToken = string.Empty;
 
-                await _administrationRepository.IdentityRepository.UserCredentialsRepository.AddOrUpdate(user.UserCredentials, x => x.Id == user.CredentialsId);
+                await _administrationRepository.IdentityRepository.UserCredentialsRepository.AddIfNotExists(user.UserCredentials, x => x.Id == user.CredentialsId);
 
-                await _administrationRepository.SaveChanges();
+                await _administrationRepository.IdentityRepository.UserIdentityRepository.SaveChangesAsync();
 
                 return response;
         }
@@ -97,7 +97,7 @@ namespace Logic.Identity
                     return false;
                 }
 
-                var entity = await _administrationRepository.IdentityRepository.UserIdentityRepository.AddOrUpdate(new UserIdentity
+                var entity = new UserIdentity
                 {
                     FirstName = request.FirstName,
                     LastName = request.LastName,
@@ -110,11 +110,14 @@ namespace Logic.Identity
                         Password = string.Empty
                     },
                     RoleId = (int)userRoleId,
-                }, usr => usr.Email.ToLower() == request.Email.ToLower());
+                };
 
-                await _administrationRepository.IdentityRepository.SaveChanges();
+                var result = await _administrationRepository.IdentityRepository.UserIdentityRepository.AddIfNotExists(entity, 
+                    usr => usr.Email.ToLower() == request.Email.ToLower());
 
-                if (entity != null)
+                await _administrationRepository.IdentityRepository.UserIdentityRepository.SaveChangesAsync();
+
+                if (result)
                 {
                     var accessRightEntities = await _administrationRepository.IdentityRepository.AccessRightRepository.GetAllAsync();
 
@@ -127,7 +130,7 @@ namespace Logic.Identity
                             continue;
                         }
 
-                        await _administrationRepository.IdentityRepository.UserAccessRightRepository.Add(new UserAccessRightEntity
+                        await _administrationRepository.IdentityRepository.UserAccessRightRepository.AddAsync(new UserAccessRightEntity
                         {
                             UserId = entity.Id,
                             AccessRightId = accessRight.Id,
@@ -138,7 +141,7 @@ namespace Logic.Identity
                     }
                 }
 
-                await _administrationRepository.IdentityRepository.SaveChanges();
+                await _administrationRepository.IdentityRepository.UserIdentityRepository.SaveChangesAsync();
                
 
                 return true;
@@ -150,12 +153,12 @@ namespace Logic.Identity
 
         #region private members
 
-        private async Task LoadCredentials(IRepositoryBase<UserCredentials> credentialsRepository, int credentialsId)
+        private async Task LoadCredentials(IDbContextRepository<UserCredentials> credentialsRepository, int credentialsId)
         {
             await credentialsRepository.GetFirstOrDefault(cred => cred.Id == credentialsId);
         }
 
-        private async Task LoadUserRole(IRepositoryBase<UserRole> userRoleRepository, int roleId)
+        private async Task LoadUserRole(IDbContextRepository<UserRole> userRoleRepository, int roleId)
         {
             await userRoleRepository.GetFirstOrDefault(role => role.Id == roleId);
         }
@@ -174,7 +177,7 @@ namespace Logic.Identity
             return claims;
         }
 
-        private async Task<int?> LoadUserRoleId(IRepositoryBase<UserRole> userRoleRepository, UserRoleEnum userRole)
+        private async Task<int?> LoadUserRoleId(IDbContextRepository<UserRole> userRoleRepository, UserRoleEnum userRole)
         {
             var role = await userRoleRepository.GetFirstOrDefault(r => r.RoleType == userRole);
 

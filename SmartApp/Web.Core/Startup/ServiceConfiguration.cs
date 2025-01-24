@@ -1,8 +1,7 @@
 ﻿using Data.AiContext;
-using Data.AppContext;
 using Data.ContextAccessor;
 using Data.ContextAccessor.Interfaces;
-using Data.Identity;
+using Data.Databases;
 using Logic.Administration;
 using Logic.Administration.Interfaces;
 using Logic.EmailCleaner;
@@ -24,7 +23,7 @@ namespace Web.Core.Startup
     {
         public static void ConfigureServices(WebApplicationBuilder builder, string corsPolicy, string? identityContextConnectionString, string? applicationContextConnectionString, string? aiContextConnectionString)
         {
-            builder.Services.AddDbContext<IdentityDbContext>(opt =>
+            builder.Services.AddDbContext<UserIdentityContext>(opt =>
             {
                 if (identityContextConnectionString == null)
                 {
@@ -34,7 +33,7 @@ namespace Web.Core.Startup
                 opt.UseMySQL(identityContextConnectionString);
             });
 
-            builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+            builder.Services.AddDbContext<ApplicationContext>(opt =>
             {
                 if (applicationContextConnectionString == null)
                 {
@@ -58,9 +57,8 @@ namespace Web.Core.Startup
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IClaimsAccessor, ClaimsAccessor>();
-            builder.Services.AddScoped<ILogRepository, LogRepository>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
-            builder.Services.AddScoped<ILogMessageService, LogMessageService>();
+           
             builder.Services.AddScoped<IEmailClient, EmailClient>();
             builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
             builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();

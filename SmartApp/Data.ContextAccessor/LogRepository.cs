@@ -1,5 +1,5 @@
-﻿using Data.AppContext;
-using Data.ContextAccessor.Interfaces;
+﻿using Data.ContextAccessor.Interfaces;
+using Data.Databases;
 using Data.Shared;
 using Data.Shared.Logging;
 using Microsoft.AspNetCore.Http;
@@ -10,10 +10,10 @@ namespace Data.ContextAccessor
     public class LogRepository : ILogRepository
     {
         private bool disposedValue;
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly ApplicationContext _applicationDbContext;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public LogRepository(ApplicationDbContext context, IHttpContextAccessor contextAccessor)
+        public LogRepository(ApplicationContext context, IHttpContextAccessor contextAccessor)
         {
             _applicationDbContext = context;
             _contextAccessor = contextAccessor;

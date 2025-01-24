@@ -27,16 +27,18 @@ namespace Logic.Administration
 
             try
             {
-                var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAll(x => x.UserId == userId) ?? new List<UserAccessRightEntity>();
+                var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAllAsync() ?? new List<UserAccessRightEntity>();
 
-                if (!userAccessRights.Any())
+                var rights = userAccessRights.Where(x => x.UserId == userId);
+
+                if (!rights.Any())
                 {
                     return userAccessRightModel;
                 }
 
                 foreach (var right in userAccessRights)
                 {
-                    var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetSingle(x => x.Id == right.AccessRightId);
+                    var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetFirstOrDefault(x => x.Id == right.AccessRightId);
 
                     if (accessRight == null)
                     {
@@ -58,7 +60,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could not load access rights for user {userId}.",
                     ExceptionMessage = exception.Message,
@@ -68,6 +70,8 @@ namespace Logic.Administration
                     CreatedBy = "System",
                     CreatedAt = DateTime.UtcNow,
                 });
+
+                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
 
                 return userAccessRightModel;
             }
@@ -96,9 +100,11 @@ namespace Logic.Administration
                         AccessRights = new List<AccessRight>()
                     };
 
-                    var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAll(x => x.UserId == userEntity.Id) ?? new List<UserAccessRightEntity>();
+                    var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAllAsync() ?? new List<UserAccessRightEntity>();
 
-                    if (!userAccessRights.Any())
+                    var rights = userAccessRights.Where(x => x.UserId == userEntity.Id);
+
+                    if (!rights.Any())
                     {
                         accessRightModels.Add(model);
 
@@ -107,7 +113,7 @@ namespace Logic.Administration
 
                     foreach (var right in userAccessRights)
                     {
-                        var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetSingle(x => x.Id == right.AccessRightId);
+                        var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetFirstOrDefault(x => x.Id == right.AccessRightId);
 
                         if (accessRight == null)
                         {
@@ -132,7 +138,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not load users with access rights.",
                     ExceptionMessage = exception.Message,
@@ -143,6 +149,7 @@ namespace Logic.Administration
                     CreatedAt = DateTime.UtcNow,
                 });
 
+                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
                 return accessRightModels;
             }
         }

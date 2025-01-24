@@ -39,7 +39,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _aiRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _aiRepository.LogRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not load spam classification page data.",
                     ExceptionMessage = exception.Message,
@@ -48,7 +48,7 @@ namespace Logic.Administration
                     Module = nameof(SpamClassificationDataService)
                 });
 
-                await _aiRepository.LogRepository.SaveChanges();
+                await _aiRepository.LogRepository.SaveChangesAsync();
 
                 return new SpamClassificationPageData
                 {
@@ -92,9 +92,9 @@ namespace Logic.Administration
 
                 var hasModifications = false;
 
-                if (updatedTrainingEntities.Any())
+                if (updatedTrainingEntities != null && updatedTrainingEntities.Any())
                 {
-                    _aiRepository.SpamClassificationTrainingDataRepository.UpdateRange(updatedTrainingEntities);
+                    await _aiRepository.SpamClassificationTrainingDataRepository.AddRange(updatedTrainingEntities);
                     hasModifications = true;
                 }
 
@@ -108,14 +108,14 @@ namespace Logic.Administration
 
                 if (hasModifications)
                 {
-                    await _aiRepository.SpamClassificationTrainingDataRepository.SaveChanges();
+                    await _aiRepository.SpamClassificationTrainingDataRepository.SaveChangesAsync();
                 }
 
                 return true;
             }
             catch (Exception exception)
             {
-                await _aiRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _aiRepository.LogRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not save spam prediction training data.",
                     ExceptionMessage = exception.Message,
@@ -124,7 +124,7 @@ namespace Logic.Administration
                     Module = nameof(SpamClassificationDataService)
                 });
 
-                await _aiRepository.LogRepository.SaveChanges();
+                await _aiRepository.LogRepository.SaveChangesAsync();
 
                 return false;
             }
@@ -142,7 +142,7 @@ namespace Logic.Administration
                 }
                 catch (Exception exception)
                 {
-                    await _aiRepository.LogRepository.AddMessage(new LogMessageEntity
+                    await _aiRepository.LogRepository.AddAsync(new LogMessageEntity
                     {
                         Message = "Could not update spam prediction training csv.",
                         ExceptionMessage = exception.Message,
@@ -151,7 +151,7 @@ namespace Logic.Administration
                         Module = nameof(SpamClassificationDataService)
                     });
 
-                    await _aiRepository.LogRepository.SaveChanges();
+                    await _aiRepository.LogRepository.SaveChangesAsync();
                 }
             }
         }
@@ -204,7 +204,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _aiRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _aiRepository.LogRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not load available domain data for spam classification.",
                     ExceptionMessage = exception.Message,
@@ -213,7 +213,7 @@ namespace Logic.Administration
                     Module = nameof(SpamClassificationDataService)
                 });
 
-                await _aiRepository.LogRepository.SaveChanges();
+                await _aiRepository.LogRepository.SaveChangesAsync();
 
                 return (0, 0, new List<EmailDomainModel>());
             }

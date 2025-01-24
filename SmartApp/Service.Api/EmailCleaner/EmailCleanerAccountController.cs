@@ -1,9 +1,7 @@
-﻿using Data.Shared.Tools;
-using Logic.EmailCleaner.Interfaces;
+﻿using Logic.EmailCleaner.Interfaces;
 using Logic.EmailCleaner.Models;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Enums;
-using Shared.Models.Settings.EmailAccountMappings;
 
 namespace Service.Api.EmailCleaner
 {

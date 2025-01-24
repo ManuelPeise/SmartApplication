@@ -9,6 +9,5 @@ namespace Data.ContextAccessor.Interfaces
         Task<List<LogMessageEntity>> GetAllAsync(DateTime from, DateTime? to);
         Task DeleteMessages(DateTime from, DateTime? to);
         Task DeleteMessages(List<int> messageIds);
-        Task SaveChanges();
     }
 }

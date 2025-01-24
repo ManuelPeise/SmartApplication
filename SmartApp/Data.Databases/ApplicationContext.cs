@@ -2,17 +2,11 @@
 using Data.Shared.Tools;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.AppContext
+namespace Data.Databases
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationContext: DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            
-        }
+        public ApplicationContext(DbContextOptions<ApplicationContext> options): base(options) { }
 
         public DbSet<LogMessageEntity> LogMessageTable { get; set; }
         public DbSet<EmailAccountEntity> EmailAccountsTable { get; set; }

@@ -80,7 +80,7 @@ namespace Logic.EmailCleaner
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not load email address mappings!",
                     ExceptionMessage = exception.Message,
@@ -89,7 +89,7 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerMappingService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
                 return new List<EmailMappingModel>();
             }
@@ -108,7 +108,7 @@ namespace Logic.EmailCleaner
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not update email address mappings!",
                     ExceptionMessage = exception.Message,
@@ -117,7 +117,7 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerMappingService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
                 return false;
             }
@@ -129,7 +129,9 @@ namespace Logic.EmailCleaner
 
             var mappingUpdateDictionary = mappingEntries.ToDictionary(x => x.Id);
 
-            var entitiesToUpdate = await _settingsRepository.EmailAddressMappingRepository.GetAll(x => mappingIds.Contains(x.Id)) ?? new List<EmailAddressMappingEntity>();
+            var allEntitiesToUpdate = await _settingsRepository.EmailAddressMappingRepository.GetAllAsync() ?? new List<EmailAddressMappingEntity>();
+
+            var entitiesToUpdate = allEntitiesToUpdate.Where(x => mappingIds.Contains(x.Id));
 
             if (!entitiesToUpdate.Any())
             {
@@ -144,10 +146,10 @@ namespace Logic.EmailCleaner
                 entity.PredictedValue = mappingUpdateDictionary[entity.Id].PredictedValue;
                 entity.Action = mappingUpdateDictionary[entity.Id].Action;
 
-                await _settingsRepository.EmailAddressMappingRepository.AddOrUpdate(entity, x => x.Id == entity.Id);
+               _settingsRepository.EmailAddressMappingRepository.Update(entity);
             }
 
-            await _settingsRepository.SaveChanges();
+            await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
             return true;
         }
@@ -226,14 +228,14 @@ namespace Logic.EmailCleaner
                 {
                     await _settingsRepository.EmailAddressMappingRepository.AddRange(newMappingEntities);
 
-                    await _settingsRepository.EmailAddressMappingRepository.SaveChanges();
+                    await _settingsRepository.EmailAddressMappingRepository.SaveChangesAsync();
                 }
 
                 return true;
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could not update email address mappings of folder [{folder}]!",
                     ExceptionMessage = exception.Message,
@@ -242,7 +244,7 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerMappingService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.EmailAccountRepository.SaveChangesAsync();
 
                 return false;
             }
@@ -250,7 +252,7 @@ namespace Logic.EmailCleaner
 
         private async Task<EmailAccountEntity?> LoadAccount(int accountId)
         {
-            return await _settingsRepository.EmailAccountRepository.GetSingle(x => x.Id == accountId);
+            return await _settingsRepository.EmailAccountRepository.GetFirstOrDefault(x => x.Id == accountId);
         }
 
         private async Task<List<EmailDataEntity>> LoadEmailDataEntities()
@@ -260,7 +262,9 @@ namespace Logic.EmailCleaner
 
         private async Task<List<EmailAddressMappingEntity>> LoadMappingEntities(int accountId)
         {
-            return await _settingsRepository.EmailAddressMappingRepository.GetAll(x => x.AccountId == accountId, true) ?? new List<EmailAddressMappingEntity>();
+            var entities = await _settingsRepository.EmailAddressMappingRepository.GetAllAsync() ?? new List<EmailAddressMappingEntity>();
+
+            return entities.Where(x => x.AccountId == accountId).ToList();
         }
 
         private Dictionary<string, EmailDataEntity> GetEmailMetaDataEntityDataDictionary(List<EmailDataEntity> dataEntities)
@@ -274,7 +278,7 @@ namespace Logic.EmailCleaner
         {
             if (settingsId == null) { throw new Exception("Could not load email account settings, Reason: settings id is null!"); }
 
-            await _settingsRepository.EmailCleanerSettingsRepository.GetSingle(x => x.Id == settingsId);
+            await _settingsRepository.EmailCleanerSettingsRepository.GetFirstOrDefault(x => x.Id == settingsId);
         }
 
         private async Task<List<IMessageSummary>> LoadEnvalopeData(EmailAccountEntity account, List<string>? foldernames = null)
@@ -312,7 +316,7 @@ namespace Logic.EmailCleaner
             {
                 await _settingsRepository.EmailDataRepository.AddRange(newEntities);
 
-                await _settingsRepository.EmailDataRepository.SaveChanges();
+                await _settingsRepository.EmailDataRepository.SaveChangesAsync();
 
                 dataEntities.AddRange(newEntities);
             }

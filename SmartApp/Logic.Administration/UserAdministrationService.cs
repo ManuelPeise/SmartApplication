@@ -58,7 +58,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not load users.",
                     ExceptionMessage = exception.Message,
@@ -67,7 +67,7 @@ namespace Logic.Administration
                     Module = nameof(UserAdministrationService),
                 });
 
-                await _administrationRepository.SaveChanges();
+                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
             }
 
             return userModels;
@@ -77,20 +77,22 @@ namespace Logic.Administration
         {
             try
             {
-                var entity = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetSingle(x => x.Id == model.UserId);
+                var entity = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetFirstOrDefault(x => x.Id == model.UserId);
 
                 if (entity == null) { return false; }
 
                 entity.IsActive = model.IsActive;
 
-                entity.RoleId = await LoadUserRoleId(_administrationRepository.IdentityRepository.UserRoleRepository,
+                entity.RoleId = (int)await LoadUserRoleId(_administrationRepository.IdentityRepository.UserRoleRepository,
                     model.IsAdmin ? UserRoleEnum.Admin : UserRoleEnum.User);
 
-                var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAll(x => x.UserId == entity.Id) ?? new List<UserAccessRightEntity>();
+                var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAllAsync() ?? new List<UserAccessRightEntity>();
+
+                var rights = userAccessRights.Where(x => x.UserId == entity.Id);
 
                 foreach (var right in model.AccessRights)
                 {
-                    var rightEntity = userAccessRights.FirstOrDefault(x => x.UserId == entity.Id && x.AccessRightId == right.Id);
+                    var rightEntity = rights.FirstOrDefault(x => x.UserId == entity.Id && x.AccessRightId == right.Id);
 
                     if (rightEntity == null) { continue; }
 
@@ -99,9 +101,9 @@ namespace Logic.Administration
                     rightEntity.Deny = right.Deny;
                 }
 
-                await _administrationRepository.IdentityRepository.SaveChanges();
+                await _administrationRepository.IdentityRepository.UserAccessRightRepository.SaveChangesAsync();
 
-                await _administrationRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"User data and rights of user id [{model.UserId}] updated.",
                     ExceptionMessage = string.Empty,
@@ -112,13 +114,13 @@ namespace Logic.Administration
                     CreatedAt = DateTime.UtcNow,
                 });
 
-                await _administrationRepository.SaveChanges();
+                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could not update user rights of user {model.UserId}.",
                     ExceptionMessage = exception.Message,
@@ -129,7 +131,7 @@ namespace Logic.Administration
                     CreatedAt = DateTime.UtcNow,
                 });
 
-                await _administrationRepository.SaveChanges();
+                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
 
                 return false;
             }
@@ -139,15 +141,17 @@ namespace Logic.Administration
         {
             try
             {
-                var userEntities = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetAll(x => x.IsNewUserRegistration) ?? new List<UserIdentity>();
-                
+                var userEntities = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetAllAsync() ?? new List<UserIdentity>();
+
+                var newEntities = userEntities.Where(x => x.IsNewUserRegistration);
+
                 var defaultActivatedUserRights = AccessRights.DefaultActivatedUserAccessRights;
 
-                if (userEntities.Any())
+                if (newEntities.Any())
                 {
                     var passwordHandler = new PasswordHandler(_securityData);
 
-                    foreach (var entity in userEntities)
+                    foreach (var entity in newEntities)
                     {
                         await LoadCredentials(_administrationRepository.IdentityRepository.UserCredentialsRepository, entity.CredentialsId);
 
@@ -158,13 +162,15 @@ namespace Logic.Administration
                             entity.UserCredentials.Password = passwordHandler.Encrypt(generatedPassword);
                             entity.IsNewUserRegistration = false;
 
-                            var userRightEntities = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAll(x => x.UserId == entity.Id);
+                            var userRightEntities = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAllAsync();
+
+                            var rights = userRightEntities.Where(x => x.UserId == entity.Id);
 
                             if (userRightEntities != null && userRightEntities.Any())
                             {
-                                foreach (var right in userRightEntities)
+                                foreach (var right in rights)
                                 {
-                                    var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetSingle(x => x.Id == right.AccessRightId);
+                                    var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetFirstOrDefault(x => x.Id == right.AccessRightId);
 
                                     if (accessRight != null && defaultActivatedUserRights.ContainsKey(accessRight.Name))
                                     {
@@ -175,7 +181,7 @@ namespace Logic.Administration
                                 }
                             }
 
-                            await _administrationRepository.IdentityRepository.SaveChanges();
+                            await _administrationRepository.IdentityRepository.UserAccessRightRepository.SaveChangesAsync();
 
                             await sendMail(entity.Email, "Your account is activated now!", GetAccountActivationBody(entity.FirstName, entity.Email, generatedPassword));
                         }
@@ -184,7 +190,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could not activate users.",
                     ExceptionMessage = exception.Message,
@@ -195,24 +201,24 @@ namespace Logic.Administration
                     CreatedAt = DateTime.UtcNow,
                 });
 
-                await _administrationRepository.SaveChanges();
+                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
             }
         }
 
 
-        private async Task LoadUserRole(IRepositoryBase<UserRole> repository, int roleId)
+        private async Task LoadUserRole(IDbContextRepository<UserRole> repository, int roleId)
         {
-            await repository.GetSingle(x => x.Id == roleId);
+            await repository.GetFirstOrDefault(x => x.Id == roleId);
         }
 
-        private async Task<int> LoadUserRoleId(IRepositoryBase<UserRole> repository, UserRoleEnum roleType)
+        private async Task<int?> LoadUserRoleId(IDbContextRepository<UserRole> repository, UserRoleEnum roleType)
         {
-            var role = await repository.GetSingle(x => x.RoleType == roleType);
+            var role = await repository.GetFirstOrDefault(x => x.RoleType == roleType);
 
-            return role.Id;
+            return role?.Id;
         }
 
-        private async Task LoadCredentials(IRepositoryBase<UserCredentials> credentialsRepository, int credentialsId)
+        private async Task LoadCredentials(IDbContextRepository<UserCredentials> credentialsRepository, int credentialsId)
         {
             await credentialsRepository.GetFirstOrDefault(cred => cred.Id == credentialsId);
         }

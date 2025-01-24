@@ -41,7 +41,9 @@ namespace Logic.EmailCleaner
                     throw new Exception("Could not load user id from claims!");
                 }
 
-                var entities = await _settingsRepository.EmailAccountRepository.GetAll(x => x.UserId == userId) ?? new List<EmailAccountEntity>();
+                var allEntities = await _settingsRepository.EmailAccountRepository.GetAllAsync() ?? new List<EmailAccountEntity>();
+
+                var entities = allEntities.Where(x => x.UserId == userId);
 
                 if (!entities.Any())
                 {
@@ -59,7 +61,7 @@ namespace Logic.EmailCleaner
                         continue;
                     }
 
-                    var settingsEntity = await _settingsRepository.EmailCleanerSettingsRepository.GetSingle(x => x.Id == entity.SettingsId);
+                    var settingsEntity = await _settingsRepository.EmailCleanerSettingsRepository.GetFirstOrDefault(x => x.Id == entity.SettingsId);
 
                     if (settingsEntity == null)
                     {
@@ -86,9 +88,9 @@ namespace Logic.EmailCleaner
                     {
                         await UpdateFolders(settingsEntity, entity.Server, entity.Port, entity.EmailAddress, passwordHandler.Decrypt(entity.EncodedPassword));
 
-                        await _settingsRepository.EmailCleanerSettingsRepository.AddOrUpdate(settingsEntity, x => x.Id == settingsEntity.Id);
+                        _settingsRepository.EmailCleanerSettingsRepository.Update(settingsEntity);
 
-                        await _settingsRepository.EmailCleanerSettingsRepository.SaveChanges();
+                        await _settingsRepository.EmailCleanerSettingsRepository.SaveChangesAsync();
                     }
 
                     var emailAddressMappings = await _mappingService.GetMappings(entity.Id);
@@ -125,7 +127,7 @@ namespace Logic.EmailCleaner
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not load email account settings.",
                     ExceptionMessage = exception.Message,
@@ -134,7 +136,7 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
                 return new List<EmailAccountModel>();
             }
@@ -152,11 +154,11 @@ namespace Logic.EmailCleaner
                     throw new Exception("Could not load user id from claims!");
                 }
 
-                var entitiy = await _settingsRepository.EmailAccountRepository.GetSingle(x => x.Id == accountId);
+                var entitiy = await _settingsRepository.EmailAccountRepository.GetFirstOrDefault(x => x.Id == accountId);
 
                 if (entitiy != null)
                 {
-                    await _settingsRepository.EmailCleanerSettingsRepository.GetSingle(x => x.Id == entitiy.SettingsId);
+                    await _settingsRepository.EmailCleanerSettingsRepository.GetFirstOrDefault(x => x.Id == entitiy.SettingsId);
 
                     var passwordHandler = new PasswordHandler(_securityData);
 
@@ -175,7 +177,7 @@ namespace Logic.EmailCleaner
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could not get email folders from account.",
                     ExceptionMessage = exception.Message,
@@ -184,7 +186,7 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
                 return new List<FolderSettings>();
             }
@@ -218,7 +220,7 @@ namespace Logic.EmailCleaner
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could not test email account connection.",
                     ExceptionMessage = exception.Message,
@@ -227,7 +229,7 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
                 return false;
             }
@@ -245,7 +247,7 @@ namespace Logic.EmailCleaner
                     throw new Exception("Could not load user id from claims!");
                 }
 
-                var entity = await _settingsRepository.EmailAccountRepository.GetSingle(x => x.EmailAddress.ToLower() == model.EmailAddress.ToLower(), true);
+                var entity = await _settingsRepository.EmailAccountRepository.GetFirstOrDefault(x => x.EmailAddress.ToLower() == model.EmailAddress.ToLower(), true);
 
                 var passwordHandler = new PasswordHandler(_securityData);
 
@@ -282,7 +284,7 @@ namespace Logic.EmailCleaner
 
                     if (await _settingsRepository.EmailAccountRepository.AddIfNotExists(entity, x => x.Id == entity.Id && x.UserId == entity.UserId))
                     {
-                        await _settingsRepository.SaveChanges();
+                        await _settingsRepository.EmailAccountRepository.SaveChangesAsync();
 
                         await _mappingService.UpdateAllEmailAddressMappings(entity, folderNames);
 
@@ -294,7 +296,7 @@ namespace Logic.EmailCleaner
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could update entity [{model.Id}].",
                     ExceptionMessage = exception.Message,
@@ -303,7 +305,7 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
                 return false;
             }
@@ -321,7 +323,7 @@ namespace Logic.EmailCleaner
                     throw new Exception("Could not load user id from claims!");
                 }
 
-                var entity = await _settingsRepository.EmailAccountRepository.GetSingle(x => x.EmailAddress.ToLower() == model.EmailAddress.ToLower(), true);
+                var entity = await _settingsRepository.EmailAccountRepository.GetFirstOrDefault(x => x.EmailAddress.ToLower() == model.EmailAddress.ToLower(), true);
 
                 if (entity == null)
                 {
@@ -352,16 +354,16 @@ namespace Logic.EmailCleaner
 
                 };
 
-                await _settingsRepository.EmailAccountRepository.AddOrUpdate(entity, x => x.UserId == userId && x.Id == entity.Id);
+                _settingsRepository.EmailAccountRepository.Update(entity);
 
-                await _settingsRepository.EmailAccountRepository.SaveChanges();
+                await _settingsRepository.EmailAccountRepository.SaveChangesAsync();
 
                 return true;
 
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not load email account settings.",
                     ExceptionMessage = exception.Message,
@@ -370,7 +372,7 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
                 return false;
             }
@@ -388,14 +390,14 @@ namespace Logic.EmailCleaner
                     throw new Exception("Could not load user id from claims!");
                 }
 
-                var accountEntity = await _settingsRepository.EmailAccountRepository.GetSingle(x => x.UserId == userId);
+                var accountEntity = await _settingsRepository.EmailAccountRepository.GetFirstOrDefault(x => x.UserId == userId);
 
-                if(accountEntity == null)
+                if (accountEntity == null)
                 {
                     return false;
                 }
 
-                var settingsEntity = await _settingsRepository.EmailCleanerSettingsRepository.GetSingle(x => x.Id == model.SettingsId, true);
+                var settingsEntity = await _settingsRepository.EmailCleanerSettingsRepository.GetFirstOrDefault(x => x.Id == model.SettingsId, true);
 
                 if (settingsEntity != null)
                 {
@@ -405,11 +407,11 @@ namespace Logic.EmailCleaner
                     settingsEntity.FolderConfigurationJson = JsonConvert.SerializeObject(model.FolderConfiguration);
                     settingsEntity.MessageLogJson = GetLogMessageJson(userName);
 
-                    await _settingsRepository.EmailCleanerSettingsRepository.AddOrUpdate(settingsEntity, x => x.Id == settingsEntity.Id);
+                    _settingsRepository.EmailCleanerSettingsRepository.Update(settingsEntity);
 
-                    await _settingsRepository.EmailCleanerSettingsRepository.SaveChanges();
+                    await _settingsRepository.EmailCleanerSettingsRepository.SaveChangesAsync();
 
-                    await _mappingService.UpdateAllEmailAddressMappings(accountEntity, 
+                    await _mappingService.UpdateAllEmailAddressMappings(accountEntity,
                         model.FolderConfiguration.Where(folder => folder.IsInbox).Select(folder => folder.FolderName).ToList());
 
                     return true;
@@ -420,7 +422,7 @@ namespace Logic.EmailCleaner
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could update email cleaner general settings [{model.SettingsId}].",
                     ExceptionMessage = exception.Message,
@@ -429,7 +431,7 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
                 return false;
             }
@@ -447,7 +449,7 @@ namespace Logic.EmailCleaner
         //            throw new Exception("Could not load user id from claims!");
         //        }
 
-              
+
 
         //        var entity = await _settingsRepository.EmailAccountRepository.GetSingle(x => x.Id == model.AccountId, true);
 
@@ -492,7 +494,7 @@ namespace Logic.EmailCleaner
             }
             catch (Exception exception)
             {
-                await _settingsRepository.LogRepository.AddMessage(new LogMessageEntity
+                await _settingsRepository.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could update email cleaner email address mappings entries.",
                     ExceptionMessage = exception.Message,
@@ -501,12 +503,12 @@ namespace Logic.EmailCleaner
                     Module = nameof(EmailCleanerService),
                 });
 
-                await _settingsRepository.SaveChanges();
+                await _settingsRepository.LogMessageRepository.SaveChangesAsync();
 
                 return false;
             }
         }
-        
+
         #region private members
 
         private async Task UpdateFolders(EmailCleanerSettingsEntity settings, string server, int port, string email, string password)
