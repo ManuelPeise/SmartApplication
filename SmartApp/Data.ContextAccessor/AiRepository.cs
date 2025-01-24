@@ -1,12 +1,10 @@
 ﻿using Data.AiContext;
 using Data.ContextAccessor.Interfaces;
 using Data.Databases;
-using Data.Shared;
 using Data.Shared.Ai;
 using Data.Shared.Logging;
 using Data.Shared.Tools;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Data.ContextAccessor
 {
