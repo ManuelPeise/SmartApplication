@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Data.AppContext;
+using Data.Databases;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Web.Core.Startup
@@ -25,6 +28,27 @@ namespace Web.Core.Startup
             });
 
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var applicationContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+
+                var pendingMigrations = applicationContext.Database.GetPendingMigrations();
+
+                if (pendingMigrations.Any())
+                {
+                    applicationContext.Database.Migrate();
+                }
+
+                var userIdentityContext = scope.ServiceProvider.GetRequiredService<UserIdentityContext>();
+
+                var pendingUserIdentityMigrations = userIdentityContext.Database.GetPendingMigrations();
+
+                if (pendingUserIdentityMigrations.Any())
+                {
+                    userIdentityContext.Database.Migrate();
+                }
+            }
 
         }
     }
