@@ -25,7 +25,7 @@ const DetailsView: React.FC<IDetailsViewProps> = (props) => {
   return (
     <Grid2
       container
-      height="100%"
+      minHeight="100%"
       size={12}
       display="flex"
       alignItems="space-between"
@@ -41,7 +41,12 @@ const DetailsView: React.FC<IDetailsViewProps> = (props) => {
         {children}
       </Grid2>
       <Grid2 size={12} height={30} display="flex" flexDirection="row">
-        <Grid2 size={6} display="flex">
+        <Grid2
+          size={6}
+          display="flex"
+          justifyContent="flex-start"
+          paddingLeft={4}
+        >
           {additionalButtonProps?.map((item, index) => (
             <FormButton
               key={`additional-button-${index}`}
@@ -51,7 +56,13 @@ const DetailsView: React.FC<IDetailsViewProps> = (props) => {
             />
           ))}
         </Grid2>
-        <Grid2 size={6} display="flex" justifyContent="flex-end" gap={2}>
+        <Grid2
+          size={6}
+          display="flex"
+          justifyContent="flex-end"
+          paddingRight={4}
+          gap={2}
+        >
           {saveCancelButtonProps.map((item, index) => (
             <FormButton
               key={`save-cancel-button-${index}`}

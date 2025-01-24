@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Data.Resources\Data.Resources.csproj" />
     <ProjectReference Include="..\Data.Shared\Data.Shared.csproj" />
+    <ProjectReference Include="..\Logic.Ai\Logic.Ai.csproj" />
     <ProjectReference Include="..\Logic.Shared\Logic.Shared.csproj" />
     <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
   </ItemGroup>

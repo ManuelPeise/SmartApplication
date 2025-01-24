@@ -13,6 +13,7 @@ namespace Data.ContextAccessor.Interfaces
         Task<T> AddOrUpdate(T entity, Expression<Func<T, bool>> predicate);
         Task Add(T entity);
         Task AddRange(IEnumerable<T> entities);
+        void UpdateRange(List<T> entities);
         Task<bool> Delete(int id);
         Task SaveChanges();
     }

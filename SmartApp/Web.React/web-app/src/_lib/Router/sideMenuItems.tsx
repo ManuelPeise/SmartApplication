@@ -1,4 +1,3 @@
-import React from "react";
 import { HomeRepairServiceRounded, SettingsRounded } from "@mui/icons-material";
 import { browserRoutes } from "./RouterUtils";
 import { AccessRight } from "../_types/auth";
@@ -43,6 +42,14 @@ export const getAdministrationSideMenuItem = (
     item.childItems.push({
       displayNameRecourceKey: "common.labelUserAdministration",
       route: browserRoutes.userAdministration,
+      childItems: null,
+    });
+  }
+
+  if (userAdministrationRight != null && userAdministrationRight.canView) {
+    item.childItems.push({
+      displayNameRecourceKey: "common.labelSpamClassification",
+      route: browserRoutes.spamClassification,
       childItems: null,
     });
   }

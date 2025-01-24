@@ -1,4 +1,5 @@
-﻿using Data.AppContext;
+﻿using Data.AiContext;
+using Data.AppContext;
 using Data.ContextAccessor;
 using Data.ContextAccessor.Interfaces;
 using Data.Identity;
@@ -21,7 +22,7 @@ namespace Web.Core.Startup
 {
     public static class ServiceConfiguration
     {
-        public static void ConfigureServices(WebApplicationBuilder builder, string corsPolicy, string? identityContextConnectionString, string? applicationContextConnectionString)
+        public static void ConfigureServices(WebApplicationBuilder builder, string corsPolicy, string? identityContextConnectionString, string? applicationContextConnectionString, string? aiContextConnectionString)
         {
             builder.Services.AddDbContext<IdentityDbContext>(opt =>
             {
@@ -43,6 +44,16 @@ namespace Web.Core.Startup
                 opt.UseMySQL(applicationContextConnectionString);
             });
 
+            builder.Services.AddDbContext<AiDbContext>(opt =>
+            {
+                if (aiContextConnectionString == null)
+                {
+                    throw new ArgumentNullException(nameof(aiContextConnectionString));
+                }
+
+                opt.UseMySQL(aiContextConnectionString);
+            });
+
             builder.Services.AddScoped<WebJob>();
 
             builder.Services.AddHttpContextAccessor();
@@ -57,8 +68,8 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<IUserAdministrationService, UserAdministrationService>();
             builder.Services.AddScoped<IAccessRightAdministrationService, AccessRightAdministrationService>();
             builder.Services.AddScoped<IEmailCleanerMappingService, EmailCleanerMappingService>();
-            // email cleaner
             builder.Services.AddScoped<IEmailCleanerService, EmailCleanerService>();
+            builder.Services.AddScoped<IAiRepository, AiRepository>();
 
             ConfigureOptions(builder);
 

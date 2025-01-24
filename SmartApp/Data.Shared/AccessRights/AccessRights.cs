@@ -7,11 +7,12 @@ namespace Data.Shared.AccessRights
         public static Dictionary<string, string> AvailableAccessRights = new Dictionary<string, string>
         {
             { UserAdministration,  AdministrationGroup },
+            { SpamPredictionSettings,  AdministrationGroup },
             { MessageLog,  AdministrationGroup },
             { EmailCleaner,  Tools },
             { EmailAccountSettings,  SettingsGroup },
             { EmailCleanerSettings,  SettingsGroup },
-            
+
         };
 
         public readonly static Dictionary<string, AccessRightValues> DefaultActivatedUserAccessRights = new Dictionary<string, AccessRightValues>
@@ -27,6 +28,7 @@ namespace Data.Shared.AccessRights
             { UserAdministration, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { EmailCleaner, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { EmailCleanerSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
+            { SpamPredictionSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
         };
 
         // right groups
@@ -41,5 +43,6 @@ namespace Data.Shared.AccessRights
         public const string EmailCleaner = "EmailCleaner";
         public const string EmailAccountSettings = "EmailAccountSettings";
         public const string EmailCleanerSettings = "EmailCleanerSettings";
+        public const string SpamPredictionSettings = "SpamPredictionSettings";
     }
 }

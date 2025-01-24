@@ -22,5 +22,6 @@
   "labelCancel": "Cancel",
   "labelAgree": "Agree",
   "labelAdministration": "Administration",
+  "labelSpamClassification": "Spam classification",
   "descriptionAccountRequest": "You will receive an email with the access data approx 15 minutes after requesting the account."
 }

@@ -4,6 +4,7 @@ using Web.Core.Startup;
 
 var identityContext = "IdentityContext";
 var applicationContext = "ApplicationContext";
+var aiContext = "AiContext";
 
 var corsPolicy = "policy";
 
@@ -12,8 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 var identityContextConnectionString = builder.Configuration.GetConnectionString(identityContext) ?? null;
 var applicationContextConnectionString = builder.Configuration.GetConnectionString(applicationContext) ?? null;
+var aiContextConnectionString = builder.Configuration.GetConnectionString(aiContext) ?? null;
 
-ServiceConfiguration.ConfigureServices(builder, corsPolicy, identityContextConnectionString, applicationContextConnectionString);
+ServiceConfiguration.ConfigureServices(builder, corsPolicy, identityContextConnectionString, applicationContextConnectionString, aiContextConnectionString);
 
 var app = builder.Build();
 

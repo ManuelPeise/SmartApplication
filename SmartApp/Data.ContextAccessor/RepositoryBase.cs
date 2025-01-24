@@ -103,6 +103,14 @@ namespace Data.ContextAccessor
             await _context.AddRangeAsync(entities);
         }
 
+        public void UpdateRange(List<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                _context.Entry(entity).State = EntityState.Modified;
+            }
+        }
+
         public async Task<bool> Delete(int id)
         {
             var queryable = _context.Set<T>().AsQueryable();

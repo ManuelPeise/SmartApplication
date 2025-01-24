@@ -4,6 +4,7 @@ export const browserRoutes = {
   requestAccount: "/request-account",
   log: "/administration/log",
   userAdministration: "/administration/user",
+  spamClassification: "/administration/spam-classification",
   emailAccountSettings: "/settings/email-account-settings",
   emailCleanerSettings: "/settings/email-cleaner-settings",
   emailCleanerMappings: "/settings/email-cleaner-settings/mappings/",

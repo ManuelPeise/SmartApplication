@@ -13,6 +13,7 @@ import EmailCleanerSettingsContainer from "src/Pages/Settings/EmailCleanerSettin
 import EmailAddressMappingPageContainer from "src/Pages/Settings/EmailAddressMapping/EmailAddressMappingPageContainer";
 import EmailCleanerPageContainer from "src/Pages/EmailCleaner/EmailCleanerPage";
 import SandboxPage from "src/Pages/Sandbox/SandboxPage";
+import SpamClassificationContainer from "src/Pages/Administration/SpamClassification/SpamClassificationContainer";
 
 const AppRouter: React.FC = () => {
   return (
@@ -30,14 +31,14 @@ const AppRouter: React.FC = () => {
             <Route path={browserRoutes.home} Component={Home} />
           </Route>
 
-          <Route
+          {/* <Route
             path={browserRoutes.home}
             element={
               <ProtectedRoute requiredRight={UserRightTypeEnum.MessageLog} />
             }
           >
             <Route path={browserRoutes.log} Component={LogPageContainer} />
-          </Route>
+          </Route> */}
           <Route
             path={browserRoutes.home}
             element={
@@ -46,9 +47,14 @@ const AppRouter: React.FC = () => {
               />
             }
           >
+            <Route path={browserRoutes.log} Component={LogPageContainer} />
             <Route
               path={browserRoutes.userAdministration}
               Component={UserAdministrationPageContainer}
+            />
+            <Route
+              path={browserRoutes.spamClassification}
+              Component={SpamClassificationContainer}
             />
           </Route>
           <Route
