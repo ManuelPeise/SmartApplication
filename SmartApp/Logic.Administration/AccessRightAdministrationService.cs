@@ -9,12 +9,12 @@ namespace Logic.Administration
 {
     public class AccessRightAdministrationService : IAccessRightAdministrationService
     {
-        private readonly IAdministrationRepository _administrationRepository;
+        private readonly IApplicationUnitOfWork _applicationUnitOfWork;
         private bool disposedValue;
 
-        public AccessRightAdministrationService(IAdministrationRepository administrationRepository)
+        public AccessRightAdministrationService(IApplicationUnitOfWork applicationUnitOfWork)
         {
-            _administrationRepository = administrationRepository;
+            _applicationUnitOfWork = applicationUnitOfWork;
         }
 
         public async Task<UserAccessRightModel> GetUserrights(int userId)
@@ -27,7 +27,7 @@ namespace Logic.Administration
 
             try
             {
-                var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAllAsync() ?? new List<UserAccessRightEntity>();
+                var userAccessRights = await _applicationUnitOfWork.IdentityRepository.UserAccessRightRepository.GetAllAsync() ?? new List<UserAccessRightEntity>();
 
                 var rights = userAccessRights.Where(x => x.UserId == userId);
 
@@ -38,7 +38,7 @@ namespace Logic.Administration
 
                 foreach (var right in userAccessRights)
                 {
-                    var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetFirstOrDefault(x => x.Id == right.AccessRightId);
+                    var accessRight = await _applicationUnitOfWork.IdentityRepository.AccessRightRepository.GetFirstOrDefault(x => x.Id == right.AccessRightId);
 
                     if (accessRight == null)
                     {
@@ -60,7 +60,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
+                await _applicationUnitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could not load access rights for user {userId}.",
                     ExceptionMessage = exception.Message,
@@ -71,7 +71,7 @@ namespace Logic.Administration
                     CreatedAt = DateTime.UtcNow,
                 });
 
-                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
+                await _applicationUnitOfWork.LogMessageRepository.SaveChangesAsync();
 
                 return userAccessRightModel;
             }
@@ -83,7 +83,7 @@ namespace Logic.Administration
 
             try
             {
-                var userEntities = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetAllAsync();
+                var userEntities = await _applicationUnitOfWork.IdentityRepository.UserIdentityRepository.GetAllAsync();
 
 
                 if (!userEntities.Any())
@@ -100,7 +100,7 @@ namespace Logic.Administration
                         AccessRights = new List<AccessRight>()
                     };
 
-                    var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAllAsync() ?? new List<UserAccessRightEntity>();
+                    var userAccessRights = await _applicationUnitOfWork.IdentityRepository.UserAccessRightRepository.GetAllAsync() ?? new List<UserAccessRightEntity>();
 
                     var rights = userAccessRights.Where(x => x.UserId == userEntity.Id);
 
@@ -113,7 +113,7 @@ namespace Logic.Administration
 
                     foreach (var right in userAccessRights)
                     {
-                        var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetFirstOrDefault(x => x.Id == right.AccessRightId);
+                        var accessRight = await _applicationUnitOfWork.IdentityRepository.AccessRightRepository.GetFirstOrDefault(x => x.Id == right.AccessRightId);
 
                         if (accessRight == null)
                         {
@@ -138,7 +138,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
+                await _applicationUnitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not load users with access rights.",
                     ExceptionMessage = exception.Message,
@@ -149,7 +149,7 @@ namespace Logic.Administration
                     CreatedAt = DateTime.UtcNow,
                 });
 
-                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
+                await _applicationUnitOfWork.LogMessageRepository.SaveChangesAsync();
                 return accessRightModels;
             }
         }
@@ -163,7 +163,7 @@ namespace Logic.Administration
             {
                 if (disposing)
                 {
-                    _administrationRepository?.Dispose();
+                    _applicationUnitOfWork?.Dispose();
                 }
 
                 disposedValue = true;

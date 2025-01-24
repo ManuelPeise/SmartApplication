@@ -5,10 +5,8 @@ using Data.Shared.AccessRights;
 using Data.Shared.Identity.Entities;
 using Data.Shared.Logging;
 using Logic.Administration.Interfaces;
-using Microsoft.Extensions.Options;
 using Shared.Enums;
 using Shared.Models.Administration;
-using Shared.Models.Identity;
 using System.Text;
 
 
@@ -18,14 +16,13 @@ namespace Logic.Administration
     public class UserAdministrationService : IUserAdministrationService
     {
         private readonly IAccessRightAdministrationService _accessRightAdministrationService;
-        private readonly IAdministrationRepository _administrationRepository;
-        private readonly IOptions<SecurityData> _securityData;
-       
-        public UserAdministrationService(IOptions<SecurityData> securityData, IAccessRightAdministrationService accessRightAdministrationService, IAdministrationRepository administrationRepository)
+        private readonly IApplicationUnitOfWork _applicationUnitOfWork;
+        
+
+        public UserAdministrationService(IAccessRightAdministrationService accessRightAdministrationService, IApplicationUnitOfWork applicationUnitOfWork)
         {
             _accessRightAdministrationService = accessRightAdministrationService;
-            _administrationRepository = administrationRepository;
-            _securityData = securityData;
+            _applicationUnitOfWork = applicationUnitOfWork;
         }
 
         public async Task<List<UserAdministrationUserModel>> LoadUsers()
@@ -34,11 +31,11 @@ namespace Logic.Administration
 
             try
             {
-                var userEntities = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetAllAsync() ?? new List<UserIdentity>();
+                var userEntities = await _applicationUnitOfWork.IdentityRepository.UserIdentityRepository.GetAllAsync() ?? new List<UserIdentity>();
 
                 foreach (var userEntity in userEntities)
                 {
-                    await LoadUserRole(_administrationRepository.IdentityRepository.UserRoleRepository, userEntity.RoleId);
+                    await LoadUserRole(_applicationUnitOfWork.IdentityRepository.UserRoleRepository, userEntity.RoleId);
 
                     var userRights = await _accessRightAdministrationService.GetUserrights(userEntity.Id);
 
@@ -58,7 +55,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
+                await _applicationUnitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = "Could not load users.",
                     ExceptionMessage = exception.Message,
@@ -67,7 +64,7 @@ namespace Logic.Administration
                     Module = nameof(UserAdministrationService),
                 });
 
-                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
+                await _applicationUnitOfWork.LogMessageRepository.SaveChangesAsync();
             }
 
             return userModels;
@@ -77,16 +74,16 @@ namespace Logic.Administration
         {
             try
             {
-                var entity = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetFirstOrDefault(x => x.Id == model.UserId);
+                var entity = await _applicationUnitOfWork.IdentityRepository.UserIdentityRepository.GetFirstOrDefault(x => x.Id == model.UserId);
 
                 if (entity == null) { return false; }
 
                 entity.IsActive = model.IsActive;
 
-                entity.RoleId = (int)await LoadUserRoleId(_administrationRepository.IdentityRepository.UserRoleRepository,
+                entity.RoleId = (int)await LoadUserRoleId(_applicationUnitOfWork.IdentityRepository.UserRoleRepository,
                     model.IsAdmin ? UserRoleEnum.Admin : UserRoleEnum.User);
 
-                var userAccessRights = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAllAsync() ?? new List<UserAccessRightEntity>();
+                var userAccessRights = await _applicationUnitOfWork.IdentityRepository.UserAccessRightRepository.GetAllAsync() ?? new List<UserAccessRightEntity>();
 
                 var rights = userAccessRights.Where(x => x.UserId == entity.Id);
 
@@ -101,9 +98,9 @@ namespace Logic.Administration
                     rightEntity.Deny = right.Deny;
                 }
 
-                await _administrationRepository.IdentityRepository.UserAccessRightRepository.SaveChangesAsync();
+                await _applicationUnitOfWork.IdentityRepository.UserAccessRightRepository.SaveChangesAsync();
 
-                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
+                await _applicationUnitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"User data and rights of user id [{model.UserId}] updated.",
                     ExceptionMessage = string.Empty,
@@ -114,13 +111,13 @@ namespace Logic.Administration
                     CreatedAt = DateTime.UtcNow,
                 });
 
-                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
+                await _applicationUnitOfWork.LogMessageRepository.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
+                await _applicationUnitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could not update user rights of user {model.UserId}.",
                     ExceptionMessage = exception.Message,
@@ -131,7 +128,7 @@ namespace Logic.Administration
                     CreatedAt = DateTime.UtcNow,
                 });
 
-                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
+                await _applicationUnitOfWork.LogMessageRepository.SaveChangesAsync();
 
                 return false;
             }
@@ -141,7 +138,7 @@ namespace Logic.Administration
         {
             try
             {
-                var userEntities = await _administrationRepository.IdentityRepository.UserIdentityRepository.GetAllAsync() ?? new List<UserIdentity>();
+                var userEntities = await _applicationUnitOfWork.IdentityRepository.UserIdentityRepository.GetAllAsync() ?? new List<UserIdentity>();
 
                 var newEntities = userEntities.Where(x => x.IsNewUserRegistration);
 
@@ -149,11 +146,11 @@ namespace Logic.Administration
 
                 if (newEntities.Any())
                 {
-                    var passwordHandler = new PasswordHandler(_securityData);
+                    var passwordHandler = new PasswordHandler(_applicationUnitOfWork.SecurityData);
 
                     foreach (var entity in newEntities)
                     {
-                        await LoadCredentials(_administrationRepository.IdentityRepository.UserCredentialsRepository, entity.CredentialsId);
+                        await LoadCredentials(_applicationUnitOfWork.IdentityRepository.UserCredentialsRepository, entity.CredentialsId);
 
                         if (entity.UserCredentials != null)
                         {
@@ -162,7 +159,7 @@ namespace Logic.Administration
                             entity.UserCredentials.Password = passwordHandler.Encrypt(generatedPassword);
                             entity.IsNewUserRegistration = false;
 
-                            var userRightEntities = await _administrationRepository.IdentityRepository.UserAccessRightRepository.GetAllAsync();
+                            var userRightEntities = await _applicationUnitOfWork.IdentityRepository.UserAccessRightRepository.GetAllAsync();
 
                             var rights = userRightEntities.Where(x => x.UserId == entity.Id);
 
@@ -170,7 +167,7 @@ namespace Logic.Administration
                             {
                                 foreach (var right in rights)
                                 {
-                                    var accessRight = await _administrationRepository.IdentityRepository.AccessRightRepository.GetFirstOrDefault(x => x.Id == right.AccessRightId);
+                                    var accessRight = await _applicationUnitOfWork.IdentityRepository.AccessRightRepository.GetFirstOrDefault(x => x.Id == right.AccessRightId);
 
                                     if (accessRight != null && defaultActivatedUserRights.ContainsKey(accessRight.Name))
                                     {
@@ -181,7 +178,7 @@ namespace Logic.Administration
                                 }
                             }
 
-                            await _administrationRepository.IdentityRepository.UserAccessRightRepository.SaveChangesAsync();
+                            await _applicationUnitOfWork.IdentityRepository.UserAccessRightRepository.SaveChangesAsync();
 
                             await sendMail(entity.Email, "Your account is activated now!", GetAccountActivationBody(entity.FirstName, entity.Email, generatedPassword));
                         }
@@ -190,7 +187,7 @@ namespace Logic.Administration
             }
             catch (Exception exception)
             {
-                await _administrationRepository.LogMessageRepository.AddAsync(new LogMessageEntity
+                await _applicationUnitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
                 {
                     Message = $"Could not activate users.",
                     ExceptionMessage = exception.Message,
@@ -201,7 +198,7 @@ namespace Logic.Administration
                     CreatedAt = DateTime.UtcNow,
                 });
 
-                await _administrationRepository.LogMessageRepository.SaveChangesAsync();
+                await _applicationUnitOfWork.LogMessageRepository.SaveChangesAsync();
             }
         }
 

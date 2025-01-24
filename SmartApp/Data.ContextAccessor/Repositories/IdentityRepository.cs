@@ -1,22 +1,21 @@
-﻿using Data.ContextAccessor.Interfaces;
-using Data.Databases;
+﻿using Data.Databases;
 using Data.Shared.AccessRights;
 using Data.Shared.Identity.Entities;
 using Microsoft.AspNetCore.Http;
 
 
-namespace Data.ContextAccessor
+namespace Data.ContextAccessor.Repositories
 {
-    public class IdentityRepository: IIdentityRepository
+    public class IdentityRepository
     {
         private readonly UserIdentityContext _identityDbContext;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly IClaimsAccessor _claimsAccessor;
-        public IdentityRepository(UserIdentityContext identityDbContext, IHttpContextAccessor contextAccessor, IClaimsAccessor claimsAccessor)
+
+        public IdentityRepository(UserIdentityContext identityDbContext, IHttpContextAccessor contextAccessor)
         {
             _identityDbContext = identityDbContext;
             _contextAccessor = contextAccessor;
-            _claimsAccessor = claimsAccessor;
+
         }
 
         public DbContextRepository<UserIdentity> UserIdentityRepository => new DbContextRepository<UserIdentity>(_identityDbContext, _contextAccessor);
@@ -24,8 +23,8 @@ namespace Data.ContextAccessor
         public DbContextRepository<UserRole> UserRoleRepository => new DbContextRepository<UserRole>(_identityDbContext, _contextAccessor);
         public DbContextRepository<AccessRightEntity> AccessRightRepository => new DbContextRepository<AccessRightEntity>(_identityDbContext, _contextAccessor);
         public DbContextRepository<UserAccessRightEntity> UserAccessRightRepository => new DbContextRepository<UserAccessRightEntity>(_identityDbContext, _contextAccessor);
-        public IClaimsAccessor ClaimsAccessor => _claimsAccessor;
-       
+        public ClaimsAccessor ClaimsAccessor => new ClaimsAccessor();
+
 
         #region dispose
 

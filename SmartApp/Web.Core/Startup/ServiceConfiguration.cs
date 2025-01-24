@@ -1,6 +1,7 @@
 ﻿using Data.AiContext;
 using Data.ContextAccessor;
 using Data.ContextAccessor.Interfaces;
+using Data.ContextAccessor.Repositories;
 using Data.Databases;
 using Logic.Administration;
 using Logic.Administration.Interfaces;
@@ -56,15 +57,15 @@ namespace Web.Core.Startup
             builder.Services.AddScoped<WebJob>();
 
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddScoped<IClaimsAccessor, ClaimsAccessor>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
-           
-            builder.Services.AddScoped<IEmailClient, EmailClient>();
-            builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
-            builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
-            builder.Services.AddScoped<IAdministrationRepository, AdministrationRepository>();     
+            builder.Services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
+
             builder.Services.AddScoped<IUserAdministrationService, UserAdministrationService>();
             builder.Services.AddScoped<IAccessRightAdministrationService, AccessRightAdministrationService>();
+
+            builder.Services.AddScoped<IEmailClient, EmailClient>();
+            builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
+           
             builder.Services.AddScoped<IEmailCleanerMappingService, EmailCleanerMappingService>();
             builder.Services.AddScoped<IEmailCleanerService, EmailCleanerService>();
             builder.Services.AddScoped<IAiRepository, AiRepository>();

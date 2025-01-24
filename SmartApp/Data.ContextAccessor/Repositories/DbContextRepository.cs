@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Data.ContextAccessor
+namespace Data.ContextAccessor.Repositories
 {
 
     public class DbContextRepository<T> : IDbContextRepository<T> where T : AEntityBase
@@ -146,14 +146,14 @@ namespace Data.ContextAccessor
                     _context.Dispose();
                 }
 
-               
+
                 disposedValue = true;
             }
         }
 
         public void Dispose()
         {
-           
+
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }

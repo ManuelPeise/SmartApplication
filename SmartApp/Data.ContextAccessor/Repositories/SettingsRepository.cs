@@ -6,21 +6,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Shared.Models.Identity;
 
-namespace Data.ContextAccessor
+namespace Data.ContextAccessor.Repositories
 {
     public class SettingsRepository : ISettingsRepository
     {
         private readonly ApplicationContext _applicationDbContext;
         private readonly IOptions<SecurityData> _securityData;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly IClaimsAccessor _claimsAccessor;
-       
-        public SettingsRepository(ApplicationContext applicationDbContext, IOptions<SecurityData> securityData, IHttpContextAccessor contextAccessor, IClaimsAccessor claimsAccessor)
+
+        public SettingsRepository(ApplicationContext applicationDbContext, IOptions<SecurityData> securityData, IHttpContextAccessor contextAccessor)
         {
             _applicationDbContext = applicationDbContext;
             _securityData = securityData;
             _contextAccessor = contextAccessor;
-            _claimsAccessor = claimsAccessor;
+
         }
 
         public DbContextRepository<EmailAccountEntity> EmailAccountRepository => new DbContextRepository<EmailAccountEntity>(_applicationDbContext, _contextAccessor);
@@ -28,7 +27,7 @@ namespace Data.ContextAccessor
         public DbContextRepository<EmailDataEntity> EmailDataRepository => new DbContextRepository<EmailDataEntity>(_applicationDbContext, _contextAccessor);
         public DbContextRepository<EmailAddressMappingEntity> EmailAddressMappingRepository => new DbContextRepository<EmailAddressMappingEntity>(_applicationDbContext, _contextAccessor);
         public DbContextRepository<LogMessageEntity> LogMessageRepository => new DbContextRepository<LogMessageEntity>(_applicationDbContext, _contextAccessor);
-        public IClaimsAccessor ClaimsAccessor => _claimsAccessor;
+        public ClaimsAccessor ClaimsAccessor => new ClaimsAccessor();
         public IOptions<SecurityData> SecurityData => _securityData;
 
         #region dispose

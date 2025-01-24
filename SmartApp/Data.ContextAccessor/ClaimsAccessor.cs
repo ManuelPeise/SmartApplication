@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace Data.ContextAccessor
 {
-    public class ClaimsAccessor: IClaimsAccessor
+    public class ClaimsAccessor
     {
         private readonly Dictionary<string, string> _claimsDictionary;
 

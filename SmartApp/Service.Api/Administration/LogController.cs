@@ -8,17 +8,17 @@ namespace Service.Api.Administration
     [Authorize]
     public class LogController : ApiControllerBase
     {
-        private readonly IAdministrationRepository _administrationRepository;
+        private readonly IApplicationUnitOfWork _applicationUnitOfWork;
 
-        public LogController(IAdministrationRepository administrationRepository)
+        public LogController(IApplicationUnitOfWork applicationUnitOfWork)
         {
-            _administrationRepository = administrationRepository;
+            _applicationUnitOfWork = applicationUnitOfWork;
         }
 
         [HttpGet(Name = "GetLogMessages")]
         public async Task<List<LogMessageExportModel>> GetLogMessages()
         {
-            var entities = await _administrationRepository.LogMessageRepository.GetAllAsync();
+            var entities = await _applicationUnitOfWork.LogMessageRepository.GetAllAsync();
 
             return entities.Select(x => new LogMessageExportModel
             {
