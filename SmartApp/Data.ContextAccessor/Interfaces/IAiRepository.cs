@@ -9,7 +9,6 @@ namespace Data.ContextAccessor.Interfaces
     {
         DbContextRepository<SpamClassificationTrainingDataEntity> SpamClassificationTrainingDataRepository { get; }
         DbContextRepository<AiScore> AiScoreRepository { get; }
-        DbContextRepository<EmailAddressMappingEntity> EmailAddressMappingRepository { get; }
         DbContextRepository<EmailDataEntity> EmailDataRepository { get; }
         DbContextRepository<LogMessageEntity> LogRepository { get; }
         ClaimsAccessor ClaimsAccessor { get; }

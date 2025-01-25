@@ -23,7 +23,6 @@ namespace Data.ContextAccessor.Repositories
         }
 
         public DbContextRepository<EmailDataEntity> EmailDataRepository => new DbContextRepository<EmailDataEntity>(_applicationDbContext, _contextAccessor);
-        public DbContextRepository<EmailAddressMappingEntity> EmailAddressMappingRepository => new DbContextRepository<EmailAddressMappingEntity>(_applicationDbContext, _contextAccessor);
         public DbContextRepository<SpamClassificationTrainingDataEntity> SpamClassificationTrainingDataRepository => new DbContextRepository<SpamClassificationTrainingDataEntity>(_aiDbContext, _contextAccessor);
         public DbContextRepository<AiScore> AiScoreRepository => new DbContextRepository<AiScore>(_aiDbContext, _contextAccessor);
         public DbContextRepository<LogMessageEntity> LogRepository => new DbContextRepository<LogMessageEntity>(_aiDbContext, _contextAccessor);

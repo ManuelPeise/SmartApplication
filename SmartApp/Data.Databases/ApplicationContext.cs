@@ -34,10 +34,11 @@ namespace Data.Databases
         public DbSet<EmailMappingEntity> EmailMappingTable { get; set; }
 
 
-        // TODO Check that
-        public DbSet<EmailAccountEntity> EmailAccountsTable { get; set; }
-        public DbSet<EmailCleanerSettingsEntity> EmailCleanerSettingsTable { get; set; }
-        public DbSet<EmailAddressMappingEntity> EmailAddressMappingTable { get; set; }
+        // TODO Check that 
+
+
+        // !!! MIGRATE ALL DATABASES !!!
+      
         public DbSet<EmailDataEntity> EmailDataTable { get; set; }
     }
 }
