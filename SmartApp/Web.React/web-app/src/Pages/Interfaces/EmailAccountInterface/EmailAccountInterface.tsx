@@ -18,6 +18,7 @@ interface IProps {
     request: EmailAccountConnectionTestRequest
   ) => Promise<boolean>;
   handleSaveConnection: (connection: EmailAccountSettings) => Promise<void>;
+  handleUpdateMappingTable: (settingsGuid: string) => Promise<boolean>;
 }
 const minHeight = 800;
 
@@ -31,10 +32,20 @@ const initialState: EmailAccountSettings = {
   emailAddress: "",
   password: undefined,
   connectionTestPassed: false,
+  emailAccountAiSettings: {
+    useAiSpamPrediction: false,
+    useAiTargetFolderPrediction: false,
+  },
 };
 
 const EmailAccountInterface: React.FC<IProps> = (props) => {
-  const { isLoading, data, handleTestConnection, handleSaveConnection } = props;
+  const {
+    isLoading,
+    data,
+    handleTestConnection,
+    handleSaveConnection,
+    handleUpdateMappingTable,
+  } = props;
   const [selectedTab, setSelectedTab] = React.useState<number>(0);
   const { getResource } = useI18n();
 
@@ -77,15 +88,24 @@ const EmailAccountInterface: React.FC<IProps> = (props) => {
       selectedTab={selectedTab}
       maxHeight={minHeight}
     >
-      <Grid2 height="inherit">
+      <Grid2
+        height="inherit"
+        sx={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          overflow: "hidden",
+        }}
+      >
         {data?.map((connection, index) => (
           <EmailAccountTab
             state={connection}
             selectedTab={selectedTab}
             minHeight={minHeight}
             tabIndex={index}
+            isLoading={isLoading}
             handleTestConnection={handleTestConnection}
             handleSaveConnection={handleSaveConnection}
+            handleUpdateMappingTable={handleUpdateMappingTable}
           />
         ))}
         <EmailAccountTab
@@ -93,8 +113,10 @@ const EmailAccountInterface: React.FC<IProps> = (props) => {
           selectedTab={selectedTab}
           minHeight={minHeight}
           tabIndex={data?.length}
+          isLoading={isLoading}
           handleTestConnection={handleTestConnection}
           handleSaveConnection={handleSaveConnection}
+          handleUpdateMappingTable={handleUpdateMappingTable}
         />
       </Grid2>
     </VerticalTabPageLayout>

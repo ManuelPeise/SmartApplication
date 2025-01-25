@@ -81,8 +81,8 @@ const UserDataDetails: React.FC<IProps> = (props) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        height: "100%",
-        minHeight: "750px",
+        height: 550,
+        minHeight: 550,
       }}
     >
       <Box padding={3}>

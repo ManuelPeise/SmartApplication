@@ -61,7 +61,6 @@ const ProviderSelection: React.FC<IProps> = (props) => {
     [state, handleChange]
   );
 
-  console.log("Provider:", state.providerType);
   return (
     <Grid2 size={12}>
       <Grid2
@@ -103,4 +102,4 @@ const ProviderSelection: React.FC<IProps> = (props) => {
   );
 };
 
-export default ProviderSelection;
+export default React.memo(ProviderSelection);

@@ -5,8 +5,6 @@ import DrawerListItem from "./DrawerListItem";
 import {
   getAdministrationSideMenuItem,
   getInterfaceSideMenuItem,
-  getSettingsSideMenuItem,
-  getToolsSideMenuItem,
   SideMenuEntry,
 } from "./sideMenuItems";
 import { useI18n } from "src/_hooks/useI18n";
@@ -41,20 +39,20 @@ const AppDrawer: React.FC<IProps> = (props) => {
       items.push(interfaceSideMenuItem);
     }
 
-    const settingsSideMenuItem = getSettingsSideMenuItem(
-      accessRights?.accessRights.filter((x) => x.group === "Settings")
-    );
-    if (settingsSideMenuItem != null) {
-      items.push(settingsSideMenuItem);
-    }
+    // const settingsSideMenuItem = getSettingsSideMenuItem(
+    //   accessRights?.accessRights.filter((x) => x.group === "Settings")
+    // );
+    // if (settingsSideMenuItem != null) {
+    //   items.push(settingsSideMenuItem);
+    // }
 
-    const toolsSideMenuItem = getToolsSideMenuItem(
-      accessRights?.accessRights.filter((x) => x.group === "Tools")
-    );
+    // const toolsSideMenuItem = getToolsSideMenuItem(
+    //   accessRights?.accessRights.filter((x) => x.group === "Tools")
+    // );
 
-    if (toolsSideMenuItem != null) {
-      items.push(toolsSideMenuItem);
-    }
+    // if (toolsSideMenuItem != null) {
+    //   items.push(toolsSideMenuItem);
+    // }
 
     return items;
   }, [accessRights]);

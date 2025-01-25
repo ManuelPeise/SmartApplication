@@ -1,5 +1,4 @@
-﻿using Data.AiContext;
-using Data.ContextAccessor.Interfaces;
+﻿using Data.ContextAccessor.Interfaces;
 using Data.Databases;
 using Data.Shared.Ai;
 using Data.Shared.Logging;

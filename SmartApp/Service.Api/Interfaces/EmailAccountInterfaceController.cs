@@ -35,5 +35,12 @@ namespace Service.Api.Interfaces
             return await _module.ExcecuteConnectionTest(request);
         }
 
+        [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]
+        [HttpPost(Name = "UpdateEmailMappingTable")]
+        public async Task<bool> UpdateEmailMappingTable([FromQuery] string settingsGuid)
+        {
+            return await _module.ExecuteEmailMappingTableUpdate(settingsGuid);
+        }
+
     }
 }

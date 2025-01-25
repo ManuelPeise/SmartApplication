@@ -7,21 +7,14 @@ namespace Data.Shared.AccessRights
         public static Dictionary<string, string> AvailableAccessRights = new Dictionary<string, string>
         {
             { UserAdministration,  AdministrationGroup },
-            { SpamPredictionSettings,  AdministrationGroup },
             { MessageLog,  AdministrationGroup },
             { EmailAccountInterface, InterfaceGroup },
-            { EmailCleaner,  Tools },
-            { EmailAccountSettings,  SettingsGroup },
-            { EmailCleanerSettings,  SettingsGroup },
-
+           
         };
 
         public readonly static Dictionary<string, AccessRightValues> DefaultActivatedUserAccessRights = new Dictionary<string, AccessRightValues>
         {
             { EmailAccountInterface, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
-            { EmailCleaner, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
-            { EmailAccountSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
-            { EmailCleanerSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
         };
 
         public readonly static Dictionary<string, AccessRightValues> DefaultActivatedAdminAccessRights = new Dictionary<string, AccessRightValues>
@@ -29,25 +22,16 @@ namespace Data.Shared.AccessRights
             { MessageLog, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { UserAdministration, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { EmailAccountInterface, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
-            { EmailCleaner, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
-            { EmailCleanerSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
-            { SpamPredictionSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
+            
         };
 
         // right groups
         public const string AdministrationGroup = "Administration";
         public const string InterfaceGroup = "Interface";
-        public const string SettingsGroup = "Settings";
-        public const string Tools = "Tools";
-
-
+       
         // user rights
         public const string UserAdministration = "UserAdministration";
         public const string MessageLog = "MessageLog";
         public const string EmailAccountInterface = "EmailAccountInterface";
-        public const string EmailCleaner = "EmailCleaner";
-        public const string EmailAccountSettings = "EmailAccountSettings";
-        public const string EmailCleanerSettings = "EmailCleanerSettings";
-        public const string SpamPredictionSettings = "SpamPredictionSettings";
     }
 }

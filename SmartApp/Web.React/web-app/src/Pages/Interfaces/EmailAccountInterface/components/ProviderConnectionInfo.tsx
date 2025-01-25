@@ -41,7 +41,7 @@ const ProviderConnectionInfo: React.FC<IProps> = (props) => {
           width="49%"
           display="flex"
           justifyContent="flex-end"
-          paddingRight={2}
+          paddingRight={4.5}
         >
           {state.connectionTestPassed ? <CheckRounded /> : <CloseRounded />}
         </Grid2>
@@ -50,4 +50,4 @@ const ProviderConnectionInfo: React.FC<IProps> = (props) => {
   );
 };
 
-export default ProviderConnectionInfo;
+export default React.memo(ProviderConnectionInfo);

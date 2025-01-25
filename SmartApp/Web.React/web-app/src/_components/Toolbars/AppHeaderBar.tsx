@@ -41,16 +41,8 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
         )}`;
       case browserRoutes.log:
         return `${process.env.REACT_APP_Name} - Log`;
-      case browserRoutes.emailCleaner:
-        return `${process.env.REACT_APP_Name} - Email Cleaner`;
-      case browserRoutes.emailAccountSettings:
-        return `${process.env.REACT_APP_Name} - Email Account Settings`;
-      case browserRoutes.emailCleanerSettings:
-        return `${process.env.REACT_APP_Name} - Email Cleaner Settings`;
       case browserRoutes.userAdministration:
         return `${process.env.REACT_APP_Name} - User Administration`;
-      case browserRoutes.spamClassification:
-        return `${process.env.REACT_APP_Name} - Spam Classification`;
       case browserRoutes.emailAccountInterface:
         return `${process.env.REACT_APP_Name} - Email Accounts`;
       default:

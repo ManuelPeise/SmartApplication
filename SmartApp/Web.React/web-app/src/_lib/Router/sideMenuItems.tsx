@@ -49,14 +49,6 @@ export const getAdministrationSideMenuItem = (
       childItems: null,
     });
   }
-
-  if (userAdministrationRight != null && userAdministrationRight.canView) {
-    item.childItems.push({
-      displayNameRecourceKey: "common.labelSpamClassification",
-      route: browserRoutes.spamClassification,
-      childItems: null,
-    });
-  }
   return item;
 };
 
@@ -75,17 +67,6 @@ export const getToolsSideMenuItem = (
     ),
     childItems: [],
   };
-
-  const emailCleanerRight =
-    accessRights.find((x) => x.name === "EmailCleaner") ?? null;
-
-  if (emailCleanerRight != null && emailCleanerRight.canView) {
-    item.childItems.push({
-      displayNameRecourceKey: "common.labelEmailCleaner",
-      route: browserRoutes.emailCleaner,
-      childItems: null,
-    });
-  }
   return item;
 };
 
@@ -102,31 +83,6 @@ export const getSettingsSideMenuItem = (
     icon: <SettingsRounded style={{ width: "30px", height: "30px" }} />,
     childItems: [],
   };
-
-  const emailAccountSettingsRight =
-    accessRights.find((x) => x.name === "EmailAccountSettings") ?? null;
-
-  if (emailAccountSettingsRight != null && emailAccountSettingsRight.canView) {
-    item.childItems.push({
-      displayNameRecourceKey: "common.labelEmailAccountSettings",
-      route: browserRoutes.emailAccountSettings,
-      childItems: null,
-    });
-  }
-
-  const emailCleanerEmailCleanerSettingsAccessRight =
-    accessRights.find((x) => x.name === "EmailAccountSettings") ?? null;
-
-  if (
-    emailCleanerEmailCleanerSettingsAccessRight != null &&
-    emailCleanerEmailCleanerSettingsAccessRight.canView
-  ) {
-    item.childItems.push({
-      displayNameRecourceKey: "common.labelEmailCleanerSettings",
-      route: browserRoutes.emailCleanerSettings,
-      childItems: null,
-    });
-  }
 
   return item;
 };

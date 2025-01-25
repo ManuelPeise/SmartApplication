@@ -47,7 +47,9 @@ namespace Data.Shared
                 using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
                 using (var reader = new StreamReader(cs))
                 {
-                    return reader.ReadToEnd();
+                    var pswd = reader.ReadToEnd();
+
+                    return pswd;
                 }
             }
         }

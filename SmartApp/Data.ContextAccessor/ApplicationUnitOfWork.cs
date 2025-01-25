@@ -2,6 +2,7 @@
 using Data.ContextAccessor.Repositories;
 using Data.Databases;
 using Data.Shared;
+using Data.Shared.Email;
 using Data.Shared.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,11 @@ namespace Data.ContextAccessor
         public DbContextRepository<LogMessageEntity> LogMessageRepository => new DbContextRepository<LogMessageEntity>(_applicationContext, _contextAccessor);
         public IdentityRepository IdentityRepository => new IdentityRepository(_userIdentityContext, _contextAccessor);
         public GenericSettingsRepository GenericSettingsRepository => new GenericSettingsRepository(_applicationContext, _contextAccessor);
+        public DbContextRepository<EmailSubjectEntity> EmailSubjectTable => new DbContextRepository<EmailSubjectEntity>(_applicationContext, _contextAccessor);
+        public DbContextRepository<EmailAddressEntity> EmailAddressTable => new DbContextRepository<EmailAddressEntity>(_applicationContext, _contextAccessor);
+        public DbContextRepository<EmailMappingEntity> EmailMappingTable => new DbContextRepository<EmailMappingEntity>(_applicationContext, _contextAccessor);
+
+
         public ClaimsAccessor ClaimsAccessor => new ClaimsAccessor();
         
         public IOptions<SecurityData> SecurityData => _securityData;

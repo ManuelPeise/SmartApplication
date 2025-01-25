@@ -7,5 +7,10 @@
   "labelPassword": "Password",
   "labelAccountName": "AccountName",
   "labelTestConnection": "Test connection",
-  "labelConnectionTestpassed": "Connection test passed:"
+  "labelConnectionTestpassed": "Connection test passed:",
+  "labelUpdateMappingTable": "Update Mappings",
+  "labelMappingUpdateSuccessfull": "Updated with success!",
+  "labelMappingUpdateFailedfull": "Updated with errors!",
+  "descriptionUseAiSpamPrediction": "Use the AI spam prediction for this account.",
+  "descriptionUseAiTargetFolderPrediction": "Use the AI target folder prediction for this account."
 }

@@ -58,4 +58,4 @@ const ProviderAuthentication: React.FC<IProps> = (props) => {
   );
 };
 
-export default ProviderAuthentication;
+export default React.memo(ProviderAuthentication);

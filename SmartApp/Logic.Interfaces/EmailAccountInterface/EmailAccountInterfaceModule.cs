@@ -1,6 +1,7 @@
 ﻿using Data.ContextAccessor.Interfaces;
 using Data.ContextAccessor.ModuleSettings;
 using Data.Shared;
+using Data.Shared.Email;
 using Logic.Interfaces.EmailAccountInterface.Models;
 using Logic.Interfaces.Interfaces;
 using Logic.Shared;
@@ -94,11 +95,13 @@ namespace Logic.Interfaces.EmailAccountInterface
                         s.Server = accountSettings.Server;
                         s.Port = accountSettings.Port;
                         s.EmailAddress = accountSettings.EmailAddress;
+                        s.EmailAccountAiSettings.UseAiTargetFolderPrediction = accountSettings.EmailAccountAiSettings.UseAiTargetFolderPrediction;
+                        s.EmailAccountAiSettings.UseAiSpamPrediction = accountSettings.EmailAccountAiSettings.UseAiSpamPrediction;
 
                         // update password only if changed
                         if (s.Password != accountSettings.Password)
                         {
-                            s.Password = _passwordHandler.Encrypt(s.Password);
+                            s.Password = _passwordHandler.Encrypt(accountSettings.Password);
                         }
 
                         s.ConnectionTestPassed = accountSettings.ConnectionTestPassed;
@@ -148,7 +151,156 @@ namespace Logic.Interfaces.EmailAccountInterface
             }
         }
 
+        public async Task<bool> ExecuteEmailMappingTableUpdate(string settingsGuid)
+        {
+            try
+            {
+                if (!_applicationUnitOfWork.IsAuthenticated)
+                {
+                    throw new Exception("Could not execute email mapping update, reason: unauthenticated!");
+                }
+
+                var settings = await _applicationUnitOfWork.GenericSettingsRepository.GetSettings<List<EmailAccountSettings>>(
+                   EmailAccountInterfaceSettings.ModuleName,
+                   EmailAccountInterfaceSettings.ModuleType,
+                   _applicationUnitOfWork.CurrentUserId) ?? new List<EmailAccountSettings>();
+
+                if (!settings.Any())
+                {
+                    if (_logger != null)
+                    {
+                        await _logger.Info($"Execute email mapping update for [{settingsGuid}] aborted, reason no settings found.");
+                    }
+
+                    return false;
+                }
+
+                var settingsToProcess = settings.FirstOrDefault(s => s.SettingsGuid == settingsGuid);
+
+                if (settingsToProcess == null)
+                {
+                    if (_logger != null)
+                    {
+                        await _logger.Info($"Could not find setting [{settingsGuid}].");
+                    }
+
+                    return false;
+                }
+
+                var client = new EmailAccountInterfaceClient(_applicationUnitOfWork);
+
+                var decodedPassword = _passwordHandler.Decrypt(settingsToProcess.Password);
+
+                var emailsToProcess = await client.LoadMailsFromServer(new EmailAccountConnectionTestRequest
+                {
+                    Server = settingsToProcess.Server,
+                    Port = settingsToProcess.Port,
+                    EmailAddress = settingsToProcess.EmailAddress,
+                    Password = decodedPassword
+                });
+
+                var addressEntities = await EnsureAllAddressEntitiesExists(emailsToProcess);
+                var subjectEntities = await EnsureAllSubjectEntitiesExists(emailsToProcess);
+
+                foreach (var email in emailsToProcess)
+                {
+                    var addressId = addressEntities.First(x => x.EmailAddress.ToLower() == email.FromAddress.ToLower()).Id;
+                    var subjectId = subjectEntities.First(x => x.EmailSubject.ToLower() == email.Subject.ToLower()).Id;
+
+                    await _applicationUnitOfWork.EmailMappingTable.InsertIfNotExists(new EmailMappingEntity
+                    {
+                        AddressId = addressId,
+                        SubjectId = subjectId,
+                        MessageDate = email.MessageDate,
+                        SourceFolder = email.SourceFolder,
+                        TargetFolder = null,
+                        UserId = _applicationUnitOfWork.CurrentUserId,
+                        SettingsGuid = settingsToProcess.SettingsGuid,
+                        PredictedValue = null,
+                        AutomatedCleanup = false,
+                        IsProcessed = false,
+                    }, x => x.SettingsGuid == settingsToProcess.SettingsGuid
+                    && x.MessageDate == email.MessageDate
+                    && x.AddressId == addressId
+                    && x.SubjectId == subjectId);
+                }
+
+                await _applicationUnitOfWork.EmailMappingTable.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception exception)
+            {
+                if (_logger != null)
+                {
+                    await _logger.Error($"Could not execute email mapping update for [{settingsGuid}]", exception.Message);
+                }
+
+                return false;
+            }
+        }
+
         #region private 
+
+        private async Task<List<EmailAddressEntity>> EnsureAllAddressEntitiesExists(List<EmailMappingModel> mappingTableList)
+        {
+            var addressEntities = await _applicationUnitOfWork.EmailAddressTable.GetAllAsync();
+            var addedEntities = new List<EmailAddressEntity>();
+
+            foreach (var mapping in mappingTableList)
+            {
+                if (!addressEntities.Any(x => x.EmailAddress.ToLower() == mapping.FromAddress.ToLower())
+                    && !addedEntities.Any(x => x.EmailAddress.ToLower() == mapping.FromAddress.ToLower()))
+                {
+                    var entity = new EmailAddressEntity
+                    {
+                        EmailAddress = mapping.FromAddress,
+                    };
+
+                    await _applicationUnitOfWork.EmailAddressTable.AddAsync(entity);
+
+                    addedEntities.Add(entity);
+                }
+            }
+
+            if (addedEntities.Any())
+            {
+                await _applicationUnitOfWork.EmailAddressTable.SaveChangesAsync();
+                addressEntities.AddRange(addedEntities);
+            }
+
+            return addressEntities;
+        }
+
+        private async Task<List<EmailSubjectEntity>> EnsureAllSubjectEntitiesExists(List<EmailMappingModel> mappingTableList)
+        {
+            var subjectEntities = await _applicationUnitOfWork.EmailSubjectTable.GetAllAsync();
+            var addedEntities = new List<EmailSubjectEntity>();
+
+            foreach (var mapping in mappingTableList)
+            {
+                if (!subjectEntities.Any(x => x.EmailSubject.ToLower() == mapping.Subject.ToLower())
+                    && !addedEntities.Any(x => x.EmailSubject.ToLower() == mapping.Subject.ToLower()))
+                {
+                    var entity = new EmailSubjectEntity
+                    {
+                        EmailSubject = mapping.Subject,
+                    };
+
+                    await _applicationUnitOfWork.EmailSubjectTable.AddAsync(entity);
+
+                    addedEntities.Add(entity);
+                }
+            }
+
+            if (addedEntities.Any())
+            {
+                await _applicationUnitOfWork.EmailSubjectTable.SaveChangesAsync();
+                subjectEntities.AddRange(addedEntities);
+            }
+
+            return subjectEntities;
+        }
 
         private async Task<List<EmailAccountSettings>> GetAccountSettings()
         {
@@ -169,6 +321,7 @@ namespace Logic.Interfaces.EmailAccountInterface
 
             return accountSettings;
         }
+
         private EmailAccountSettings GetDefaultEmailAccountModel()
         {
             return new EmailAccountSettings
@@ -182,6 +335,11 @@ namespace Logic.Interfaces.EmailAccountInterface
                 Password = string.Empty,
                 ProviderType = EmailProviderTypeEnum.None,
                 ConnectionTestPassed = false,
+                EmailAccountAiSettings = new EmailAccountAiSettings
+                {
+                    UseAiSpamPrediction = false,
+                    UseAiTargetFolderPrediction = false,
+                }
             };
         }
 

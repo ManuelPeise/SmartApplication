@@ -36,4 +36,4 @@ const EmailAccountName: React.FC<IProps> = (props) => {
   );
 };
 
-export default EmailAccountName;
+export default React.memo(EmailAccountName);

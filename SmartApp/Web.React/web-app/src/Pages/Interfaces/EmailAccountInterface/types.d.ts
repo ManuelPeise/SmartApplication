@@ -10,6 +10,12 @@ export type EmailAccountSettings = {
   emailAddress: string;
   connectionTestPassed: boolean;
   password: string | null;
+  emailAccountAiSettings: EmailAccountAiSettings;
+};
+
+export type EmailAccountAiSettings = {
+  useAiSpamPrediction: boolean;
+  useAiTargetFolderPrediction: boolean;
 };
 
 export type EmailAccountConnectionTestRequest = {
@@ -17,4 +23,9 @@ export type EmailAccountConnectionTestRequest = {
   port: number;
   emailAddress: string;
   password: string;
+};
+
+export type EmailMappingUpdateStatus = {
+  open: boolean;
+  success: boolean;
 };

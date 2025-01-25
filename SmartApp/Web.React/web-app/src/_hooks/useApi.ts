@@ -51,7 +51,7 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
             }
           }
         });
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setIsloading(false);
@@ -72,7 +72,7 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
         await AxiosClient.post(options.requestUrl, options.data, {
           headers: { "Content-Type": "application/json" },
         });
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setIsloading(false);
@@ -103,7 +103,7 @@ export const useApi = <T>(initializationOptions: ApiOptions): ApiResult<T> => {
             }
           }
         });
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setIsloading(false);

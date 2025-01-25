@@ -60,11 +60,13 @@ namespace Data.ContextAccessor.Repositories
             return await table.FirstOrDefaultAsync(predicate, CancellationToken.None);
         }
 
-        public async Task AddAsync(T entity)
+        public async Task<T> AddAsync(T entity)
         {
             _context.Entry(entity).State = EntityState.Added;
 
-            await _dbSet.AddAsync(entity);
+            var result = await _dbSet.AddAsync(entity);
+
+            return result.Entity;
         }
 
         public async Task<bool> AddIfNotExists(T entity, Expression<Func<T, bool>> predicate)
@@ -82,6 +84,25 @@ namespace Data.ContextAccessor.Repositories
             }
 
             return false;
+        }
+
+        public async Task<T> InsertIfNotExists(T entity, Expression<Func<T, bool>> predicate)
+        {
+            var table = _context.Set<T>();
+
+            var existingEntity = table.FirstOrDefault(predicate);
+
+            if (existingEntity == null)
+            {
+                _context.Entry(entity).State |= EntityState.Added;
+                var result = await table.AddAsync(entity);
+
+                await _context.SaveChangesAsync();
+
+                return result.Entity;
+            }
+
+            return existingEntity;
         }
 
         public void Update(T entity)

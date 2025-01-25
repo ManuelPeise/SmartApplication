@@ -31,6 +31,7 @@ const UserRightList: React.FC<IProps> = (props) => {
         paddingRight: 2,
         height: 400,
         overflowX: "scroll",
+        scrollbarWidth: 0,
       }}
     >
       {Object.keys(accessRights).map((right, index) => (

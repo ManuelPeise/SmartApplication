@@ -21,6 +21,7 @@ const FormButton: React.FC<IProps> = (props) => {
         color: colors.typography.darkgray,
         opacity: disabled ? 0.2 : 1,
         backgroundColor: "transparent",
+        fontSize: ".8rem",
       }}
       disabled={disabled}
       onClick={onAction}

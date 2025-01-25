@@ -1,11 +1,10 @@
 ﻿using Data.ContextAccessor.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Enums;
 using Shared.Models.Administration.Log;
 
 namespace Service.Api.Administration
 {
-    [Authorize]
     public class LogController : ApiControllerBase
     {
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
@@ -15,6 +14,7 @@ namespace Service.Api.Administration
             _applicationUnitOfWork = applicationUnitOfWork;
         }
 
+        [RoleAuthorization(RequiredRole = UserRoleEnum.Admin, AllowAdmin = true)]
         [HttpGet(Name = "GetLogMessages")]
         public async Task<List<LogMessageExportModel>> GetLogMessages()
         {
@@ -30,6 +30,7 @@ namespace Service.Api.Administration
             }).ToList();
         }
 
+        [RoleAuthorization(RequiredRole = UserRoleEnum.Admin, AllowAdmin = true)]
         [HttpPost(Name = "DeleteMessages")]
         public async Task DeleteMessages([FromBody] List<int> messageIds)
         {

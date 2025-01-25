@@ -76,8 +76,13 @@ function sendPostRequest<TModel>(
 ): Promise<TModel> {
   return new Promise<TModel>(async (resolve, reject) => {
     try {
+      const requestUrl = getRequestUrl(options.serviceUrl, options.parameters);
+
+      console.log(requestUrl);
+
       setToken(AxiosClient, token);
-      AxiosClient.post(options.serviceUrl, options.body, {
+
+      AxiosClient.post(requestUrl, options.body, {
         headers: { "Content-Type": "application/json" },
       }).then((res) => {
         if (res.status === 200) {

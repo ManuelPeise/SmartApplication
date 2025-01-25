@@ -1,9 +1,5 @@
-﻿using Data.AppContext;
-using Data.Databases;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Data.Databases;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace Web.Core.Startup
 {
