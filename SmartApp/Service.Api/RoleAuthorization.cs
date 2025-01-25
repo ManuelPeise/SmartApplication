@@ -19,8 +19,13 @@ namespace Service.Api
 
             if (!user.Identity?.IsAuthenticated ?? false)
             {
-                context.Result = new UnauthorizedResult();
+                var responseText = "You are not allowed to execute this action, please contact the administrator to get access!";
 
+                context.Result = new ObjectResult(responseText)
+                {
+                    StatusCode = 401
+                };
+                
                 return;
             }
 

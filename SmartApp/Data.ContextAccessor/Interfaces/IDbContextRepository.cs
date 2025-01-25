@@ -8,6 +8,7 @@ namespace Data.ContextAccessor.Interfaces
         int GetEntityCount(Expression<Func<T, bool>>? predicate);
         Task<List<T>> GetAllAsync();
         Task<T?> GetByIdAsync(int id);
+        Task<List<T>> GetAllAsyncBy(Expression<Func<T, bool>> predicate);
         Task<T?> GetFirstOrDefault(Expression<Func<T, bool>> predicate, bool asNoTracking = false);
         Task AddAsync(T entity);
         Task<bool> AddIfNotExists(T entity, Expression<Func<T, bool>> predicate);

@@ -1,5 +1,4 @@
 ﻿using System;
-using Data.Databases.SqlScripts;
 using Microsoft.EntityFrameworkCore.Migrations;
 using MySql.EntityFrameworkCore.Metadata;
 
@@ -141,43 +140,45 @@ namespace Data.Databases.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
-            IdentitySql.SeedUserRoles(migrationBuilder.Sql);
+            SqlScripts.IdentitySql.SeedUserRoles(migrationBuilder.Sql);
 
             migrationBuilder.InsertData(
                 table: "AccessRights",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Group", "Name", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(4162), "System", "Administration", "UserAdministration", null, null },
-                    { 2, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(4165), "System", "Administration", "SpamPredictionSettings", null, null },
-                    { 3, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(4167), "System", "Administration", "MessageLog", null, null },
-                    { 4, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(4169), "System", "Tools", "EmailCleaner", null, null },
-                    { 5, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(4170), "System", "Settings", "EmailAccountSettings", null, null },
-                    { 6, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(4173), "System", "Settings", "EmailCleanerSettings", null, null }
+                    { 1, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(3110), "System", "Administration", "UserAdministration", null, null },
+                    { 2, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(3115), "System", "Administration", "SpamPredictionSettings", null, null },
+                    { 3, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(3117), "System", "Administration", "MessageLog", null, null },
+                    { 4, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(3119), "System", "Interface", "EmailAccountInterface", null, null },
+                    { 5, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(3121), "System", "Tools", "EmailCleaner", null, null },
+                    { 6, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(3133), "System", "Settings", "EmailAccountSettings", null, null },
+                    { 7, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(3136), "System", "Settings", "EmailCleanerSettings", null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Credentials",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "ExpiresAt", "Password", "RefreshToken", "UpdatedAt", "UpdatedBy" },
-                values: new object[] { 1, new DateTime(2025, 1, 24, 21, 14, 32, 149, DateTimeKind.Local).AddTicks(4279), "System", new DateTime(2025, 4, 24, 21, 14, 32, 149, DateTimeKind.Local).AddTicks(4279), "Am1I3JdgO3aS/VUSZ8kfKQ==", "", new DateTime(2025, 1, 24, 21, 14, 32, 149, DateTimeKind.Local).AddTicks(4279), "System" });
+                values: new object[] { 1, new DateTime(2025, 1, 25, 9, 35, 16, 508, DateTimeKind.Local).AddTicks(3222), "System", new DateTime(2025, 4, 25, 9, 35, 16, 508, DateTimeKind.Local).AddTicks(3222), "Am1I3JdgO3aS/VUSZ8kfKQ==", "", new DateTime(2025, 1, 25, 9, 35, 16, 508, DateTimeKind.Local).AddTicks(3222), "System" });
 
             migrationBuilder.InsertData(
                 table: "UserAccessRights",
                 columns: new[] { "Id", "AccessRightId", "CreatedAt", "CreatedBy", "Deny", "Edit", "UpdatedAt", "UpdatedBy", "UserId", "View" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(6174), "System", false, true, null, null, 1, true },
-                    { 2, 2, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(6176), "System", false, true, null, null, 1, true },
-                    { 3, 3, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(6179), "System", false, true, null, null, 1, true },
-                    { 4, 4, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(6181), "System", false, true, null, null, 1, true },
-                    { 5, 5, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(6182), "System", false, true, null, null, 1, true },
-                    { 6, 6, new DateTime(2025, 1, 24, 20, 14, 32, 149, DateTimeKind.Utc).AddTicks(6185), "System", false, true, null, null, 1, true }
+                    { 1, 1, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(5076), "System", false, true, null, null, 1, true },
+                    { 2, 2, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(5079), "System", false, true, null, null, 1, true },
+                    { 3, 3, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(5080), "System", false, true, null, null, 1, true },
+                    { 4, 4, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(5081), "System", false, true, null, null, 1, true },
+                    { 5, 5, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(5082), "System", false, true, null, null, 1, true },
+                    { 6, 6, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(5085), "System", false, true, null, null, 1, true },
+                    { 7, 7, new DateTime(2025, 1, 25, 8, 35, 16, 508, DateTimeKind.Utc).AddTicks(5088), "System", false, true, null, null, 1, true }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "CredentialsId", "Email", "FirstName", "IsActive", "IsNewUserRegistration", "LastName", "RoleId", "UpdatedAt", "UpdatedBy" },
-                values: new object[] { 1, new DateTime(2025, 1, 24, 21, 14, 32, 149, DateTimeKind.Local).AddTicks(6089), "System", 1, "admin.user@gmx.de", "Admin", true, false, "User", 2, new DateTime(2025, 1, 24, 21, 14, 32, 149, DateTimeKind.Local).AddTicks(6089), "System" });
+                values: new object[] { 1, new DateTime(2025, 1, 25, 9, 35, 16, 508, DateTimeKind.Local).AddTicks(4958), "System", 1, "admin.user@gmx.de", "Admin", true, false, "User", 2, new DateTime(2025, 1, 25, 9, 35, 16, 508, DateTimeKind.Local).AddTicks(4958), "System" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAccessRights_AccessRightId",

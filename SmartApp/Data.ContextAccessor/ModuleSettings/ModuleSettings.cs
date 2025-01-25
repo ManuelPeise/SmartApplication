@@ -1,10 +1,17 @@
-﻿using Shared.Enums;
+﻿using Data.ContextAccessor.Interfaces;
+using Shared.Enums;
 
 namespace Data.ContextAccessor.ModuleSettings
 {
-    public static class ModuleSettings
+    public class ModuleSettings : IModuleSettings
     {
-        public const string ModuleName = "";
-        public const ModuleTypeEnum ModuleType = 0;
+        public string ModuleName { get; set; } = string.Empty;
+        public ModuleTypeEnum ModuleType { get; set; }
+    }
+
+    public static class EmailAccountInterfaceSettings
+    {
+        public const string ModuleName = "EmailAccountInterface";
+        public const ModuleTypeEnum ModuleType = ModuleTypeEnum.EmailAccountInterface;
     }
 }

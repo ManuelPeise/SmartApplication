@@ -9,6 +9,7 @@ namespace Data.Shared.AccessRights
             { UserAdministration,  AdministrationGroup },
             { SpamPredictionSettings,  AdministrationGroup },
             { MessageLog,  AdministrationGroup },
+            { EmailAccountInterface, InterfaceGroup },
             { EmailCleaner,  Tools },
             { EmailAccountSettings,  SettingsGroup },
             { EmailCleanerSettings,  SettingsGroup },
@@ -17,6 +18,7 @@ namespace Data.Shared.AccessRights
 
         public readonly static Dictionary<string, AccessRightValues> DefaultActivatedUserAccessRights = new Dictionary<string, AccessRightValues>
         {
+            { EmailAccountInterface, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { EmailCleaner, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { EmailAccountSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { EmailCleanerSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
@@ -26,6 +28,7 @@ namespace Data.Shared.AccessRights
         {
             { MessageLog, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { UserAdministration, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
+            { EmailAccountInterface, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { EmailCleaner, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { EmailCleanerSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
             { SpamPredictionSettings, new AccessRightValues{ Deny = false, CanView = true, CanEdit = true }},
@@ -33,6 +36,7 @@ namespace Data.Shared.AccessRights
 
         // right groups
         public const string AdministrationGroup = "Administration";
+        public const string InterfaceGroup = "Interface";
         public const string SettingsGroup = "Settings";
         public const string Tools = "Tools";
 
@@ -40,6 +44,7 @@ namespace Data.Shared.AccessRights
         // user rights
         public const string UserAdministration = "UserAdministration";
         public const string MessageLog = "MessageLog";
+        public const string EmailAccountInterface = "EmailAccountInterface";
         public const string EmailCleaner = "EmailCleaner";
         public const string EmailAccountSettings = "EmailAccountSettings";
         public const string EmailCleanerSettings = "EmailCleanerSettings";

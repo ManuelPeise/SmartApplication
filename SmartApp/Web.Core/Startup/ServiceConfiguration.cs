@@ -9,6 +9,7 @@ using Logic.EmailCleaner;
 using Logic.EmailCleaner.Interfaces;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
+using Logic.Interfaces;
 using Logic.Shared.Clients;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -59,6 +60,8 @@ namespace Web.Core.Startup
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
             builder.Services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
+
+            builder.Services.RegisterInterfaceServices();
 
             builder.Services.AddScoped<IUserAdministrationService, UserAdministrationService>();
             builder.Services.AddScoped<IAccessRightAdministrationService, AccessRightAdministrationService>();

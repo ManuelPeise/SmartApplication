@@ -12,6 +12,9 @@ namespace Data.ContextAccessor.Interfaces
         IdentityRepository IdentityRepository { get; }
         GenericSettingsRepository GenericSettingsRepository { get; }
         ClaimsAccessor ClaimsAccessor { get; }
+        bool IsAuthenticated { get; }
         IOptions<SecurityData> SecurityData { get; }
+        Task<int> SaveApplicationContextChangesAsync();
+        Task<int> SaveIdentityContextChangesAsync();
     }
 }

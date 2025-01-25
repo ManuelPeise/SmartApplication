@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Logic.Administration\Logic.Administration.csproj" />
     <ProjectReference Include="..\Logic.EmailCleaner\Logic.EmailCleaner.csproj" />
     <ProjectReference Include="..\Logic.Identity\Logic.Identity.csproj" />
+    <ProjectReference Include="..\Logic.Interfaces\Logic.Interfaces.csproj" />
     <ProjectReference Include="..\Service.Api\Service.Api.csproj" />
     <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
   </ItemGroup>

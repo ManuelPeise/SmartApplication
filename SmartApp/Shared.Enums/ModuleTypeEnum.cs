@@ -2,5 +2,6 @@
 {
     public enum ModuleTypeEnum
     {
+        EmailAccountInterface = 0
     }
 }

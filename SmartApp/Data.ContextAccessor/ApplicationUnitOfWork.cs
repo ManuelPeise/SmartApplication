@@ -1,8 +1,10 @@
 ﻿using Data.ContextAccessor.Interfaces;
 using Data.ContextAccessor.Repositories;
 using Data.Databases;
+using Data.Shared;
 using Data.Shared.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Shared.Models.Identity;
 
@@ -28,14 +30,75 @@ namespace Data.ContextAccessor
         }
 
         public int CurrentUserId => _currentUserId;
-
+        public bool IsAuthenticated => _currentUserId != 0;
         public DbContextRepository<LogMessageEntity> LogMessageRepository => new DbContextRepository<LogMessageEntity>(_applicationContext, _contextAccessor);
         public IdentityRepository IdentityRepository => new IdentityRepository(_userIdentityContext, _contextAccessor);
         public GenericSettingsRepository GenericSettingsRepository => new GenericSettingsRepository(_applicationContext, _contextAccessor);
         public ClaimsAccessor ClaimsAccessor => new ClaimsAccessor();
         
         public IOptions<SecurityData> SecurityData => _securityData;
-        
+
+        public async Task<int> SaveApplicationContextChangesAsync()
+        {
+            var currentUser = _contextAccessor?.HttpContext.User.Identity;
+
+            var modifiedEntries = _applicationContext.ChangeTracker.Entries()
+              .Where(x => x.State == EntityState.Modified ||
+              x.State == EntityState.Added);
+
+            foreach (var entry in modifiedEntries)
+            {
+                if (entry != null)
+                {
+                    if (entry.State == EntityState.Added)
+                    {
+                        ((AEntityBase)entry.Entity).CreatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).CreatedAt = DateTime.Now;
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+
+                    }
+                    else if (entry.State == EntityState.Modified)
+                    {
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+                    }
+                }
+            }
+
+            return await _applicationContext.SaveChangesAsync();
+        }
+
+        public async Task<int> SaveIdentityContextChangesAsync()
+        {
+            var currentUser = _contextAccessor?.HttpContext.User.Identity;
+
+            var modifiedEntries = _userIdentityContext.ChangeTracker.Entries()
+              .Where(x => x.State == EntityState.Modified ||
+              x.State == EntityState.Added);
+
+            foreach (var entry in modifiedEntries)
+            {
+                if (entry != null)
+                {
+                    if (entry.State == EntityState.Added)
+                    {
+                        ((AEntityBase)entry.Entity).CreatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).CreatedAt = DateTime.Now;
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+
+                    }
+                    else if (entry.State == EntityState.Modified)
+                    {
+                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+                    }
+                }
+            }
+
+            return await _userIdentityContext.SaveChangesAsync();
+        }
 
         #region dispose
 

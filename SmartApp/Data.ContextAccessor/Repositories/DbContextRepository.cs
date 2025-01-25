@@ -38,6 +38,11 @@ namespace Data.ContextAccessor.Repositories
             return await _dbSet.ToListAsync();
         }
 
+        public async Task<List<T>> GetAllAsyncBy(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
+
         public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
