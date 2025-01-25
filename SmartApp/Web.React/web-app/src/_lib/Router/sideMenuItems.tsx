@@ -1,4 +1,8 @@
-import { HomeRepairServiceRounded, SettingsRounded } from "@mui/icons-material";
+import {
+  HomeRepairServiceRounded,
+  PolylineRounded,
+  SettingsRounded,
+} from "@mui/icons-material";
 import { browserRoutes } from "./RouterUtils";
 import { AccessRight } from "../_types/auth";
 
@@ -124,5 +128,35 @@ export const getSettingsSideMenuItem = (
     });
   }
 
+  return item;
+};
+
+export const getInterfaceSideMenuItem = (
+  accessRights: AccessRight[]
+): SideMenuEntry | null => {
+  if (accessRights == null || !accessRights.some((x) => x.canView)) {
+    return null;
+  }
+
+  const item: SideMenuEntry = {
+    displayNameRecourceKey: "common.labelInterface",
+    route: "#",
+    icon: <PolylineRounded style={{ width: "30px", height: "30px" }} />,
+    childItems: [],
+  };
+
+  const emailAccountInterfaceRight =
+    accessRights.find((x) => x.name === "EmailAccountInterface") ?? null;
+
+  if (
+    emailAccountInterfaceRight != null &&
+    emailAccountInterfaceRight.canView
+  ) {
+    item.childItems.push({
+      displayNameRecourceKey: "common.labelEmailAccountInterface",
+      route: browserRoutes.emailAccountInterface,
+      childItems: null,
+    });
+  }
   return item;
 };

@@ -23,5 +23,7 @@
   "labelAgree": "Agree",
   "labelAdministration": "Administration",
   "labelSpamClassification": "Spam classification",
+  "labelInterface": "Interface",
+  "labelEmailAccountInterface": "Email accounts",
   "descriptionAccountRequest": "You will receive an email with the access data approx 15 minutes after requesting the account."
 }

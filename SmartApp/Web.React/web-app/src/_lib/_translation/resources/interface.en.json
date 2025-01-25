@@ -1,0 +1,11 @@
+{
+  "pageTitleEmailAccountInterface": "Email Account Interface",
+  "labelEmailAddress": "Email address",
+  "labelAddAccount": "Add account",
+  "descriptionAddNewAccount": "Add a new account",
+  "descriptionAccount": "Account settings",
+  "labelPassword": "Password",
+  "labelAccountName": "AccountName",
+  "labelTestConnection": "Test connection",
+  "labelConnectionTestpassed": "Connection test passed:"
+}

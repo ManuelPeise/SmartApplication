@@ -4,6 +4,7 @@ import React from "react";
 import DrawerListItem from "./DrawerListItem";
 import {
   getAdministrationSideMenuItem,
+  getInterfaceSideMenuItem,
   getSettingsSideMenuItem,
   getToolsSideMenuItem,
   SideMenuEntry,
@@ -32,6 +33,14 @@ const AppDrawer: React.FC<IProps> = (props) => {
       items.push(administrationSideMenuItem);
     }
 
+    const interfaceSideMenuItem = getInterfaceSideMenuItem(
+      accessRights?.accessRights.filter((x) => x.group === "Interface")
+    );
+
+    if (interfaceSideMenuItem != null) {
+      items.push(interfaceSideMenuItem);
+    }
+
     const settingsSideMenuItem = getSettingsSideMenuItem(
       accessRights?.accessRights.filter((x) => x.group === "Settings")
     );
@@ -42,6 +51,7 @@ const AppDrawer: React.FC<IProps> = (props) => {
     const toolsSideMenuItem = getToolsSideMenuItem(
       accessRights?.accessRights.filter((x) => x.group === "Tools")
     );
+
     if (toolsSideMenuItem != null) {
       items.push(toolsSideMenuItem);
     }

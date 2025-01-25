@@ -14,6 +14,7 @@ import EmailAddressMappingPageContainer from "src/Pages/Settings/EmailAddressMap
 import EmailCleanerPageContainer from "src/Pages/EmailCleaner/EmailCleanerPage";
 import SandboxPage from "src/Pages/Sandbox/SandboxPage";
 import SpamClassificationContainer from "src/Pages/Administration/SpamClassification/SpamClassificationContainer";
+import EmailAccountInterfaceContainer from "src/Pages/Interfaces/EmailAccountInterface/EmailAccountInterfaceContainer";
 
 const AppRouter: React.FC = () => {
   return (
@@ -30,15 +31,7 @@ const AppRouter: React.FC = () => {
           <Route path="/" element={<ProtectedRoute />}>
             <Route path={browserRoutes.home} Component={Home} />
           </Route>
-
-          {/* <Route
-            path={browserRoutes.home}
-            element={
-              <ProtectedRoute requiredRight={UserRightTypeEnum.MessageLog} />
-            }
-          >
-            <Route path={browserRoutes.log} Component={LogPageContainer} />
-          </Route> */}
+          {/* Administration */}
           <Route
             path={browserRoutes.home}
             element={
@@ -57,6 +50,20 @@ const AppRouter: React.FC = () => {
               Component={SpamClassificationContainer}
             />
           </Route>
+          {/* Interfaces */}
+          <Route
+            path={browserRoutes.home}
+            element={
+              <ProtectedRoute
+                requiredRight={UserRightTypeEnum.EmailAccountInterface}
+              />
+            }
+          >
+            <Route
+              path={browserRoutes.emailAccountInterface}
+              Component={EmailAccountInterfaceContainer}
+            />
+          </Route>
           <Route
             path={browserRoutes.home}
             element={
@@ -64,12 +71,7 @@ const AppRouter: React.FC = () => {
                 requiredRight={UserRightTypeEnum.EmailAccountSettings}
               />
             }
-          >
-            {/* <Route
-              path={browserRoutes.emailAccountSettings}
-              Component={EmailAccountSettingsPageContainer}
-            /> */}
-          </Route>
+          ></Route>
           <Route
             path={browserRoutes.home}
             element={

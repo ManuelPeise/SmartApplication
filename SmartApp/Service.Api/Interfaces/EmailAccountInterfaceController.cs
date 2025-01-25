@@ -16,7 +16,7 @@ namespace Service.Api.Interfaces
 
         [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]
         [HttpGet(Name = "GetEmailAccountSettings")]
-        public async Task<List<EmailAccountSettingsUiModel>> GetEmailAccountSettings()
+        public async Task<List<EmailAccountSettings>> GetEmailAccountSettings()
         {
             return await _module.GetEmailAccountSettings();
         }

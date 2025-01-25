@@ -7,6 +7,7 @@ export const useI18n = () => {
     "emailCleaner",
     "administration",
     "settings",
+    "interface",
   ]);
 
   const changeLanguage = React.useCallback(

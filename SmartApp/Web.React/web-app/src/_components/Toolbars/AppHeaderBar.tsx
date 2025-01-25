@@ -51,6 +51,8 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
         return `${process.env.REACT_APP_Name} - User Administration`;
       case browserRoutes.spamClassification:
         return `${process.env.REACT_APP_Name} - Spam Classification`;
+      case browserRoutes.emailAccountInterface:
+        return `${process.env.REACT_APP_Name} - Email Accounts`;
       default:
         return "";
     }

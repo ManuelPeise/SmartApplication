@@ -23,7 +23,7 @@ namespace Logic.Interfaces.EmailAccountInterface
             _logger = new Logger<EmailAccountInterfaceModule>(applicationUnitOfWork);
         }
 
-        public async Task<List<EmailAccountSettingsUiModel>> GetEmailAccountSettings()
+        public async Task<List<EmailAccountSettings>> GetEmailAccountSettings()
         {
             try
             {
@@ -34,7 +34,7 @@ namespace Logic.Interfaces.EmailAccountInterface
 
                 var accountSettings = await GetAccountSettings();
 
-                return accountSettings.Select(setting => (EmailAccountSettingsUiModel)setting).ToList();
+                return accountSettings;
             }
             catch (Exception exception)
             {
@@ -44,7 +44,7 @@ namespace Logic.Interfaces.EmailAccountInterface
                 }
             }
 
-            return new List<EmailAccountSettingsUiModel>();
+            return new List<EmailAccountSettings>();
         }
 
         public async Task<bool> UpdateEmailAccountSettings(EmailAccountSettings accountSettings)
@@ -65,23 +65,42 @@ namespace Logic.Interfaces.EmailAccountInterface
 
                 if (!settingIsAvailable)
                 {
+                    accountSettings.SettingsGuid = Guid.NewGuid().ToString();
+                    accountSettings.UserId = _applicationUnitOfWork.CurrentUserId;
+                    accountSettings.Password = _passwordHandler.Encrypt(accountSettings.Password);
+
+                    settings.Add(accountSettings);
+
+                    await _applicationUnitOfWork.GenericSettingsRepository.SaveSettings(
+                       EmailAccountInterfaceSettings.ModuleName,
+                       EmailAccountInterfaceSettings.ModuleType,
+                       _applicationUnitOfWork.CurrentUserId,
+                       settings);
+
                     if (_logger != null)
                     {
-                        await _logger.Error($"Could not update email account settings for [{accountSettings.SettingsGuid}].", null);
+                        await _logger.Info($"Added new account [{accountSettings.SettingsGuid}].");
                     }
 
-                    return false;
+                    return true;
                 }
 
                 settings.ForEach(s =>
                 {
                     if (s.SettingsGuid == accountSettings.SettingsGuid)
                     {
+                        s.ProviderType = accountSettings.ProviderType;
                         s.AccountName = accountSettings.AccountName;
                         s.Server = accountSettings.Server;
                         s.Port = accountSettings.Port;
                         s.EmailAddress = accountSettings.EmailAddress;
-                        s.Password = _passwordHandler.Encrypt(s.Password);
+
+                        // update password only if changed
+                        if (s.Password != accountSettings.Password)
+                        {
+                            s.Password = _passwordHandler.Encrypt(s.Password);
+                        }
+
                         s.ConnectionTestPassed = accountSettings.ConnectionTestPassed;
                     }
                 });
@@ -118,7 +137,7 @@ namespace Logic.Interfaces.EmailAccountInterface
 
                 return await client.ExecuteConnectionTest(model);
             }
-            catch (Exception exception) 
+            catch (Exception exception)
             {
                 if (_logger != null)
                 {
@@ -143,7 +162,7 @@ namespace Logic.Interfaces.EmailAccountInterface
                 var emailAccount = GetDefaultEmailAccountModel();
 
                 await _applicationUnitOfWork.GenericSettingsRepository.SaveSettings(EmailAccountInterfaceSettings.ModuleName,
-                    ModuleTypeEnum.EmailAccountInterface, _applicationUnitOfWork.CurrentUserId, emailAccount);
+                    ModuleTypeEnum.EmailAccountInterface, _applicationUnitOfWork.CurrentUserId, new List<EmailAccountSettings> { emailAccount });
 
                 return new List<EmailAccountSettings> { emailAccount };
             }
@@ -154,7 +173,7 @@ namespace Logic.Interfaces.EmailAccountInterface
         {
             return new EmailAccountSettings
             {
-                SettingsGuid = Guid.NewGuid(),
+                SettingsGuid = Guid.NewGuid().ToString(),
                 UserId = _applicationUnitOfWork.CurrentUserId,
                 AccountName = string.Empty,
                 Server = string.Empty,

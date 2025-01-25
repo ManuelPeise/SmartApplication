@@ -9,4 +9,5 @@ export const browserRoutes = {
   emailCleanerSettings: "/settings/email-cleaner-settings",
   emailCleanerMappings: "/settings/email-cleaner-settings/mappings/",
   emailCleaner: "/email-cleaner",
+  emailAccountInterface: "/interfaces/email-accounts",
 };
