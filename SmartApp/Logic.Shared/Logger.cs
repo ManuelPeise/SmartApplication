@@ -13,7 +13,7 @@ namespace Logic.Shared
             _unitOfWork = applicationUnitOfWork;
         }
 
-        public async Task<int> Info(string message)
+        public async Task Info(string message)
         {
             await _unitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
             {
@@ -25,10 +25,10 @@ namespace Logic.Shared
 
             });
 
-            return await _unitOfWork.SaveApplicationContextChangesAsync();
+            await _unitOfWork.LogMessageRepository.SaveChangesAsync();
         }
 
-        public async Task<int> Error(string message, string? exceptionMessage = null)
+        public async Task Error(string message, string? exceptionMessage = null)
         {
             await _unitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
             {
@@ -40,10 +40,10 @@ namespace Logic.Shared
 
             });
 
-            return await _unitOfWork.SaveApplicationContextChangesAsync();
+            await _unitOfWork.LogMessageRepository.SaveChangesAsync();
         }
 
-        public async Task<int> CriticalError(string message, string? exceptionMessage)
+        public async Task CriticalError(string message, string? exceptionMessage)
         {
             await _unitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
             {
@@ -55,7 +55,7 @@ namespace Logic.Shared
 
             });
 
-            return await _unitOfWork.SaveApplicationContextChangesAsync();
+            await _unitOfWork.LogMessageRepository.SaveChangesAsync();
         }
     }
 }

@@ -5,4 +5,5 @@ export const browserRoutes = {
   log: "/administration/log",
   userAdministration: "/administration/user",
   emailAccountInterface: "/interfaces/email-accounts",
+  emailCleanerInterface: "/interfaces/email-cleaner",
 };

@@ -14,4 +14,10 @@ namespace Data.ContextAccessor.ModuleSettings
         public const string ModuleName = "EmailAccountInterface";
         public const ModuleTypeEnum ModuleType = ModuleTypeEnum.EmailAccountInterface;
     }
+
+    public static class EmailCleanerInterfaceSettings
+    {
+        public const string ModuleName = "EmailCleanerInterface";
+        public const ModuleTypeEnum ModuleType = ModuleTypeEnum.EmailCleanerInterface;
+    }
 }

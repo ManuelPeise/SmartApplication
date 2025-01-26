@@ -45,6 +45,8 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
         return `${process.env.REACT_APP_Name} - User Administration`;
       case browserRoutes.emailAccountInterface:
         return `${process.env.REACT_APP_Name} - Email Accounts`;
+      case browserRoutes.emailCleanerInterface:
+        return `${process.env.REACT_APP_Name} - Email Cleaner`;
       default:
         return "";
     }

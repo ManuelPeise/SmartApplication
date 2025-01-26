@@ -2,6 +2,7 @@
 {
     public enum ModuleTypeEnum
     {
-        EmailAccountInterface = 0
+        EmailAccountInterface = 0,
+        EmailCleanerInterface = 1
     }
 }

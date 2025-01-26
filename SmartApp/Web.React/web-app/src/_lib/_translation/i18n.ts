@@ -6,22 +6,18 @@ import administrationEn from "./resources/administration.en.json";
 import administrationDe from "./resources/administration.de.json";
 import settingsEn from "./resources/settings.en.json";
 import settingsDe from "./resources/settings.de.json";
-import emailCleanerEn from "./resources/emailCleaner.en.json";
-import emailCleanerDe from "./resources/emailCleaner.de.json";
 import interfaceEn from "./resources/interface.en.json";
 import interfaceDe from "./resources/interface.de.json";
 
 const resources = {
   en: {
     common: commonEn,
-    emailCleaner: emailCleanerEn,
     administration: administrationEn,
     settings: settingsEn,
     interface: interfaceEn,
   },
   de: {
     common: commonDe,
-    emailCleaner: emailCleanerDe,
     administration: administrationDe,
     settings: settingsDe,
     interface: interfaceDe,

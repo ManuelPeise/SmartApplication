@@ -12,6 +12,7 @@ namespace Data.Shared.Email
         public string? PredictedValue { get; set; }
         public bool AutomatedCleanup { get; set; }
         public bool IsProcessed { get; set; }
+        public bool ShareWithAi { get; set; }
         public int AddressId { get; set; }
         public EmailAddressEntity? AddressEntity { get; set; }
         public int SubjectId { get; set; }

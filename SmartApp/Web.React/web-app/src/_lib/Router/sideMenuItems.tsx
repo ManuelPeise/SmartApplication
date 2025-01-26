@@ -113,6 +113,12 @@ export const getInterfaceSideMenuItem = (
       route: browserRoutes.emailAccountInterface,
       childItems: null,
     });
+
+    item.childItems.push({
+      displayNameRecourceKey: "common.labelEmailCleanerInterface",
+      route: browserRoutes.emailCleanerInterface,
+      childItems: null,
+    });
   }
   return item;
 };
