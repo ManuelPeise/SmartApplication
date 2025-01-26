@@ -35,10 +35,6 @@ namespace Data.Databases
 
 
         // TODO Check that 
-
-
-        // !!! MIGRATE ALL DATABASES !!!
-      
         public DbSet<EmailDataEntity> EmailDataTable { get; set; }
     }
 }

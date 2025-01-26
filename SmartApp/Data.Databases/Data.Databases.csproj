@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Data.Shared\Data.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\Application\" />
-  </ItemGroup>
-
 </Project>
