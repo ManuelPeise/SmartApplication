@@ -12,5 +12,14 @@
   "labelMappingUpdateSuccessfull": "Updated with success!",
   "labelMappingUpdateFailedfull": "Updated with errors!",
   "descriptionUseAiSpamPrediction": "Use the AI spam prediction for this account.",
-  "descriptionUseAiTargetFolderPrediction": "Use the AI target folder prediction for this account."
+  "descriptionUseAiTargetFolderPrediction": "Use the AI target folder prediction for this account.",
+  "labelEmailCleaner": "Email Cleaner Interface",
+  "labelEmailCleanerSettings": "Settings for {Value}",
+  "descriptionEmailCleanerEnabled": "Define if the email cleaner schould be enabled for this account.",
+  "labelConfigureEmailAccount": "You have to configure a email account first.",
+  "labelConfigure": "Configure",
+  "labelUnmappedDomains": "You have {Count} unmapped domains",
+  "descriptionEmailDomainMappings": "Configure your domain mapping to cleanup your inbox.",
+  "labelConnectionTestNotPassed": "something went wrong while establish a connection to your account.",
+  "labelLastSettingsUpdateBy": "Last settings update by {By} at {At} (UTC)"
 }

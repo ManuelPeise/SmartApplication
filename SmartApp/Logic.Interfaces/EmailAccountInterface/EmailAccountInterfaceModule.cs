@@ -2,8 +2,8 @@
 using Data.ContextAccessor.ModuleSettings;
 using Data.Shared;
 using Data.Shared.Email;
-using Logic.Interfaces.EmailAccountInterface.Models;
 using Logic.Interfaces.Interfaces;
+using Logic.Interfaces.Models;
 using Logic.Shared;
 using Shared.Enums;
 
@@ -58,8 +58,8 @@ namespace Logic.Interfaces.EmailAccountInterface
                 }
 
                 var settings = await _applicationUnitOfWork.GenericSettingsRepository.GetSettings<List<EmailAccountSettings>>(
-                    EmailAccountInterfaceSettings.ModuleName,
-                    EmailAccountInterfaceSettings.ModuleType,
+                    GenericSettigsModules.EmailAccountInterfaceModuleName,
+                    GenericSettigsModules.EmailAccountInterfaceModuleType,
                     _applicationUnitOfWork.CurrentUserId) ?? new List<EmailAccountSettings>();
 
                 var settingIsAvailable = settings.FirstOrDefault(s => s.SettingsGuid == accountSettings.SettingsGuid) != null;
@@ -73,8 +73,8 @@ namespace Logic.Interfaces.EmailAccountInterface
                     settings.Add(accountSettings);
 
                     await _applicationUnitOfWork.GenericSettingsRepository.SaveSettings(
-                       EmailAccountInterfaceSettings.ModuleName,
-                       EmailAccountInterfaceSettings.ModuleType,
+                      GenericSettigsModules.EmailAccountInterfaceModuleName,
+                    GenericSettigsModules.EmailAccountInterfaceModuleType,
                        _applicationUnitOfWork.CurrentUserId,
                        settings);
 
@@ -95,8 +95,6 @@ namespace Logic.Interfaces.EmailAccountInterface
                         s.Server = accountSettings.Server;
                         s.Port = accountSettings.Port;
                         s.EmailAddress = accountSettings.EmailAddress;
-                        s.EmailAccountAiSettings.UseAiTargetFolderPrediction = accountSettings.EmailAccountAiSettings.UseAiTargetFolderPrediction;
-                        s.EmailAccountAiSettings.UseAiSpamPrediction = accountSettings.EmailAccountAiSettings.UseAiSpamPrediction;
 
                         // update password only if changed
                         if (s.Password != accountSettings.Password)
@@ -109,8 +107,8 @@ namespace Logic.Interfaces.EmailAccountInterface
                 });
 
                 await _applicationUnitOfWork.GenericSettingsRepository.SaveSettings(
-                    EmailAccountInterfaceSettings.ModuleName,
-                    EmailAccountInterfaceSettings.ModuleType,
+                   GenericSettigsModules.EmailAccountInterfaceModuleName,
+                    GenericSettigsModules.EmailAccountInterfaceModuleType,
                     _applicationUnitOfWork.CurrentUserId,
                     settings);
 
@@ -136,7 +134,7 @@ namespace Logic.Interfaces.EmailAccountInterface
                     throw new Exception("Could not execute connection test, reason: unauthenticated!");
                 }
 
-                var client = new EmailAccountInterfaceClient(_applicationUnitOfWork);
+                var client = new EmailInterfaceEmailClient(_applicationUnitOfWork);
 
                 return await client.ExecuteConnectionTest(model);
             }
@@ -161,8 +159,8 @@ namespace Logic.Interfaces.EmailAccountInterface
                 }
 
                 var settings = await _applicationUnitOfWork.GenericSettingsRepository.GetSettings<List<EmailAccountSettings>>(
-                   EmailAccountInterfaceSettings.ModuleName,
-                   EmailAccountInterfaceSettings.ModuleType,
+                   GenericSettigsModules.EmailAccountInterfaceModuleName,
+                   GenericSettigsModules.EmailAccountInterfaceModuleType,
                    _applicationUnitOfWork.CurrentUserId) ?? new List<EmailAccountSettings>();
 
                 if (!settings.Any())
@@ -187,7 +185,7 @@ namespace Logic.Interfaces.EmailAccountInterface
                     return false;
                 }
 
-                var client = new EmailAccountInterfaceClient(_applicationUnitOfWork);
+                var client = new EmailInterfaceEmailClient(_applicationUnitOfWork);
 
                 var decodedPassword = _passwordHandler.Decrypt(settingsToProcess.Password);
 
@@ -254,7 +252,8 @@ namespace Logic.Interfaces.EmailAccountInterface
                 {
                     var entity = new EmailAddressEntity
                     {
-                        EmailAddress = mapping.FromAddress,
+                        EmailAddress = mapping.FromAddress.Trim(),
+                        Domain = mapping.FromAddress.Split('@')[1].Trim(),
                     };
 
                     await _applicationUnitOfWork.EmailAddressTable.AddAsync(entity);
@@ -305,16 +304,16 @@ namespace Logic.Interfaces.EmailAccountInterface
         private async Task<List<EmailAccountSettings>> GetAccountSettings()
         {
             var accountSettings = await _applicationUnitOfWork.GenericSettingsRepository.GetSettings<List<EmailAccountSettings>>(
-                   EmailAccountInterfaceSettings.ModuleName,
-                   EmailAccountInterfaceSettings.ModuleType
-                , _applicationUnitOfWork.CurrentUserId) ?? new List<EmailAccountSettings>();
+                   GenericSettigsModules.EmailAccountInterfaceModuleName,
+                   GenericSettigsModules.EmailAccountInterfaceModuleType,
+                   _applicationUnitOfWork.CurrentUserId) ?? new List<EmailAccountSettings>();
 
             if (accountSettings == null || !accountSettings.Any())
             {
                 var emailAccount = GetDefaultEmailAccountModel();
 
-                await _applicationUnitOfWork.GenericSettingsRepository.SaveSettings(EmailAccountInterfaceSettings.ModuleName,
-                    ModuleTypeEnum.EmailAccountInterface, _applicationUnitOfWork.CurrentUserId, new List<EmailAccountSettings> { emailAccount });
+                await _applicationUnitOfWork.GenericSettingsRepository.SaveSettings(GenericSettigsModules.EmailAccountInterfaceModuleName,
+                    GenericSettigsModules.EmailAccountInterfaceModuleType, _applicationUnitOfWork.CurrentUserId, new List<EmailAccountSettings> { emailAccount });
 
                 return new List<EmailAccountSettings> { emailAccount };
             }
@@ -335,11 +334,6 @@ namespace Logic.Interfaces.EmailAccountInterface
                 Password = string.Empty,
                 ProviderType = EmailProviderTypeEnum.None,
                 ConnectionTestPassed = false,
-                EmailAccountAiSettings = new EmailAccountAiSettings
-                {
-                    UseAiSpamPrediction = false,
-                    UseAiTargetFolderPrediction = false,
-                }
             };
         }
 

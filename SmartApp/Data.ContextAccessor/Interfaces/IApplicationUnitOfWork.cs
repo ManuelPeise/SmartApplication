@@ -9,6 +9,7 @@ namespace Data.ContextAccessor.Interfaces
     public interface IApplicationUnitOfWork : IDisposable
     {
         int CurrentUserId { get; }
+        public string CurrentUserName { get; }
         DbContextRepository<LogMessageEntity> LogMessageRepository { get; }
         // email mapping for ai and email cleaner
         DbContextRepository<EmailSubjectEntity> EmailSubjectTable { get; }

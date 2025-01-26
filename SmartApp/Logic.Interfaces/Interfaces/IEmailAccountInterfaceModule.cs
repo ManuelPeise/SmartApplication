@@ -1,4 +1,4 @@
-﻿using Logic.Interfaces.EmailAccountInterface.Models;
+﻿using Logic.Interfaces.Models;
 
 namespace Logic.Interfaces.Interfaces
 {

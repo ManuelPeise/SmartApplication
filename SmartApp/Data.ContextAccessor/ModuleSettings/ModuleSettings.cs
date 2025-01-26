@@ -9,15 +9,12 @@ namespace Data.ContextAccessor.ModuleSettings
         public ModuleTypeEnum ModuleType { get; set; }
     }
 
-    public static class EmailAccountInterfaceSettings
+    public static class GenericSettigsModules
     {
-        public const string ModuleName = "EmailAccountInterface";
-        public const ModuleTypeEnum ModuleType = ModuleTypeEnum.EmailAccountInterface;
-    }
+        public const string EmailAccountInterfaceModuleName = "EmailAccountInterface";
+        public const ModuleTypeEnum EmailAccountInterfaceModuleType = ModuleTypeEnum.EmailAccountInterface;
 
-    public static class EmailCleanerInterfaceSettings
-    {
-        public const string ModuleName = "EmailCleanerInterface";
-        public const ModuleTypeEnum ModuleType = ModuleTypeEnum.EmailCleanerInterface;
+        public const string EmailCleanerInterfaceModuleName = "EmailCleanerInterface";
+        public const ModuleTypeEnum EmailCleanerInterfaceModuleType = ModuleTypeEnum.EmailCleanerInterface;
     }
 }

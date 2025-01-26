@@ -1,6 +1,6 @@
 ﻿using Shared.Enums;
 
-namespace Logic.Interfaces.EmailAccountInterface.Models
+namespace Logic.Interfaces.Models
 {
     public class EmailAccountSettings
     {
@@ -13,12 +13,6 @@ namespace Logic.Interfaces.EmailAccountInterface.Models
         public string EmailAddress { get; set; } = string.Empty;
         public string? Password { get; set; }
         public bool ConnectionTestPassed { get; set; }
-        public EmailAccountAiSettings EmailAccountAiSettings { get; set; } = new EmailAccountAiSettings();
-    }
-
-    public class EmailAccountAiSettings
-    {
-        public bool UseAiSpamPrediction { get; set; }
-        public bool UseAiTargetFolderPrediction { get; set; }
+        
     }
 }

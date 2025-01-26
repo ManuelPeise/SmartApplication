@@ -14,8 +14,8 @@ namespace Data.Shared.Email
         public bool IsProcessed { get; set; }
         public bool ShareWithAi { get; set; }
         public int AddressId { get; set; }
-        public EmailAddressEntity? AddressEntity { get; set; }
+        public EmailAddressEntity AddressEntity { get; set; } = new EmailAddressEntity();
         public int SubjectId { get; set; }
-        public EmailSubjectEntity? SubjectEntity { get; set; }
+        public EmailSubjectEntity SubjectEntity { get; set; } = new EmailSubjectEntity();
     }
 }

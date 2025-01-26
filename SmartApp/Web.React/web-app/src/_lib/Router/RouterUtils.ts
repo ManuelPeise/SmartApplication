@@ -6,4 +6,5 @@ export const browserRoutes = {
   userAdministration: "/administration/user",
   emailAccountInterface: "/interfaces/email-accounts",
   emailCleanerInterface: "/interfaces/email-cleaner",
+  emailDomainMapping: "/interfaces/email-cleaner/domain-mapping/:id",
 };

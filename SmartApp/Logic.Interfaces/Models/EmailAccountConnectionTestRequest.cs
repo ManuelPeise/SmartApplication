@@ -1,4 +1,4 @@
-﻿namespace Logic.Interfaces.EmailAccountInterface.Models
+﻿namespace Logic.Interfaces.Models
 {
     public class EmailAccountConnectionTestRequest
     {

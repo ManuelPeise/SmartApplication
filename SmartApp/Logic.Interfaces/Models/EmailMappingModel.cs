@@ -1,4 +1,4 @@
-﻿namespace Logic.Interfaces.EmailAccountInterface.Models
+﻿namespace Logic.Interfaces.Models
 {
     internal class EmailMappingModel
     {
@@ -7,5 +7,6 @@
         public string FromAddress { get; set; } = string.Empty;
         public string Subject { get; set; } = string.Empty;
         public string SourceFolder { get; set; } = string.Empty;
+        public bool IsNew { get; set; }
     }
 }

@@ -3,6 +3,6 @@
     public class SpamClassificationPageData
     {
         public SpamPredictionStatisticData Statistics { get; set; } = new SpamPredictionStatisticData();
-        public List<EmailDomainModel> Domains { get; set; } = new List<EmailDomainModel>();
+        public List<EmailSpamDomainModel> Domains { get; set; } = new List<EmailSpamDomainModel>();
     }
 }

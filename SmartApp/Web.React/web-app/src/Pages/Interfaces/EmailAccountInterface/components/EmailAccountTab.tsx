@@ -14,19 +14,16 @@ import { useI18n } from "src/_hooks/useI18n";
 import { emailValidation } from "src/_lib/validation";
 import { isEqual } from "lodash";
 import EmailMappingImportAlert from "./EmailMappingImportAlert";
-import AccountAiSettings from "./AccountAiSettings";
 
 interface IProps {
   tabIndex: number;
   selectedTab: number;
-  isLoading: boolean;
   minHeight: number;
   state: EmailAccountSettings;
   handleTestConnection: (
     request: EmailAccountConnectionTestRequest
   ) => Promise<boolean>;
   handleSaveConnection: (connection: EmailAccountSettings) => Promise<void>;
-  handleUpdateMappingTable: (settingsGuid: string) => Promise<boolean>;
 }
 
 const EmailAccountTab: React.FC<IProps> = (props) => {
@@ -34,11 +31,9 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
     tabIndex,
     selectedTab,
     minHeight,
-    isLoading,
     state,
     handleTestConnection,
     handleSaveConnection,
-    handleUpdateMappingTable,
   } = props;
   const { getResource } = useI18n();
 
@@ -87,18 +82,6 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
     intermediateState.server,
   ]);
 
-  const onUpdateMappingTable = React.useCallback(async () => {
-    await handleUpdateMappingTable(intermediateState.settingsGuid).then(
-      (res) => {
-        handleImportState({ open: true, success: res });
-      }
-    );
-  }, [
-    handleUpdateMappingTable,
-    handleImportState,
-    intermediateState.settingsGuid,
-  ]);
-
   const isModified = React.useMemo((): boolean => {
     return !isEqual(state, intermediateState);
   }, [state, intermediateState]);
@@ -145,22 +128,6 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
     handleReset,
   ]);
 
-  const updateMappingTableDisabled = React.useMemo(() => {
-    return (
-      !intermediateState.connectionTestPassed ||
-      !intermediateState.settingsGuid.length ||
-      !intermediateState.emailAccountAiSettings.useAiTargetFolderPrediction ||
-      isLoading ||
-      isModified
-    );
-  }, [
-    intermediateState.connectionTestPassed,
-    intermediateState.emailAccountAiSettings.useAiTargetFolderPrediction,
-    intermediateState.settingsGuid.length,
-    isLoading,
-    isModified,
-  ]);
-
   const additionalButtonProps = React.useMemo((): ButtonProps[] => {
     return [
       {
@@ -168,19 +135,8 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
         disabled: connectionTestDisabled,
         onAction: onTestConnection,
       },
-      {
-        label: getResource("interface.labelUpdateMappingTable"),
-        disabled: updateMappingTableDisabled,
-        onAction: onUpdateMappingTable,
-      },
     ];
-  }, [
-    getResource,
-    connectionTestDisabled,
-    onTestConnection,
-    updateMappingTableDisabled,
-    onUpdateMappingTable,
-  ]);
+  }, [getResource, connectionTestDisabled, onTestConnection]);
 
   React.useEffect(() => {
     setIntermediateState(state);
@@ -190,7 +146,6 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
     return null;
   }
 
-  console.log("Render tab...");
   return (
     <DetailsView
       saveCancelButtonProps={saveCancelButtonProps}
@@ -243,11 +198,6 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
         <ProviderConnectionInfo
           key="provider-connection-info"
           state={intermediateState}
-        />
-        <AccountAiSettings
-          key="account-ai-settings"
-          aiSettings={intermediateState.emailAccountAiSettings}
-          handleChange={handleChange}
         />
       </Grid2>
     </DetailsView>

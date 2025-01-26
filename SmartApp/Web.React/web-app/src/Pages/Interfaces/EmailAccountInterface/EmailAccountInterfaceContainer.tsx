@@ -44,16 +44,6 @@ const EmailAccountInterfaceContainer: React.FC = () => {
     [rebindData, sendPost]
   );
 
-  const handleUpdateMappingTable = React.useCallback(
-    async (settingsGuid: string): Promise<boolean> => {
-      return await sendPost<boolean>({
-        serviceUrl: "EmailAccountInterface/UpdateEmailMappingTable",
-        parameters: { settingsGuid: settingsGuid },
-      });
-    },
-    [sendPost]
-  );
-
   if (!data?.length) {
     return null;
   }
@@ -64,7 +54,6 @@ const EmailAccountInterfaceContainer: React.FC = () => {
       data={data}
       handleTestConnection={handleTestConnection}
       handleSaveConnection={handleSaveConnection}
-      handleUpdateMappingTable={handleUpdateMappingTable}
     />
   );
 };

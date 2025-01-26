@@ -52,7 +52,7 @@ namespace Logic.Administration
 
                 return new SpamClassificationPageData
                 {
-                    Domains = new List<EmailDomainModel>()
+                    Domains = new List<EmailSpamDomainModel>()
                 };
             }
         }
@@ -166,7 +166,7 @@ namespace Logic.Administration
 
         #region private
 
-        private async Task<(int dataEntities, int trainingEntities, List<EmailDomainModel> domainData)> GetSpamClassificationData()
+        private async Task<(int dataEntities, int trainingEntities, List<EmailSpamDomainModel> domainData)> GetSpamClassificationData()
         {
             try
             {
@@ -175,7 +175,7 @@ namespace Logic.Administration
 
                 if (emailDataEntities == null || existingTrainingData == null)
                 {
-                    return (emailDataEntities?.Count ?? 0, existingTrainingData?.Count ?? 0, new List<EmailDomainModel>());
+                    return (emailDataEntities?.Count ?? 0, existingTrainingData?.Count ?? 0, new List<EmailSpamDomainModel>());
                 }
 
                 var id = 0;
@@ -183,7 +183,7 @@ namespace Logic.Administration
                 var domainData = (from data in emailDataEntities
                                   where data != null && !string.IsNullOrWhiteSpace(data.Subject)
                                   group data by data.FromAddress.Split('@')[1] into domainGroup
-                                  select new EmailDomainModel
+                                  select new EmailSpamDomainModel
                                   {
                                       Id = id++,
                                       DomainName = domainGroup.Key,
@@ -215,7 +215,7 @@ namespace Logic.Administration
 
                 await _aiRepository.LogRepository.SaveChangesAsync();
 
-                return (0, 0, new List<EmailDomainModel>());
+                return (0, 0, new List<EmailSpamDomainModel>());
             }
         }
 

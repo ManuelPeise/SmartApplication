@@ -19,6 +19,7 @@ namespace Data.ContextAccessor
         private readonly IOptions<SecurityData> _securityData;
         private readonly ClaimsAccessor _claimsAccessor;
         private readonly int _currentUserId;
+        private readonly string? _currentUserName;
 
         public ApplicationUnitOfWork(ApplicationContext applicationContext, UserIdentityContext userIdentityContext, IOptions<SecurityData> securityData, IHttpContextAccessor contextAccessor)
         {
@@ -28,9 +29,12 @@ namespace Data.ContextAccessor
             _securityData = securityData;
             _claimsAccessor = new ClaimsAccessor();
             _currentUserId = _claimsAccessor.GetClaimsValue<int>("userId");
+            _currentUserName = _claimsAccessor.GetClaimsValue<string>("name");
         }
 
         public int CurrentUserId => _currentUserId;
+        public string CurrentUserName => _currentUserName ?? "";
+
         public bool IsAuthenticated => _currentUserId != 0;
         public DbContextRepository<LogMessageEntity> LogMessageRepository => new DbContextRepository<LogMessageEntity>(_applicationContext, _contextAccessor);
         public IdentityRepository IdentityRepository => new IdentityRepository(_userIdentityContext, _contextAccessor);
@@ -41,7 +45,7 @@ namespace Data.ContextAccessor
 
 
         public ClaimsAccessor ClaimsAccessor => new ClaimsAccessor();
-        
+
         public IOptions<SecurityData> SecurityData => _securityData;
 
         public async Task<int> SaveApplicationContextChangesAsync()

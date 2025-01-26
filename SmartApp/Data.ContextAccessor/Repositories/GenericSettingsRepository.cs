@@ -43,8 +43,8 @@ namespace Data.ContextAccessor.Repositories
             {
                 settingsEntity = new GenericSettingsEntity
                 {
-                    ModuleName = EmailAccountInterfaceSettings.ModuleName,
-                    ModuleType = EmailAccountInterfaceSettings.ModuleType,
+                    ModuleName = moduleName,
+                    ModuleType = moduleType,
                     UserId = userId,
                     SettingsJson = JsonConvert.SerializeObject(model)
                 };

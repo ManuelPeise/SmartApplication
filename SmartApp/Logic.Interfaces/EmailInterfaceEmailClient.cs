@@ -1,20 +1,20 @@
 ﻿using Data.ContextAccessor.Interfaces;
-using Logic.Interfaces.EmailAccountInterface.Models;
+using Logic.Interfaces.Models;
 using Logic.Shared;
 using MailKit;
 using MailKit.Net.Imap;
 
-namespace Logic.Interfaces.EmailAccountInterface
+namespace Logic.Interfaces
 {
-    internal class EmailAccountInterfaceClient
+    internal class EmailInterfaceEmailClient
     {
-        private Logger<EmailAccountInterfaceClient>? _logger;
+        private Logger<EmailInterfaceEmailClient>? _logger;
         private bool _isConnected = false;
         private bool _isAuthenticated = false;
 
-        public EmailAccountInterfaceClient(IApplicationUnitOfWork applicationUnitOfWork)
+        public EmailInterfaceEmailClient(IApplicationUnitOfWork applicationUnitOfWork)
         {
-            _logger = new Logger<EmailAccountInterfaceClient>(applicationUnitOfWork);
+            _logger = new Logger<EmailInterfaceEmailClient>(applicationUnitOfWork);
         }
 
         public async Task<bool> ExecuteConnectionTest(EmailAccountConnectionTestRequest model)
@@ -90,7 +90,8 @@ namespace Logic.Interfaces.EmailAccountInterface
                                 MessageDate = dataSet.Envelope.Date.Value.UtcDateTime,
                                 FromAddress = dataSet.Envelope.From.Mailboxes.First().Address,
                                 Subject = dataSet.Envelope.Subject,
-                                SourceFolder = dataSet.Folder.Name
+                                SourceFolder = dataSet.Folder.Name,
+                                IsNew = dataSet.Flags.HasValue ? !dataSet.Flags.Value.HasFlag(MessageFlags.Seen) : true,
                             });
                         }
                     }
