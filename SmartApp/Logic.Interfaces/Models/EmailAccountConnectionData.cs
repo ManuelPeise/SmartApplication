@@ -1,6 +1,6 @@
 ﻿namespace Logic.Interfaces.Models
 {
-    public class EmailAccountConnectionTestRequest
+    public class EmailAccountConnectionData
     {
         public string Server { get; set; } = string.Empty;
         public int Port { get; set; }

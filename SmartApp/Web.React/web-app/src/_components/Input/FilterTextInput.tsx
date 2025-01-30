@@ -1,4 +1,4 @@
-import { DeleteOutlineRounded } from "@material-ui/icons";
+import { DeleteOutlineRounded } from "@mui/icons-material";
 import { IconButton, TextField } from "@mui/material";
 import React from "react";
 
@@ -34,23 +34,26 @@ const FilterTextInput: React.FC<IProps> = (props) => {
       onChange={handleChange}
       slotProps={{
         input: {
-          endAdornment:
-            value !== "" ? (
-              <IconButton
-                sx={{
+          endAdornment: (
+            <IconButton
+              size="small"
+              disabled={value === ""}
+              sx={{
+                width: "30px",
+                height: "30px",
+                p: 1,
+              }}
+            >
+              <DeleteOutlineRounded
+                style={{
                   width: "30px",
                   height: "30px",
                 }}
-              >
-                <DeleteOutlineRounded
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                  }}
-                  onClick={handleClearFilterText}
-                />
-              </IconButton>
-            ) : null,
+                onClick={handleClearFilterText}
+              />
+            </IconButton>
+          ),
+
           autoComplete: "off",
           inputProps: {
             autoComplete: "off",

@@ -1,12 +1,19 @@
-﻿namespace Logic.Interfaces.Models
+﻿using Data.Shared.Email;
+
+namespace Logic.Interfaces.Models
 {
-    internal class EmailMappingModel
+    public class EmailMappingModel
     {
-        public string MessageId { get; set; } = string.Empty;
-        public DateTime MessageDate { get; set; }
+        public int MappingId { get; set; }
+        public int AddressEntityId { get; set; }
+        public int SubjectEntityId { get; set; }
+        public int UserId { get; set; }
+        public string? UserDefinedTargetFolder { get; set; }
+        public string? PredictedTargetFolder { get; set; }
+        public bool UserDefinedAsSpam { get; set; }
+        public bool PredictedAsSpam { get; set; }
         public string FromAddress { get; set; } = string.Empty;
         public string Subject { get; set; } = string.Empty;
-        public string SourceFolder { get; set; } = string.Empty;
-        public bool IsNew { get; set; }
+
     }
 }

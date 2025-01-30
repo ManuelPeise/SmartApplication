@@ -6,7 +6,7 @@ namespace Logic.Interfaces.Interfaces
     {
         Task<List<EmailAccountSettings>> GetEmailAccountSettings();
         Task<bool> UpdateEmailAccountSettings(EmailAccountSettings accountSettings);
-        Task<bool> ExcecuteConnectionTest(EmailAccountConnectionTestRequest model);
+        Task<bool> ExcecuteConnectionTest(EmailAccountConnectionData model);
         Task<bool> ExecuteEmailMappingTableUpdate(string settingsGuid);
     }
 }

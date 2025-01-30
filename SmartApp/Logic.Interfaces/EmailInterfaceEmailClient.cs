@@ -17,7 +17,7 @@ namespace Logic.Interfaces
             _logger = new Logger<EmailInterfaceEmailClient>(applicationUnitOfWork);
         }
 
-        public async Task<bool> ExecuteConnectionTest(EmailAccountConnectionTestRequest model)
+        public async Task<bool> ExecuteConnectionTest(EmailAccountConnectionData model)
         {
             try
             {
@@ -49,9 +49,9 @@ namespace Logic.Interfaces
             }
         }
 
-        public async Task<List<EmailMappingModel>> LoadMailsFromServer(EmailAccountConnectionTestRequest model)
+        public async Task<List<EmailDataModel>> LoadMailsFromServer(EmailAccountConnectionData model)
         {
-            var models = new List<EmailMappingModel>();
+            var models = new List<EmailDataModel>();
 
             try
             {
@@ -84,14 +84,11 @@ namespace Logic.Interfaces
                     {
                         if (!string.IsNullOrEmpty(dataSet.Envelope.Subject) && dataSet.Envelope.Date != null)
                         {
-                            models.Add(new EmailMappingModel
+                            models.Add(new EmailDataModel
                             {
                                 MessageId = dataSet.Envelope.MessageId,
-                                MessageDate = dataSet.Envelope.Date.Value.UtcDateTime,
                                 FromAddress = dataSet.Envelope.From.Mailboxes.First().Address,
                                 Subject = dataSet.Envelope.Subject,
-                                SourceFolder = dataSet.Folder.Name,
-                                IsNew = dataSet.Flags.HasValue ? !dataSet.Flags.Value.HasFlag(MessageFlags.Seen) : true,
                             });
                         }
                     }

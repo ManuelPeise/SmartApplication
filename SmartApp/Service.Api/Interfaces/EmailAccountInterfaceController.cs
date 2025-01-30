@@ -30,7 +30,7 @@ namespace Service.Api.Interfaces
 
         [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]
         [HttpPost(Name = "TestConnection")]
-        public async Task<bool> TestConnection([FromBody] EmailAccountConnectionTestRequest request)
+        public async Task<bool> TestConnection([FromBody] EmailAccountConnectionData request)
         {
             return await _module.ExcecuteConnectionTest(request);
         }

@@ -1,6 +1,5 @@
 ﻿using Data.ContextAccessor.Interfaces;
 using Data.ContextAccessor.ModuleSettings;
-using Data.Shared;
 using Logic.Interfaces.EmailAccountInterface;
 using Logic.Interfaces.EmailCleanerInterface.Models;
 using Logic.Interfaces.Interfaces;
@@ -12,43 +11,89 @@ namespace Logic.Interfaces.EmailCleanerInterface
     public class EmailCleanerInterfaceModule : IEmailCleanerInterfaceModule
     {
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
-        private readonly PasswordHandler _passwordHandler;
+        
         private Logger<EmailAccountInterfaceModule>? _logger;
 
         public EmailCleanerInterfaceModule(IApplicationUnitOfWork applicationUnitOfWork)
         {
             _applicationUnitOfWork = applicationUnitOfWork;
-            _passwordHandler = new PasswordHandler(applicationUnitOfWork.SecurityData);
             _logger = new Logger<EmailAccountInterfaceModule>(applicationUnitOfWork);
         }
 
         public async Task<List<EmailCleanerInterfaceConfigurationUiModel>> GetEmailCleanerConfigurations(bool loadFolderMappings)
         {
-            try
+            using (var folderMappings = new FolderMappings(_applicationUnitOfWork))
             {
-                if (!_applicationUnitOfWork.IsAuthenticated)
+                try
                 {
-                    throw new Exception("Could not update email account settings, reason: unauthenticated!");
+                    if (!_applicationUnitOfWork.IsAuthenticated)
+                    {
+                        throw new Exception("Could not update email account settings, reason: unauthenticated!");
+                    }
+
+                    var configurations = await GetConfigurations();
+
+                    await SaveEmailCleanerSettings(configurations);
+
+                    await LoadEmailData(configurations, folderMappings, loadFolderMappings);
+
+                    return configurations.Select(cnf => (EmailCleanerInterfaceConfigurationUiModel)cnf.Value).ToList();
                 }
+                catch (Exception exception)
+                {
+                    if (_logger != null)
+                    {
+                        await _logger.Error("Could not load Email cleaner configuration(s)", exception.Message);
+                    }
 
-                var configurations = await GetConfigurations();
-
-                await LoadAndUpdateFolderMappings(configurations);
-
-                await SaveEmailCleanerSettings(configurations);
-
-                await LoadEmailData(configurations, loadFolderMappings);
-
-                return configurations.Select(cnf => (EmailCleanerInterfaceConfigurationUiModel)cnf.Value).ToList();
+                    return new List<EmailCleanerInterfaceConfigurationUiModel>();
+                }
             }
-            catch (Exception exception)
-            {
-                if (_logger != null)
-                {
-                    await _logger.Error("Could not load Email cleaner configuration(s)", exception.Message);
-                }
+        }
 
-                return new List<EmailCleanerInterfaceConfigurationUiModel>();
+        public async Task<EmailCleanerMappingData<EmailFolderMappingData>?> GetFolderMappingData(string settingsGuid)
+        {
+            using (var folderMapping = new FolderMappings(_applicationUnitOfWork))
+            {
+                try
+                {
+                    if (!_applicationUnitOfWork.IsAuthenticated)
+                    {
+                        throw new Exception("Could not update email account settings, reason: unauthenticated!");
+                    }
+
+                    var configurations = await GetConfigurations();
+
+                    if (!configurations.ContainsKey(settingsGuid))
+                    {
+                        if (_logger != null)
+                        {
+                            await _logger.Error($"Could not load mapping data, {settingsGuid} not found.");
+                        }
+
+                        return new EmailCleanerMappingData<EmailFolderMappingData>();
+                    }
+
+                    var mappingData = await folderMapping.ExecuteFolderMapping(configurations[settingsGuid]);
+
+                    return new EmailCleanerMappingData<EmailFolderMappingData>
+                    {
+                        SettingsGuid = settingsGuid,
+                        AccountName = configurations[settingsGuid].AccountName,
+                        EmailAddress = configurations[settingsGuid].EmailAddress,
+                        ProviderType = configurations[settingsGuid].ProviderType,
+                        MappingData = mappingData,
+                    };
+                }
+                catch (Exception exception)
+                {
+                    if (_logger != null)
+                    {
+                        await _logger.Error("Could not load Email cleaner configuration(s)", exception.Message);
+                    }
+
+                    return null;
+                }
             }
         }
 
@@ -95,6 +140,36 @@ namespace Logic.Interfaces.EmailCleanerInterface
             }
         }
 
+        public async Task<bool> UpdateFolderMappings(EmailFolderMappingUpdate folderMappingUpdate)
+        {
+            using (var folderMapping = new FolderMappings(_applicationUnitOfWork))
+            {
+                try
+                {
+
+                    if (await folderMapping.UpdateFolderMappings(folderMappingUpdate))
+                    {
+                        if (_logger != null)
+                        {
+                            await _logger.Info($"Email cleaner folder mapping(s) [{folderMappingUpdate.SettingsGuid}] updated.");
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                }
+                catch (Exception exception)
+                {
+                    if (_logger != null)
+                    {
+                        await _logger.Error("Could not update Email cleaner folder mapping(s)", exception.Message);
+                    }
+
+                    return false;
+                }
+            }
+        }
 
         #region private members
 
@@ -125,20 +200,19 @@ namespace Logic.Interfaces.EmailCleanerInterface
                     Port = settings.Port,
                     EmailAddress = settings.EmailAddress,
                     Password = settings.Password,
-                    
+
                 };
 
                 if (emailCleanerSettings.ContainsKey(settings.SettingsGuid))
                 {
                     configurationDictionary[settings.SettingsGuid].EmailCleanerEnabled = emailCleanerSettings[settings.SettingsGuid].EmailCleanerEnabled;
-                    configurationDictionary[settings.SettingsGuid].DomainFolderMapping = emailCleanerSettings[settings.SettingsGuid].DomainFolderMapping;
                     configurationDictionary[settings.SettingsGuid].UpdatedAt = emailCleanerSettings[settings.SettingsGuid].UpdatedAt;
                     configurationDictionary[settings.SettingsGuid].UpdatedBy = emailCleanerSettings[settings.SettingsGuid].UpdatedBy;
                 }
                 else
                 {
                     configurationDictionary[settings.SettingsGuid].EmailCleanerEnabled = false;
-                    configurationDictionary[settings.SettingsGuid].DomainFolderMapping = new List<EmailDomainFolderMapping>();
+
                 }
             }
 
@@ -151,113 +225,64 @@ namespace Logic.Interfaces.EmailCleanerInterface
                    GenericSettigsModules.EmailCleanerInterfaceModuleType, _applicationUnitOfWork.CurrentUserId, configurations);
         }
 
-        private async Task LoadAndUpdateFolderMappings(Dictionary<string, EmailCleanerInterfaceConfiguration> configurations)
+        private async Task LoadEmailData(Dictionary<string, EmailCleanerInterfaceConfiguration> configurations, FolderMappings folderMappings, bool loadMails)
         {
             foreach (var key in configurations.Keys)
             {
-                var emailMappingModels = new List<EmailMappingModel>();
-
-                var settingsGuid = configurations[key].SettingsGuid;
-
-                var domainMappingDictionary = configurations[key].DomainFolderMapping.ToDictionary(x => x.SourceDomain) ?? new Dictionary<string, EmailDomainFolderMapping>();
-
-                await LoadFolderMappingsAsync(domainMappingDictionary, settingsGuid);
-
-                configurations[key].DomainFolderMapping = domainMappingDictionary.Select(x => x.Value).ToList();
+                configurations[key] = await LoadEmailDataForConfiguration(configurations[key], folderMappings, loadMails, false);
             }
         }
 
-        private async Task LoadFolderMappingsAsync(Dictionary<string, EmailDomainFolderMapping> existingEmailFolderMappings, string settingsGuid)
+        private async Task<EmailCleanerInterfaceConfiguration> LoadEmailDataForConfiguration(EmailCleanerInterfaceConfiguration configuration, FolderMappings folderMappings, bool loadMails, bool isFolderMappingData)
         {
-            var emailMappings = await _applicationUnitOfWork.EmailMappingTable.GetAllAsyncBy(mapping =>
-                   mapping.UserId == _applicationUnitOfWork.CurrentUserId
-                   && mapping.SettingsGuid == settingsGuid);
+            var currentEmailData = await folderMappings.GetMailsFromServer(configuration);
 
-            var emailMappingAddressIds = emailMappings.Select(mapping => mapping.AddressId);
-
-            await _applicationUnitOfWork.EmailAddressTable.GetAllAsyncBy(address => emailMappingAddressIds.Contains(address.Id));
-
-            var domainMappings = (from mapping in emailMappings
-                                  where !string.IsNullOrEmpty(mapping.AddressEntity.Domain)
-                                  group mapping by mapping.AddressEntity.Domain into mappingDomainGroup
-                                  select new EmailDomainFolderMapping
-                                  {
-                                      SourceDomain = mappingDomainGroup.Key,
-                                      TargetFolder = string.Empty,
-                                      PredictedTargetFolder = string.Empty,
-                                      AutomatedCleanupEnabled = false,
-                                      IsActive = false,
-                                      ForceDeleteSpamMails = false,
-                                  }).ToList();
-
-            if (!domainMappings.Any())
+            if (!currentEmailData.Any())
             {
-                return;
+                return configuration;
             }
 
-            foreach (var mapping in domainMappings)
+            var databaseHandler = new EmailDatabaseHandler(_applicationUnitOfWork);
+
+            var addressDictionary = await databaseHandler.EnsureAllAddressEntitiesExists(currentEmailData);
+            var subjectDictionary = await databaseHandler.EnsureAllSubjectEntitiesExists(currentEmailData);
+
+            var mappingEntities = await databaseHandler.GetEmailMappingEntities(_applicationUnitOfWork.CurrentUserId);
+
+            var mails = (from mail in currentEmailData
+                         let addressId = addressDictionary[mail.FromAddress].Id
+                         let subjectId = subjectDictionary[mail.Subject].Id
+                         let mappingEntity = mappingEntities.FirstOrDefault(x => x.AddressId == addressId && x.SubjectId == subjectId)
+                         select new EmailMappingModel
+                         {
+                             UserId = _applicationUnitOfWork.CurrentUserId,
+                             MappingId = mappingEntity != null ? mappingEntity.Id : -1,
+                             AddressEntityId = addressId,
+                             SubjectEntityId = subjectId,
+                             FromAddress = mail.FromAddress,
+                             Subject = mail.Subject,
+                             UserDefinedTargetFolder = mappingEntity != null ? mappingEntity.UserDefinedTargetFolder : "Unknown",
+                             PredictedTargetFolder = mappingEntity != null ? mappingEntity.UserDefinedTargetFolder : "n/a",
+                             UserDefinedAsSpam = mappingEntity != null ? mappingEntity.UserDefinedAsSpam : false,
+                             PredictedAsSpam = mappingEntity != null ? mappingEntity.PredictedAsSpam : false
+                         }).ToList();
+
+            if (isFolderMappingData)
             {
-                if (!existingEmailFolderMappings.ContainsKey(mapping.SourceDomain))
-                {
-                    existingEmailFolderMappings[mapping.SourceDomain] = mapping;
-                }
+                configuration.Emails = mails
+                    .GroupBy(m => m.FromAddress.Split('@')[1])
+                    .Select(grp => grp.First())
+                    .ToList();
             }
-        }
-
-        private async Task<List<EmailMappingModel>> LoadEmailsFromServer(EmailCleanerInterfaceConfiguration configuration)
-        {
-            var client = new EmailInterfaceEmailClient(_applicationUnitOfWork);
-
-            var emailData = await client.LoadMailsFromServer(new EmailAccountConnectionTestRequest
+            else
             {
-                Server = configuration.Server,
-                Port = configuration.Port,
-                EmailAddress = configuration.EmailAddress,
-                Password = _passwordHandler.Decrypt(configuration.Password),
-            });
-
-            return emailData;
-        }
-
-        private async Task LoadEmailData(Dictionary<string, EmailCleanerInterfaceConfiguration> configurations, bool loadFolderMappings)
-        {
-            foreach (var configuration in configurations)
-            {
-               
-                    var currentEmailData = await LoadEmailsFromServer(configuration.Value);
-
-                    if (!currentEmailData.Any())
-                    {
-                        continue;
-                    }
-
-                    foreach (var mapping in configuration.Value.DomainFolderMapping)
-                    {
-                        if (currentEmailData.Any(mail => mail.FromAddress.Split('@')[1].ToLower() == mapping.SourceDomain.ToLower()))
-                        {
-                            mapping.CurrentEmailData = currentEmailData
-                                .Where(mail => mail.FromAddress.Split('@')[1].ToLower() == mapping.SourceDomain.ToLower())
-                                .Select(mail => new EmailDomainModel
-                                {
-                                    EmailId = mail.MessageId,
-                                    SourceAddress = mail.FromAddress,
-                                    Subject = mail.Subject,
-                                    Domain = mail.FromAddress.Split('@')[1],
-                                    PredictionResult = "n/a",
-                                    IsNew = mail.IsNew,
-                                    IsSpam = false
-                                }).ToList();
-                        }
-                    }
-                
-
-                configuration.Value.UnmappedDomains = configuration.Value.DomainFolderMapping.Count(x => string.IsNullOrEmpty(x.TargetFolder));
-
-                if (!loadFolderMappings)
-                {
-                    configuration.Value.DomainFolderMapping = new List<EmailDomainFolderMapping>();
-                }
+                configuration.Emails = loadMails ? mails : new List<EmailMappingModel>();
             }
+
+            configuration.UnmappedDomains = mails.Count(x => string.IsNullOrEmpty(x.UserDefinedTargetFolder)
+                || string.IsNullOrEmpty(x.PredictedTargetFolder));
+
+            return configuration;
         }
 
         #endregion
@@ -272,9 +297,10 @@ namespace Logic.Interfaces.EmailCleanerInterface
             {
                 if (disposing)
                 {
-                    // TODO: Verwalteten Zustand (verwaltete Objekte) bereinigen
+                    _applicationUnitOfWork?.Dispose();
                 }
 
+                _logger = null;
                 disposedValue = true;
             }
         }

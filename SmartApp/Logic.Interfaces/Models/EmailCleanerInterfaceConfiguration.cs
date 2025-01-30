@@ -1,8 +1,9 @@
-﻿using Shared.Enums;
+﻿using Newtonsoft.Json;
+using Shared.Enums;
 
 namespace Logic.Interfaces.Models
 {
-    public class EmailCleanerInterfaceConfiguration: EmailCleanerInterfaceConfigurationUiModel
+    public class EmailCleanerInterfaceConfiguration : EmailCleanerInterfaceConfigurationUiModel
     {
         public string Server { get; set; } = string.Empty;
         public int Port { get; set; }
@@ -23,6 +24,8 @@ namespace Logic.Interfaces.Models
         public bool UseAiTargetFolderPrediction { get; set; }
         public string UpdatedBy { get; set; } = string.Empty;
         public string UpdatedAt { get; set; } = string.Empty;
-        public List<EmailDomainFolderMapping> DomainFolderMapping { get; set; } = new List<EmailDomainFolderMapping>();
+        [JsonIgnore]
+        public List<EmailMappingModel> Emails { get; set; } = new List<EmailMappingModel>();
+
     }
 }

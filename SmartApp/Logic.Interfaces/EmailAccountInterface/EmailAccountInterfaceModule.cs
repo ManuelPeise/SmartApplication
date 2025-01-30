@@ -125,7 +125,7 @@ namespace Logic.Interfaces.EmailAccountInterface
             }
         }
 
-        public async Task<bool> ExcecuteConnectionTest(EmailAccountConnectionTestRequest model)
+        public async Task<bool> ExcecuteConnectionTest(EmailAccountConnectionData model)
         {
             try
             {
@@ -189,7 +189,7 @@ namespace Logic.Interfaces.EmailAccountInterface
 
                 var decodedPassword = _passwordHandler.Decrypt(settingsToProcess.Password);
 
-                var emailsToProcess = await client.LoadMailsFromServer(new EmailAccountConnectionTestRequest
+                var emailsToProcess = await client.LoadMailsFromServer(new EmailAccountConnectionData
                 {
                     Server = settingsToProcess.Server,
                     Port = settingsToProcess.Port,
@@ -209,16 +209,12 @@ namespace Logic.Interfaces.EmailAccountInterface
                     {
                         AddressId = addressId,
                         SubjectId = subjectId,
-                        MessageDate = email.MessageDate,
-                        SourceFolder = email.SourceFolder,
-                        TargetFolder = null,
                         UserId = _applicationUnitOfWork.CurrentUserId,
-                        SettingsGuid = settingsToProcess.SettingsGuid,
-                        PredictedValue = null,
-                        AutomatedCleanup = false,
-                        IsProcessed = false,
-                    }, x => x.SettingsGuid == settingsToProcess.SettingsGuid
-                    && x.MessageDate == email.MessageDate
+                        UserDefinedTargetFolder = "Unknown",
+                        UserDefinedAsSpam = false,
+                        PredictedTargetFolder = "Unknown",
+                        PredictedAsSpam = false,
+                    }, x => x.UserId == _applicationUnitOfWork.CurrentUserId
                     && x.AddressId == addressId
                     && x.SubjectId == subjectId);
                 }
@@ -240,7 +236,7 @@ namespace Logic.Interfaces.EmailAccountInterface
 
         #region private 
 
-        private async Task<List<EmailAddressEntity>> EnsureAllAddressEntitiesExists(List<EmailMappingModel> mappingTableList)
+        private async Task<List<EmailAddressEntity>> EnsureAllAddressEntitiesExists(List<EmailDataModel> mappingTableList)
         {
             var addressEntities = await _applicationUnitOfWork.EmailAddressTable.GetAllAsync();
             var addedEntities = new List<EmailAddressEntity>();
@@ -271,7 +267,7 @@ namespace Logic.Interfaces.EmailAccountInterface
             return addressEntities;
         }
 
-        private async Task<List<EmailSubjectEntity>> EnsureAllSubjectEntitiesExists(List<EmailMappingModel> mappingTableList)
+        private async Task<List<EmailSubjectEntity>> EnsureAllSubjectEntitiesExists(List<EmailDataModel> mappingTableList)
         {
             var subjectEntities = await _applicationUnitOfWork.EmailSubjectTable.GetAllAsync();
             var addedEntities = new List<EmailSubjectEntity>();

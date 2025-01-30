@@ -6,7 +6,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Data.Databases.Migrations
+namespace Data.Databases.Migrations.UserIdentity
 {
     /// <inheritdoc />
     public partial class InitializeDatabase : Migration
@@ -147,30 +147,30 @@ namespace Data.Databases.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Group", "Name", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 1, 26, 5, 35, 7, 139, DateTimeKind.Utc).AddTicks(4034), "System", "Administration", "UserAdministration", null, null },
-                    { 2, new DateTime(2025, 1, 26, 5, 35, 7, 139, DateTimeKind.Utc).AddTicks(4038), "System", "Administration", "MessageLog", null, null },
-                    { 3, new DateTime(2025, 1, 26, 5, 35, 7, 139, DateTimeKind.Utc).AddTicks(4040), "System", "Interface", "EmailAccountInterface", null, null }
+                    { 1, new DateTime(2025, 1, 30, 8, 18, 27, 146, DateTimeKind.Utc).AddTicks(5319), "System", "Administration", "UserAdministration", null, null },
+                    { 2, new DateTime(2025, 1, 30, 8, 18, 27, 146, DateTimeKind.Utc).AddTicks(5323), "System", "Administration", "MessageLog", null, null },
+                    { 3, new DateTime(2025, 1, 30, 8, 18, 27, 146, DateTimeKind.Utc).AddTicks(5325), "System", "Interface", "EmailAccountInterface", null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Credentials",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "ExpiresAt", "Password", "RefreshToken", "UpdatedAt", "UpdatedBy" },
-                values: new object[] { 1, new DateTime(2025, 1, 26, 6, 35, 7, 139, DateTimeKind.Local).AddTicks(4117), "System", new DateTime(2025, 4, 26, 6, 35, 7, 139, DateTimeKind.Local).AddTicks(4117), "Am1I3JdgO3aS/VUSZ8kfKQ==", "", new DateTime(2025, 1, 26, 6, 35, 7, 139, DateTimeKind.Local).AddTicks(4117), "System" });
+                values: new object[] { 1, new DateTime(2025, 1, 30, 9, 18, 27, 146, DateTimeKind.Local).AddTicks(5400), "System", new DateTime(2025, 4, 30, 9, 18, 27, 146, DateTimeKind.Local).AddTicks(5400), "Am1I3JdgO3aS/VUSZ8kfKQ==", "", new DateTime(2025, 1, 30, 9, 18, 27, 146, DateTimeKind.Local).AddTicks(5400), "System" });
 
             migrationBuilder.InsertData(
                 table: "UserAccessRights",
                 columns: new[] { "Id", "AccessRightId", "CreatedAt", "CreatedBy", "Deny", "Edit", "UpdatedAt", "UpdatedBy", "UserId", "View" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2025, 1, 26, 5, 35, 7, 141, DateTimeKind.Utc).AddTicks(7314), "System", false, true, null, null, 1, true },
-                    { 2, 2, new DateTime(2025, 1, 26, 5, 35, 7, 141, DateTimeKind.Utc).AddTicks(7326), "System", false, true, null, null, 1, true },
-                    { 3, 3, new DateTime(2025, 1, 26, 5, 35, 7, 141, DateTimeKind.Utc).AddTicks(7327), "System", false, true, null, null, 1, true }
+                    { 1, 1, new DateTime(2025, 1, 30, 8, 18, 27, 148, DateTimeKind.Utc).AddTicks(8510), "System", false, true, null, null, 1, true },
+                    { 2, 2, new DateTime(2025, 1, 30, 8, 18, 27, 148, DateTimeKind.Utc).AddTicks(8513), "System", false, true, null, null, 1, true },
+                    { 3, 3, new DateTime(2025, 1, 30, 8, 18, 27, 148, DateTimeKind.Utc).AddTicks(8514), "System", false, true, null, null, 1, true }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "CredentialsId", "Email", "FirstName", "IsActive", "IsNewUserRegistration", "LastName", "RoleId", "UpdatedAt", "UpdatedBy" },
-                values: new object[] { 1, new DateTime(2025, 1, 26, 6, 35, 7, 141, DateTimeKind.Local).AddTicks(7122), "System", 1, "admin.user@gmx.de", "Admin", true, false, "User", 2, new DateTime(2025, 1, 26, 6, 35, 7, 141, DateTimeKind.Local).AddTicks(7122), "System" });
+                values: new object[] { 1, new DateTime(2025, 1, 30, 9, 18, 27, 148, DateTimeKind.Local).AddTicks(8413), "System", 1, "admin.user@gmx.de", "Admin", true, false, "User", 2, new DateTime(2025, 1, 30, 9, 18, 27, 148, DateTimeKind.Local).AddTicks(8413), "System" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAccessRights_AccessRightId",

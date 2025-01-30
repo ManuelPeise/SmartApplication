@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Databases.Migrations.AiDb
 {
     [DbContext(typeof(AiDbContext))]
-    [Migration("20250126053816_InitializeDatabase")]
+    [Migration("20250130081917_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />

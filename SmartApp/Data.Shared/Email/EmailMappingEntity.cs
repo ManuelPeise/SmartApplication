@@ -5,14 +5,10 @@ namespace Data.Shared.Email
     public class EmailMappingEntity : AEntityBase
     {
         public int UserId { get; set; }
-        public string SettingsGuid { get; set; } = string.Empty;
-        public DateTime MessageDate { get; set; }
-        public string SourceFolder { get; set; } = string.Empty;
-        public string? TargetFolder { get; set; }
-        public string? PredictedValue { get; set; }
-        public bool AutomatedCleanup { get; set; }
-        public bool IsProcessed { get; set; }
-        public bool ShareWithAi { get; set; }
+        public string? UserDefinedTargetFolder { get; set; }
+        public string? PredictedTargetFolder { get; set; }
+        public bool UserDefinedAsSpam { get; set; }
+        public bool PredictedAsSpam { get; set; }
         public int AddressId { get; set; }
         public EmailAddressEntity AddressEntity { get; set; } = new EmailAddressEntity();
         public int SubjectId { get; set; }

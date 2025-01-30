@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Data.Databases.Migrations
+namespace Data.Databases.Migrations.UserIdentity
 {
     [DbContext(typeof(UserIdentityContext))]
     partial class UserIdentityContextModelSnapshot : ModelSnapshot
@@ -54,7 +54,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 26, 5, 35, 7, 139, DateTimeKind.Utc).AddTicks(4034),
+                            CreatedAt = new DateTime(2025, 1, 30, 8, 18, 27, 146, DateTimeKind.Utc).AddTicks(5319),
                             CreatedBy = "System",
                             Group = "Administration",
                             Name = "UserAdministration"
@@ -62,7 +62,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 1, 26, 5, 35, 7, 139, DateTimeKind.Utc).AddTicks(4038),
+                            CreatedAt = new DateTime(2025, 1, 30, 8, 18, 27, 146, DateTimeKind.Utc).AddTicks(5323),
                             CreatedBy = "System",
                             Group = "Administration",
                             Name = "MessageLog"
@@ -70,7 +70,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 1, 26, 5, 35, 7, 139, DateTimeKind.Utc).AddTicks(4040),
+                            CreatedAt = new DateTime(2025, 1, 30, 8, 18, 27, 146, DateTimeKind.Utc).AddTicks(5325),
                             CreatedBy = "System",
                             Group = "Interface",
                             Name = "EmailAccountInterface"
@@ -122,7 +122,7 @@ namespace Data.Databases.Migrations
                         {
                             Id = 1,
                             AccessRightId = 1,
-                            CreatedAt = new DateTime(2025, 1, 26, 5, 35, 7, 141, DateTimeKind.Utc).AddTicks(7314),
+                            CreatedAt = new DateTime(2025, 1, 30, 8, 18, 27, 148, DateTimeKind.Utc).AddTicks(8510),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -133,7 +133,7 @@ namespace Data.Databases.Migrations
                         {
                             Id = 2,
                             AccessRightId = 2,
-                            CreatedAt = new DateTime(2025, 1, 26, 5, 35, 7, 141, DateTimeKind.Utc).AddTicks(7326),
+                            CreatedAt = new DateTime(2025, 1, 30, 8, 18, 27, 148, DateTimeKind.Utc).AddTicks(8513),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -144,7 +144,7 @@ namespace Data.Databases.Migrations
                         {
                             Id = 3,
                             AccessRightId = 3,
-                            CreatedAt = new DateTime(2025, 1, 26, 5, 35, 7, 141, DateTimeKind.Utc).AddTicks(7327),
+                            CreatedAt = new DateTime(2025, 1, 30, 8, 18, 27, 148, DateTimeKind.Utc).AddTicks(8514),
                             CreatedBy = "System",
                             Deny = false,
                             Edit = true,
@@ -190,12 +190,12 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 26, 6, 35, 7, 139, DateTimeKind.Local).AddTicks(4117),
+                            CreatedAt = new DateTime(2025, 1, 30, 9, 18, 27, 146, DateTimeKind.Local).AddTicks(5400),
                             CreatedBy = "System",
-                            ExpiresAt = new DateTime(2025, 4, 26, 6, 35, 7, 139, DateTimeKind.Local).AddTicks(4117),
+                            ExpiresAt = new DateTime(2025, 4, 30, 9, 18, 27, 146, DateTimeKind.Local).AddTicks(5400),
                             Password = "Am1I3JdgO3aS/VUSZ8kfKQ==",
                             RefreshToken = "",
-                            UpdatedAt = new DateTime(2025, 1, 26, 6, 35, 7, 139, DateTimeKind.Local).AddTicks(4117),
+                            UpdatedAt = new DateTime(2025, 1, 30, 9, 18, 27, 146, DateTimeKind.Local).AddTicks(5400),
                             UpdatedBy = "System"
                         });
                 });
@@ -255,7 +255,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 26, 6, 35, 7, 141, DateTimeKind.Local).AddTicks(7122),
+                            CreatedAt = new DateTime(2025, 1, 30, 9, 18, 27, 148, DateTimeKind.Local).AddTicks(8413),
                             CreatedBy = "System",
                             CredentialsId = 1,
                             Email = "admin.user@gmx.de",
@@ -264,7 +264,7 @@ namespace Data.Databases.Migrations
                             IsNewUserRegistration = false,
                             LastName = "User",
                             RoleId = 2,
-                            UpdatedAt = new DateTime(2025, 1, 26, 6, 35, 7, 141, DateTimeKind.Local).AddTicks(7122),
+                            UpdatedAt = new DateTime(2025, 1, 30, 9, 18, 27, 148, DateTimeKind.Local).AddTicks(8413),
                             UpdatedBy = "System"
                         });
                 });

@@ -1,4 +1,5 @@
-﻿using Data.Shared.Email;
+﻿using Data.Databases.Seeds;
+using Data.Shared.Email;
 using Data.Shared.Logging;
 using Data.Shared.Settings;
 using Data.Shared.Tools;
@@ -23,16 +24,18 @@ namespace Data.Databases
                .HasForeignKey(e => e.SubjectId);
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new EmailTargetFolderSeed());
         }
 
 
         public DbSet<LogMessageEntity> LogMessageTable { get; set; }
         public DbSet<GenericSettingsEntity> GenericSettingsTable { get; set; }
-
         public DbSet<EmailSubjectEntity> EmailSubjectTable { get; set; }
         public DbSet<EmailAddressEntity> EmailAddressTable { get; set; }
+        public DbSet<EmailFolderMappingEntity> EmailFolderMappingTable { get; set; }
         public DbSet<EmailMappingEntity> EmailMappingTable { get; set; }
-
+        public DbSet<EmailTargetFolderEntity> EmailTargetFolderTable { get; set; }
 
         // TODO Check that 
         public DbSet<EmailDataEntity> EmailDataTable { get; set; }

@@ -41,7 +41,9 @@ namespace Data.ContextAccessor
         public GenericSettingsRepository GenericSettingsRepository => new GenericSettingsRepository(_applicationContext, _contextAccessor);
         public DbContextRepository<EmailSubjectEntity> EmailSubjectTable => new DbContextRepository<EmailSubjectEntity>(_applicationContext, _contextAccessor);
         public DbContextRepository<EmailAddressEntity> EmailAddressTable => new DbContextRepository<EmailAddressEntity>(_applicationContext, _contextAccessor);
+        public DbContextRepository<EmailFolderMappingEntity> EmailFolderMappingTable => new DbContextRepository<EmailFolderMappingEntity>(_applicationContext, _contextAccessor);
         public DbContextRepository<EmailMappingEntity> EmailMappingTable => new DbContextRepository<EmailMappingEntity>(_applicationContext, _contextAccessor);
+        public DbContextRepository<EmailTargetFolderEntity> EmailTargetFolderTable => new DbContextRepository<EmailTargetFolderEntity>(_applicationContext, _contextAccessor);
 
 
         public ClaimsAccessor ClaimsAccessor => new ClaimsAccessor();

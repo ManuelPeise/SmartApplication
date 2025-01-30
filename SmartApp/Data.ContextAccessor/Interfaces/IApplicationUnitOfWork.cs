@@ -15,6 +15,9 @@ namespace Data.ContextAccessor.Interfaces
         DbContextRepository<EmailSubjectEntity> EmailSubjectTable { get; }
         DbContextRepository<EmailAddressEntity> EmailAddressTable { get; }
         DbContextRepository<EmailMappingEntity> EmailMappingTable { get; }
+        DbContextRepository<EmailFolderMappingEntity> EmailFolderMappingTable { get; }
+        DbContextRepository<EmailTargetFolderEntity> EmailTargetFolderTable { get; }
+
         IdentityRepository IdentityRepository { get; }
         GenericSettingsRepository GenericSettingsRepository { get; }
         ClaimsAccessor ClaimsAccessor { get; }

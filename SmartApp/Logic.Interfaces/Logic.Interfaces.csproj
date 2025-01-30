@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data.ContextAccessor\Data.ContextAccessor.csproj" />
-    <ProjectReference Include="..\Logic.Shared\Logic.Shared.csproj" />
+    <Compile Remove="EmailAccountInterface\Models\**" />
+    <EmbeddedResource Remove="EmailAccountInterface\Models\**" />
+    <None Remove="EmailAccountInterface\Models\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EmailAccountInterface\Models\" />
+    <ProjectReference Include="..\Data.ContextAccessor\Data.ContextAccessor.csproj" />
+    <ProjectReference Include="..\Logic.Shared\Logic.Shared.csproj" />
   </ItemGroup>
 
 </Project>
