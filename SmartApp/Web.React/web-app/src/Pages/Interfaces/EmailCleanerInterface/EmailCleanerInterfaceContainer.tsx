@@ -41,6 +41,16 @@ const EmailCleanerInterfaceContainer: React.FC = () => {
     [rebindData, sendPost]
   );
 
+  const handleInitializeFolderMapping = React.useCallback(
+    async (settingsGuid: string) => {
+      return await sendPost<boolean>({
+        serviceUrl: "FolderMapping/ExecuteFolderMapping",
+        parameters: { settingsGuid: settingsGuid },
+      });
+    },
+    [sendPost]
+  );
+
   if (!data) {
     return null;
   }
@@ -63,6 +73,7 @@ const EmailCleanerInterfaceContainer: React.FC = () => {
       isLoading={isLoading}
       data={data}
       handleUpdateConfiguration={handleUpdateConfiguration}
+      handleInitializeFolderMapping={handleInitializeFolderMapping}
     />
   );
 };

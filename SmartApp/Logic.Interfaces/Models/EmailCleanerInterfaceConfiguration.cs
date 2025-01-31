@@ -20,6 +20,8 @@ namespace Logic.Interfaces.Models
         public int UnmappedDomains { get; set; }
         public bool ConnectionTestPassed { get; set; }
         public bool EmailCleanerEnabled { get; set; }
+        public bool FolderMappingEnabled { get; set; }
+        public bool FolderMappingIsInitialized{ get; set; }
         public bool UseAiSpamPrediction { get; set; }
         public bool UseAiTargetFolderPrediction { get; set; }
         public string UpdatedBy { get; set; } = string.Empty;

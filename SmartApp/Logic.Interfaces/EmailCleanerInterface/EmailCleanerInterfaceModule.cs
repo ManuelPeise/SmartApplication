@@ -11,7 +11,7 @@ namespace Logic.Interfaces.EmailCleanerInterface
     public class EmailCleanerInterfaceModule : IEmailCleanerInterfaceModule
     {
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
-        
+
         private Logger<EmailAccountInterfaceModule>? _logger;
 
         public EmailCleanerInterfaceModule(IApplicationUnitOfWork applicationUnitOfWork)
@@ -74,7 +74,7 @@ namespace Logic.Interfaces.EmailCleanerInterface
                         return new EmailCleanerMappingData<EmailFolderMappingData>();
                     }
 
-                    var mappingData = await folderMapping.ExecuteFolderMapping(configurations[settingsGuid]);
+                    var mappingData = await folderMapping.GetFolderMappingData(configurations[settingsGuid]);
 
                     return new EmailCleanerMappingData<EmailFolderMappingData>
                     {
@@ -97,6 +97,45 @@ namespace Logic.Interfaces.EmailCleanerInterface
             }
         }
 
+        public async Task<bool> ExecuteFolderMapping(string settingsGuid)
+        {
+            using (var folderMapping = new FolderMappings(_applicationUnitOfWork))
+            {
+                try
+                {
+                    if (!_applicationUnitOfWork.IsAuthenticated)
+                    {
+                        throw new Exception("Could not update email account settings, reason: unauthenticated!");
+                    }
+
+                    var configurations = await GetConfigurations();
+
+                    if (!configurations.ContainsKey(settingsGuid))
+                    {
+                        if (_logger != null)
+                        {
+                            await _logger.Error($"Could not execute folder mapping, {settingsGuid} not found.");
+                        }
+
+                        return false;
+                    }
+
+                    await folderMapping.ExecuteFolderMapping(configurations[settingsGuid]);
+
+                    return true;
+                }
+                catch (Exception exception)
+                {
+                    if (_logger != null)
+                    {
+                        await _logger.Error($"Could not execute folder mapping for [{settingsGuid}]", exception.Message);
+                    }
+
+                    return false;
+                }
+            }
+        }
+
         public async Task<bool> UpdateEmailCleanerConfiguration(EmailCleanerUpdateModel model)
         {
             try
@@ -105,11 +144,20 @@ namespace Logic.Interfaces.EmailCleanerInterface
 
                 if (configurations.ContainsKey(model.SettingsGuid))
                 {
+                    if (!model.EmailCleanerEnabled)
+                    {
+                        await HandleDisableEmailCleaner(configurations, model.SettingsGuid);
+
+                        return true;
+                    }
+
                     configurations[model.SettingsGuid].EmailCleanerEnabled = model.EmailCleanerEnabled;
                     configurations[model.SettingsGuid].UseAiSpamPrediction = model.UseAiSpamPrediction;
                     configurations[model.SettingsGuid].UseAiTargetFolderPrediction = model.UseAiTargetFolderPrediction;
                     configurations[model.SettingsGuid].UpdatedAt = DateTime.UtcNow.ToString("dd.MM.yyyy HH:mm");
                     configurations[model.SettingsGuid].UpdatedBy = _applicationUnitOfWork.CurrentUserName;
+                    configurations[model.SettingsGuid].FolderMappingEnabled = model.FolderMappingEnabled;
+                    configurations[model.SettingsGuid].FolderMappingIsInitialized = model.FolderMappingIsInitialized;
 
                     if (_logger != null)
                     {
@@ -200,7 +248,6 @@ namespace Logic.Interfaces.EmailCleanerInterface
                     Port = settings.Port,
                     EmailAddress = settings.EmailAddress,
                     Password = settings.Password,
-
                 };
 
                 if (emailCleanerSettings.ContainsKey(settings.SettingsGuid))
@@ -208,11 +255,12 @@ namespace Logic.Interfaces.EmailCleanerInterface
                     configurationDictionary[settings.SettingsGuid].EmailCleanerEnabled = emailCleanerSettings[settings.SettingsGuid].EmailCleanerEnabled;
                     configurationDictionary[settings.SettingsGuid].UpdatedAt = emailCleanerSettings[settings.SettingsGuid].UpdatedAt;
                     configurationDictionary[settings.SettingsGuid].UpdatedBy = emailCleanerSettings[settings.SettingsGuid].UpdatedBy;
+                    configurationDictionary[settings.SettingsGuid].FolderMappingEnabled = emailCleanerSettings[settings.SettingsGuid].FolderMappingEnabled;
+                    configurationDictionary[settings.SettingsGuid].FolderMappingIsInitialized = emailCleanerSettings[settings.SettingsGuid].FolderMappingIsInitialized;
                 }
                 else
                 {
                     configurationDictionary[settings.SettingsGuid].EmailCleanerEnabled = false;
-
                 }
             }
 
@@ -283,6 +331,25 @@ namespace Logic.Interfaces.EmailCleanerInterface
                 || string.IsNullOrEmpty(x.PredictedTargetFolder));
 
             return configuration;
+        }
+
+        private async Task HandleDisableEmailCleaner(Dictionary<string, EmailCleanerInterfaceConfiguration> configurations, string settingsGuid)
+        {
+            using(var folderMapping = new FolderMappings(_applicationUnitOfWork))
+            {
+                configurations[settingsGuid].EmailCleanerEnabled = false;
+                configurations[settingsGuid].FolderMappingEnabled = false;
+                configurations[settingsGuid].UseAiSpamPrediction = false;
+                configurations[settingsGuid].UseAiTargetFolderPrediction = false;
+                configurations[settingsGuid].FolderMappingEnabled = false;
+                configurations[settingsGuid].FolderMappingIsInitialized = false;
+                configurations[settingsGuid].UpdatedAt = DateTime.UtcNow.ToString("dd.MM.yyyy HH:mm");
+                configurations[settingsGuid].UpdatedBy = _applicationUnitOfWork.CurrentUserName;
+
+                await folderMapping.DeleteFolderMappings(_applicationUnitOfWork.CurrentUserId, settingsGuid);
+
+                await SaveEmailCleanerSettings(configurations);
+            } 
         }
 
         #endregion

@@ -44,8 +44,8 @@ namespace Logic.Interfaces
             return false;
         }
 
-        public async Task<EmailFolderMappingData> ExecuteFolderMapping(EmailCleanerInterfaceConfiguration configuration)
-        { 
+        public async Task ExecuteFolderMapping(EmailCleanerInterfaceConfiguration configuration)
+        {
             var inboxResult = await LoadEmailsFromServer(configuration);
 
             var unmappedEmailDomains = await GetUnmappedDomainMailData(_unitOfWork.CurrentUserId, configuration.SettingsGuid, configuration);
@@ -75,6 +75,17 @@ namespace Logic.Interfaces
             await _unitOfWork.EmailFolderMappingTable.AddRange(newFolderMappingEntities);
 
             await _unitOfWork.EmailFolderMappingTable.SaveChangesAsync();
+        }
+
+        public async Task<EmailFolderMappingData> GetFolderMappingData(EmailCleanerInterfaceConfiguration configuration)
+        {
+
+
+            var unmappedEmailDomains = await GetUnmappedDomainMailData(_unitOfWork.CurrentUserId, configuration.SettingsGuid, configuration);
+
+            var availableAddresses = await GetAllAddressEntities();
+
+            var folderDictionary = await GetFolderDictionary();
 
             var allAvailableMappings = await GetAllFolderMappings(_unitOfWork.CurrentUserId, configuration.SettingsGuid);
 
@@ -104,6 +115,16 @@ namespace Logic.Interfaces
         public async Task<List<EmailDataModel>> GetMailsFromServer(EmailCleanerInterfaceConfiguration configuration)
         {
             return await LoadEmailsFromServer(configuration);
+        }
+
+        public async Task DeleteFolderMappings(int userId, string settingsGuid)
+        {
+            var folderMappings  = await _unitOfWork.EmailFolderMappingTable
+                .GetAllAsyncBy(x => x.SettingsGuid == settingsGuid)?? new List<EmailFolderMappingEntity>();
+
+            await _unitOfWork.EmailFolderMappingTable.DeleteRange(folderMappings);
+
+            await _unitOfWork.EmailFolderMappingTable.SaveChangesAsync();
         }
 
         #region private mambers
@@ -177,6 +198,13 @@ namespace Logic.Interfaces
             return addressEntities.ToDictionary(x => x.EmailAddress);
         }
 
+        private async Task<Dictionary<string, EmailAddressEntity>> GetAllAddressEntities()
+        {
+            var addressEntities = await _unitOfWork.EmailAddressTable.GetAllAsync();
+
+            return addressEntities.ToDictionary(x => x.EmailAddress);
+        }
+
         private async Task<Dictionary<int, EmailTargetFolderEntity>> GetFolderDictionary()
         {
             var folderEntities = await _unitOfWork.EmailTargetFolderTable.GetAllAsync();
@@ -189,7 +217,7 @@ namespace Logic.Interfaces
             return await _unitOfWork.EmailFolderMappingTable.GetAllAsyncBy(mapping => mapping.UserId == userId && mapping.SettingsGuid == settingsGuid);
         }
 
-        
+
 
         #endregion
 

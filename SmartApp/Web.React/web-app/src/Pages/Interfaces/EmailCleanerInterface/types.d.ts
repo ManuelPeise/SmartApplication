@@ -10,6 +10,8 @@ export type EmailCleanerInterfaceConfigurationUiModel = {
   unmappedDomains: number;
   connectionTestPassed: boolean;
   emailCleanerEnabled: boolean;
+  folderMappingEnabled: boolean;
+  folderMappingIsInitialized: boolean;
   useAiSpamPrediction: boolean;
   useAiTargetFolderPrediction: boolean;
   updatedBy?: string;
@@ -35,6 +37,8 @@ export type EmailCleanerUpdateModel = {
   emailCleanerEnabled: boolean;
   useAiSpamPrediction: boolean;
   useAiTargetFolderPrediction: boolean;
+  folderMappingEnabled: boolean;
+  folderMappingIsInitialized: boolean;
 };
 
 export type TargetFolderSectionState = {
@@ -98,6 +102,7 @@ export type EmailFolderMappingTableCellData = {
 
 export type EmailFolderMappingFilter = {
   domainFilter: string;
+  showOnlyInactive: boolean;
 };
 
 export type FolderMappingColumnProps = {

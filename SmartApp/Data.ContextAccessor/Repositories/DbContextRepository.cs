@@ -107,8 +107,12 @@ namespace Data.ContextAccessor.Repositories
 
         public void Update(T entity)
         {
-            _dbSet.Attach(entity);
+            var table = _context.Set<T>();
+
             _context.Entry(entity).State = EntityState.Modified;
+
+            table.Update(entity);
+
         }
 
         public async Task AddRange(List<T> entities)
@@ -118,13 +122,27 @@ namespace Data.ContextAccessor.Repositories
             await _context.AddRangeAsync(entities);
         }
 
-        public void Delete(T entity)
+        public async Task Delete(T entity)
         {
-            if (_context.Entry(entity).State == EntityState.Detached)
+            if (_context.Entry(entity).State == EntityState.Deleted)
             {
                 _dbSet.Attach(entity);
             }
+
             _dbSet.Remove(entity);
+        }
+
+        public async Task DeleteRange(List<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                if (_context.Entry(entity).State == EntityState.Deleted)
+                {
+                    _dbSet.Attach(entity);
+                }
+            }
+
+            _dbSet.RemoveRange(entities);
         }
 
         public async Task SaveChangesAsync()

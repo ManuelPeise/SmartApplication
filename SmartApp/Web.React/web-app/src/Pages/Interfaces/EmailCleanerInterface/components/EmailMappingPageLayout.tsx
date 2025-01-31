@@ -3,6 +3,7 @@ import { Box, Grid2, IconButton, Paper } from "@mui/material";
 import React from "react";
 import {
   EmailFolder,
+  EmailFolderMappingFilter,
   EmailTargetFolder,
   FolderMapping,
   FolderMappingUpdate,
@@ -16,27 +17,35 @@ import { DropDownItem } from "src/_components/Input/Dropdown";
 import { useI18n } from "src/_hooks/useI18n";
 import FolderMappingFilter from "./FolderMappingFilter";
 import { isEqual } from "lodash";
+import LoadingIndicator from "src/_components/Loading/LoadingIndicator";
 
 interface IProps {
   mappings: FolderMapping[];
   folders: EmailTargetFolder[];
   settingsGuid: string;
+  isLoading: boolean;
   handleUpdate: (update: FolderMappingUpdate) => Promise<void>;
 }
 
 const EmailMappingPageLayout: React.FC<IProps> = (props) => {
-  const { mappings, folders, settingsGuid, handleUpdate } = props;
+  const { mappings, folders, settingsGuid, isLoading, handleUpdate } = props;
   const { getResource } = useI18n();
 
-  const [filter, setFilter] = React.useState<string>("");
+  const [filter, setFilter] = React.useState<EmailFolderMappingFilter>({
+    domainFilter: "",
+    showOnlyInactive: false,
+  });
   const [modifiedIds, setModifiedIds] = React.useState<number[]>([]);
   const [mappingData, setMappingData] = React.useState<FolderMapping[]>(
     mappings.sort((a, b) => (a.domain < b.domain ? -1 : 1))
   );
 
-  const handleFilterChanged = React.useCallback((value: string) => {
-    setFilter(value);
-  }, []);
+  const handleFilterChanged = React.useCallback(
+    (value: Partial<EmailFolderMappingFilter>) => {
+      setFilter({ ...filter, ...value });
+    },
+    [filter]
+  );
 
   const handleChange = React.useCallback(
     (partialModel: Partial<FolderMapping>, id: number) => {
@@ -63,6 +72,15 @@ const EmailMappingPageLayout: React.FC<IProps> = (props) => {
     },
     [mappingData, mappings, modifiedIds]
   );
+
+  const handleSave = React.useCallback(async () => {
+    await handleUpdate({
+      settingsGuid: settingsGuid,
+      mappings: mappingData.filter((x) => modifiedIds.includes(x.id)),
+    }).then(() => {
+      setModifiedIds([]);
+    });
+  }, [handleUpdate, mappingData, modifiedIds, settingsGuid]);
 
   //#region folders
 
@@ -110,6 +128,23 @@ const EmailMappingPageLayout: React.FC<IProps> = (props) => {
     setMappingData(mappings);
   }, [mappings]);
 
+  const filteredMappings = React.useMemo(() => {
+    let allMappings = [...mappingData];
+
+    if (filter.showOnlyInactive) {
+      allMappings = allMappings.filter(
+        (mapping) => modifiedIds.includes(mapping.id) || !mapping.isActive
+      );
+    }
+
+    if (filter.domainFilter !== "") {
+      allMappings = allMappings.filter((mapping) =>
+        mapping.domain.toLowerCase().includes(filter.domainFilter.toLowerCase())
+      );
+    }
+    return allMappings;
+  }, [filter.domainFilter, filter.showOnlyInactive, mappingData, modifiedIds]);
+
   const saveCancelButtonProps = React.useMemo((): ButtonProps[] => {
     return [
       {
@@ -120,20 +155,10 @@ const EmailMappingPageLayout: React.FC<IProps> = (props) => {
       {
         label: getResource("common.labelSave"),
         disabled: isEqual(mappings, mappingData),
-        onAction: handleUpdate.bind(null, {
-          settingsGuid: settingsGuid,
-          mappings: mappingData.filter((x) => modifiedIds.includes(x.id)),
-        }),
+        onAction: handleSave,
       },
     ];
-  }, [
-    getResource,
-    mappings,
-    mappingData,
-    handleUpdate,
-    settingsGuid,
-    modifiedIds,
-  ]);
+  }, [getResource, mappings, mappingData, handleSave]);
 
   return (
     <Grid2
@@ -151,6 +176,7 @@ const EmailMappingPageLayout: React.FC<IProps> = (props) => {
             handleFilterChanged={handleFilterChanged}
           />
         </Paper>
+        <LoadingIndicator isLoading={isLoading} />
       </Grid2>
       <Grid2
         maxHeight="inherit"
@@ -175,11 +201,7 @@ const EmailMappingPageLayout: React.FC<IProps> = (props) => {
                 alignItems="flex-start"
               >
                 <EmailCleanerMappingTable
-                  mappings={mappingData.filter((mapping) =>
-                    mapping.domain
-                      .toLowerCase()
-                      .startsWith(filter.toLowerCase())
-                  )}
+                  mappings={filteredMappings}
                   targetFolderDropdownItems={targetFolderDropdownItems}
                   handleChange={handleChange}
                 />

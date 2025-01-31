@@ -13,10 +13,16 @@ interface IProps {
   isLoading: boolean;
   data: EmailCleanerInterfaceConfigurationUiModel[];
   handleUpdateConfiguration: (model: EmailCleanerUpdateModel) => Promise<void>;
+  handleInitializeFolderMapping: (settingsGuid: string) => Promise<boolean>;
 }
 
 const EmailCleanerInterfacePage: React.FC<IProps> = (props) => {
-  const { isLoading, data, handleUpdateConfiguration } = props;
+  const {
+    isLoading,
+    data,
+    handleUpdateConfiguration,
+    handleInitializeFolderMapping,
+  } = props;
   const { getResource } = useI18n();
   const [selectedTab, setSelectedTab] = React.useState<number>(0);
 
@@ -51,6 +57,7 @@ const EmailCleanerInterfacePage: React.FC<IProps> = (props) => {
           dataSet={dataset}
           minHeight={850}
           handleUpdateConfiguration={handleUpdateConfiguration}
+          handleInitializeFolderMapping={handleInitializeFolderMapping}
         />
       ))}
     </VerticalTabPageLayout>

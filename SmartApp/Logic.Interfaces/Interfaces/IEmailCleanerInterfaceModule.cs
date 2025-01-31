@@ -7,6 +7,7 @@ namespace Logic.Interfaces.Interfaces
     {
         Task<List<EmailCleanerInterfaceConfigurationUiModel>> GetEmailCleanerConfigurations(bool loadEmails);
         Task<EmailCleanerMappingData<EmailFolderMappingData>?> GetFolderMappingData(string settingsGuid);
+        Task<bool> ExecuteFolderMapping(string settingsGuid);
 
         // Task<EmailCleanerMappingData?> GetMappingData(string settingsGuid);
         Task<bool> UpdateEmailCleanerConfiguration(EmailCleanerUpdateModel model);

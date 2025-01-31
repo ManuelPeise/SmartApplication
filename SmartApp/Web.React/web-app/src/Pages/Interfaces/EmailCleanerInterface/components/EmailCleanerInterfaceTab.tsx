@@ -19,7 +19,11 @@ import ListItemInput from "src/_components/Lists/ListItemInput";
 import { useI18n } from "src/_hooks/useI18n";
 import SwitchInput from "src/_components/Input/SwitchInput";
 import { isEqual } from "lodash";
-import { ChecklistRtlRounded, InfoOutlined } from "@mui/icons-material";
+import {
+  AutorenewRounded,
+  ChecklistRtlRounded,
+  InfoOutlined,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { browserRoutes } from "src/_lib/Router/RouterUtils";
 import NoDataPlaceholder from "src/_components/Placeholders/NoDataPlaceholder";
@@ -30,6 +34,7 @@ interface IProps {
   minHeight: number;
   dataSet: EmailCleanerInterfaceConfigurationUiModel;
   handleUpdateConfiguration: (model: EmailCleanerUpdateModel) => Promise<void>;
+  handleInitializeFolderMapping: (settingsGuid: string) => Promise<boolean>;
 }
 
 const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
@@ -39,6 +44,7 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
     dataSet,
     minHeight,
     handleUpdateConfiguration,
+    handleInitializeFolderMapping,
   } = props;
   const { getResource } = useI18n();
   const navigate = useNavigate();
@@ -63,8 +69,22 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
       useAiSpamPrediction: intermediateState.useAiSpamPrediction,
       useAiTargetFolderPrediction:
         intermediateState.useAiTargetFolderPrediction,
+      folderMappingEnabled: intermediateState.folderMappingEnabled,
+      folderMappingIsInitialized: intermediateState.folderMappingIsInitialized,
     });
   }, [intermediateState, handleUpdateConfiguration]);
+
+  const initializeFolderMapping = React.useCallback(async () => {
+    await handleInitializeFolderMapping(intermediateState.settingsGuid).then(
+      (res) => {
+        handleSettingsChanged({ folderMappingIsInitialized: res });
+      }
+    );
+  }, [
+    handleInitializeFolderMapping,
+    handleSettingsChanged,
+    intermediateState.settingsGuid,
+  ]);
 
   const onReset = React.useCallback(() => {
     handleSettingsChanged(dataSet);
@@ -164,6 +184,12 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
               handleChange={(e) =>
                 handleSettingsChanged({
                   emailCleanerEnabled: e.currentTarget.checked,
+                  folderMappingEnabled: !e.currentTarget.checked
+                    ? false
+                    : intermediateState.folderMappingEnabled,
+                  folderMappingIsInitialized: !e.currentTarget.checked
+                    ? false
+                    : intermediateState.folderMappingIsInitialized,
                   useAiSpamPrediction: !e.currentTarget.checked
                     ? false
                     : intermediateState.useAiSpamPrediction,
@@ -175,34 +201,38 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
             />
           </ListItemInput>
           <ListItemInput
-            key="use-ai-spam-prediction"
+            key="folder-mapping-cleaner-enabled"
             marginTop="30px"
-            label={getResource("interface.descriptionUseAiSpamPrediction")}
+            label={getResource("interface.descriptionEnableFolderMapping")}
           >
             <SwitchInput
-              disabled={true} // !intermediateState.emailCleanerEnabled
-              checked={intermediateState.useAiSpamPrediction}
+              disabled={!dataSet.connectionTestPassed}
+              checked={intermediateState.folderMappingEnabled}
               handleChange={(e) =>
                 handleSettingsChanged({
-                  useAiSpamPrediction: e.currentTarget.checked,
+                  folderMappingEnabled: e.currentTarget.checked,
                 })
               }
             />
           </ListItemInput>
           <ListItemInput
-            key="use-ai-target-folder-prediction"
+            key="initialize-folder-mapping"
             marginTop="30px"
-            label={getResource(
-              "interface.descriptionUseAiTargetFolderPrediction"
-            )}
+            label={getResource("interface.descriptionInitializeFolderMapping")}
           >
-            <SwitchInput
-              disabled={true} // !intermediateState.emailCleanerEnabled
-              checked={intermediateState.useAiTargetFolderPrediction}
-              handleChange={(e) =>
-                handleSettingsChanged({
-                  useAiTargetFolderPrediction: e.currentTarget.checked,
-                })
+            <Tooltip
+              title={getResource("interface.labelInitializeFolderMapping")}
+              children={
+                <IconButton
+                  sx={{ marginRight: 1.5 }}
+                  disabled={
+                    !intermediateState.folderMappingEnabled ||
+                    intermediateState.folderMappingIsInitialized
+                  }
+                  onClick={initializeFolderMapping}
+                >
+                  <AutorenewRounded />
+                </IconButton>
               }
             />
           </ListItemInput>
@@ -223,7 +253,7 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
               children={
                 <IconButton
                   sx={{ marginRight: 1.5 }}
-                  disabled={!dataSet.emailCleanerEnabled}
+                  disabled={!dataSet.folderMappingIsInitialized}
                   style={
                     dataSet.emailCleanerEnabled &&
                     intermediateState.unmappedDomains > 0
@@ -244,6 +274,38 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
               }
             />
           </ListItemInput>
+          {/* <ListItemInput
+            key="use-ai-target-folder-prediction"
+            marginTop="30px"
+            label={getResource(
+              "interface.descriptionUseAiTargetFolderPrediction"
+            )}
+          >
+            <SwitchInput
+              disabled={true} // !intermediateState.emailCleanerEnabled
+              checked={intermediateState.useAiTargetFolderPrediction}
+              handleChange={(e) =>
+                handleSettingsChanged({
+                  useAiTargetFolderPrediction: e.currentTarget.checked,
+                })
+              }
+            />
+          </ListItemInput>
+          <ListItemInput
+            key="use-ai-spam-prediction"
+            marginTop="30px"
+            label={getResource("interface.descriptionUseAiSpamPrediction")}
+          >
+            <SwitchInput
+              disabled={true} // !intermediateState.emailCleanerEnabled
+              checked={intermediateState.useAiSpamPrediction}
+              handleChange={(e) =>
+                handleSettingsChanged({
+                  useAiSpamPrediction: e.currentTarget.checked,
+                })
+              }
+            />
+          </ListItemInput> */}
         </List>
         <Grid2 display="flex" p={2} marginTop={5}>
           <InfoOutlined sx={{ paddingRight: 1, color: colors.lighter }} />

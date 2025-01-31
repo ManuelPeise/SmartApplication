@@ -15,7 +15,8 @@ namespace Data.ContextAccessor.Interfaces
         Task<T> InsertIfNotExists(T entity, Expression<Func<T, bool>> predicate);
         void Update(T entity);
         Task AddRange(List<T> entities);
-        void Delete(T entity);
+        Task Delete(T entity);
+        Task DeleteRange(List<T> entities);
         Task SaveChangesAsync();
     }
 }
