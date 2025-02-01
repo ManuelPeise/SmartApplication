@@ -23,12 +23,12 @@ namespace Web.Core.Startup
                 GetJobDetails(EmailDataImportTask,
                     new Dictionary<string, object>
                     {
-                        { "Url", $"{baseUrl}/api/EmailDataImport/ImportEmailData"},
+                        { "Url", $"{baseUrl}api/EmailDataImport/ImportEmailData"},
                         { "SecurityData", securityData}
                     }),
-                GetTrigger(
+                GetCronTrigger(
                     $"{EmailDataImportTask}-trigger",
-                    2));
+                    "1 0/1 * * * ?"));
 #if !DEBUG
             AddJob(scheduler,
                GetJobDetails(
@@ -67,11 +67,20 @@ namespace Web.Core.Startup
         {
             return TriggerBuilder.Create()
                 .WithIdentity(name)
-                .WithSimpleSchedule(x => x.WithIntervalInMinutes(intervallMinutes))
                 .StartNow()
+                .WithSchedule(SimpleScheduleBuilder.RepeatMinutelyForever(intervallMinutes))
                 .Build();
 
 
+        }
+
+        private static ITrigger GetCronTrigger(string name, string cronSchedule)
+        {
+            return TriggerBuilder.Create()
+               .WithIdentity(name)
+               .StartNow()
+               .WithCronSchedule(cronSchedule)
+               .Build();
         }
 
     }

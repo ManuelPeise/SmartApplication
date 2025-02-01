@@ -30,7 +30,17 @@ namespace Logic.Interfaces
 
             var accountIds = settingsEntities.Select(x => x.AccountId).ToList();
 
-            await _unitOfWork.EmailAccountsTable.GetAllAsyncBy(e => accountIds.Contains(e.Id));
+            var accountEntities = await _unitOfWork.EmailAccountsTable.GetAllAsyncBy(e => accountIds.Contains(e.Id));
+
+            foreach (var entity in settingsEntities)
+            {
+                var accountEntity = accountEntities.FirstOrDefault(e => e.Id == entity.AccountId);
+
+                if (accountEntity != null)
+                {
+                    entity.Account = accountEntity;
+                }
+            }
 
             return settingsEntities;
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Logic.Interfaces
 {
-    public class EmailDataImporter: IDisposable
+    public class EmailDataImporter : IDisposable
     {
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
         private bool disposedValue;
@@ -40,40 +40,40 @@ namespace Logic.Interfaces
             if (addedEntities.Any())
             {
                 await _applicationUnitOfWork.EmailAddressTable.SaveChangesAsync();
-                addressEntities.AddRange(addedEntities);
             }
 
-            return addressEntities.ToDictionary(e => e.EmailAddress, e => e.Id);
+            var updatedAddressEntities = await _applicationUnitOfWork.EmailAddressTable.GetAllAsync();
+
+            return updatedAddressEntities.ToDictionary(e => e.EmailAddress, e => e.Id);
         }
 
-        public async Task<Dictionary<string, int>> EnsureAllSubjectEntitiesExists(List<EmailDataModel> mappingTableList)
+        public async Task<Dictionary<string, int>> EnsureAllSubjectEntitiesExists(List<EmailDataModel> emailData)
         {
             var subjectEntities = await _applicationUnitOfWork.EmailSubjectTable.GetAllAsync();
-            var addedEntities = new List<EmailSubjectEntity>();
+            var newAddedSubjects = new List<string>();
 
-            foreach (var mapping in mappingTableList)
+            foreach (var email in emailData)
             {
-                if (!subjectEntities.Any(x => x.EmailSubject.ToLower() == mapping.Subject.ToLower())
-                    && !addedEntities.Any(x => x.EmailSubject.ToLower() == mapping.Subject.ToLower()))
+                if (!subjectEntities.Any(x => x.EmailSubject == email.Subject) && !newAddedSubjects.Contains(email.Subject))
                 {
                     var entity = new EmailSubjectEntity
                     {
-                        EmailSubject = mapping.Subject,
+                        EmailSubject = email.Subject,
                     };
+
+                    newAddedSubjects.Add(email.Subject);
 
                     await _applicationUnitOfWork.EmailSubjectTable.AddAsync(entity);
 
-                    addedEntities.Add(entity);
+
                 }
             }
 
-            if (addedEntities.Any())
-            {
-                await _applicationUnitOfWork.EmailSubjectTable.SaveChangesAsync();
-                subjectEntities.AddRange(addedEntities);
-            }
+            await _applicationUnitOfWork.EmailSubjectTable.SaveChangesAsync();
 
-            return subjectEntities.ToDictionary(e => e.EmailSubject, e => e.Id);
+            var updatedSubjectEntities = await _applicationUnitOfWork.EmailSubjectTable.GetAllAsync();
+            
+            return updatedSubjectEntities.ToDictionary(e => e.EmailSubject, e => e.Id);
         }
 
         public async Task<Dictionary<string, int>> GetTargetFolderDictionary()
@@ -83,9 +83,28 @@ namespace Logic.Interfaces
             return folderEntities.ToDictionary(e => e.TargetFolderName, e => e.Id);
         }
 
-        public async Task SaveEmailCleanupConfigurationEntities(List<EmailCleanupConfigurationEntity> entities)
+        public async Task SaveEmailCleanupConfigurationEntities(List<EmailCleanupConfigurationEntity> entities, int userId, int accountId)
         {
-            await _applicationUnitOfWork.EmailCleanupConfigurationTable.AddRange(entities);
+            var entitiesToAdd = new List<EmailCleanupConfigurationEntity>();
+
+            var existingConfigurations = await _applicationUnitOfWork.EmailCleanupConfigurationTable
+                .GetAllAsyncBy(e => e.UserId == userId && e.AccountId == accountId);
+
+            // check if entity to add already exists
+            foreach (var entity in entities)
+            {
+                var existingEntity = existingConfigurations.FirstOrDefault(e => e.AccountId == entity.AccountId
+                    && e.UserId == entity.UserId
+                    && e.AddressId == entity.AddressId
+                    && e.SubjectId == entity.SubjectId);
+
+                if (existingEntity == null)
+                {
+                    entitiesToAdd.Add(entity);
+                }
+            }
+
+            await _applicationUnitOfWork.EmailCleanupConfigurationTable.AddRange(entitiesToAdd);
 
             await _applicationUnitOfWork.EmailCleanupConfigurationTable.SaveChangesAsync();
         }

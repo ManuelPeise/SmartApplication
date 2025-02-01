@@ -163,7 +163,7 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
         display="flex"
         flexDirection="column"
         minWidth="650px"
-        minHeight={maxHeight}
+        minHeight={maxHeight - 120}
         width="inherit"
         padding={2}
       >

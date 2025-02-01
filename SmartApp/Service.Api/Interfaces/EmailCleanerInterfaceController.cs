@@ -8,10 +8,11 @@ namespace Service.Api.Interfaces
     public class EmailCleanerInterfaceController : ApiControllerBase
     {
         private readonly IEmailCleanerInterfaceModule _module;
-
-        public EmailCleanerInterfaceController(IEmailCleanerInterfaceModule module)
+        private readonly IEmailCleanerImportModule _importModule;
+        public EmailCleanerInterfaceController(IEmailCleanerInterfaceModule module, IEmailCleanerImportModule importModule)
         {
             _module = module;
+            _importModule = importModule;
         }
 
         [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]
@@ -26,6 +27,14 @@ namespace Service.Api.Interfaces
         public async Task<bool> UpdateEmailCleanerSettings([FromBody] EmailCleanerUiSettings model)
         {
             return await _module.UpdateEmailCleanerSetting(model);
+        }
+
+        // manual email data import
+        [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true, AllowMaintananceUser = false)]
+        [HttpPost(Name = "ExecuteEmailDataImport")]
+        public async Task ExecuteEmailDataImport()
+        {
+            await _importModule.Import(null);
         }
 
     }

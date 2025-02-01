@@ -5,6 +5,7 @@ using Logic.Interfaces.Interfaces;
 using Logic.Interfaces.Models;
 using Logic.Shared;
 using Shared.Enums;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Logic.Interfaces.EmailCleaner
 {
@@ -58,37 +59,31 @@ namespace Logic.Interfaces.EmailCleaner
 
                     var validatedEmailData = emailData
                         .Where(e => !string.IsNullOrEmpty(e.Subject))
-                        .GroupBy(e => new { e.FromAddress, e.Subject })
-                        .Select(grp => grp.First())
                         .ToList();
 
                     var addressIdDictionary = await importer.EnsureAllAddressEntitiesExists(validatedEmailData);
                     var subjectDictionary = await importer.EnsureAllSubjectEntitiesExists(validatedEmailData);
                     var targetFolderDictionary = await importer.GetTargetFolderDictionary();
 
-                    var emailCleanupConfigurationEntities = new List<EmailCleanupConfigurationEntity>();
-
-                    foreach (var data in validatedEmailData)
+                    var emailCleanupConfigurationEntities = validatedEmailData.Select(data => new EmailCleanupConfigurationEntity
                     {
-                        // TODO predict target and spam later on
+                        UserId = settingsEntity.UserId,
+                        AccountId = settingsEntity.AccountId,
+                        AddressId = addressIdDictionary[data.FromAddress],
+                        SubjectId = subjectDictionary[data.Subject],
+                        TargetFolderId = targetFolderDictionary["Unknown"],
+                        SpamIdentifierValue = SpamValueEnum.Ham,
+                        PredictedSpamIdentifierValue = null,
+                    }).ToList();
 
-                        emailCleanupConfigurationEntities.Add(new EmailCleanupConfigurationEntity
+                    if (emailCleanupConfigurationEntities.Any())
+                    {
+                        await importer.SaveEmailCleanupConfigurationEntities(emailCleanupConfigurationEntities, settingsEntity.UserId, settingsEntity.AccountId);
+
+                        if (_logger != null)
                         {
-                            UserId = settingsEntity.UserId,
-                            AccountId = settingsEntity.AccountId,
-                            AddressId = addressIdDictionary[data.FromAddress],
-                            SubjectId = subjectDictionary[data.Subject],
-                            TargetFolderId = targetFolderDictionary["Unknown"],
-                            SpamIdentifierValue = SpamValueEnum.Ham,
-                            PredictedSpamIdentifierValue = null,
-                        });
-                    }
-
-                    await importer.SaveEmailCleanupConfigurationEntities(emailCleanupConfigurationEntities);
-
-                    if(_logger != null)
-                    {
-                        await _logger.Info($"Email data for {settingsEntity.UserId} / {settingsEntity.AccountId} imported with success.");
+                            await _logger.Info($"Email data for {settingsEntity.UserId} / {settingsEntity.AccountId} imported with success.");
+                        }
                     }
                 }
             }
