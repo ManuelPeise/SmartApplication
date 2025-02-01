@@ -1,7 +1,6 @@
 ﻿using Data.ContextAccessor.Interfaces;
 using Data.Shared.Email;
 using Logic.Interfaces.Models;
-using System.Collections.Generic;
 
 namespace Logic.Interfaces
 {
@@ -126,7 +125,6 @@ namespace Logic.Interfaces
 
         public void Dispose()
         {
-            // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in der Methode "Dispose(bool disposing)" ein.
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }

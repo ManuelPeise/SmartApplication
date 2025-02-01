@@ -13,6 +13,7 @@ namespace Logic.Interfaces
             services.AddScoped<IEmailAccountInterfaceModule, EmailAccountInterfaceModule>();
             services.AddScoped<IEmailCleanerInterfaceModule, EmailCleanerInterfaceModule>();
             services.AddScoped<IEmailCleanerImportModule, EmailCleanerImportModule>();
+            services.AddScoped<IEmailCleanerConfigurationModule, EmailCleanerConfigurationModule>();
         }
     }
 }
