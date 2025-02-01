@@ -1,90 +1,50 @@
 import React from "react";
 import DetailsView, { ButtonProps } from "src/_components/Layouts/DetailsView";
-import {
-  EmailCleanerInterfaceConfigurationUiModel,
-  EmailCleanerUpdateModel,
-} from "../types";
-import {
-  Box,
-  Divider,
-  Grid2,
-  IconButton,
-  List,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { EmailCleanerSettings } from "../types";
+import { Box, Divider, Grid2, List, Typography } from "@mui/material";
 import { emailProviderSettings } from "src/_lib/Settings/EmailProviderSettings";
 import { colors } from "src/_lib/colors";
 import ListItemInput from "src/_components/Lists/ListItemInput";
 import { useI18n } from "src/_hooks/useI18n";
 import SwitchInput from "src/_components/Input/SwitchInput";
 import { isEqual } from "lodash";
-import {
-  AutorenewRounded,
-  ChecklistRtlRounded,
-  InfoOutlined,
-} from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { InfoOutlined } from "@mui/icons-material";
 import { browserRoutes } from "src/_lib/Router/RouterUtils";
 import NoDataPlaceholder from "src/_components/Placeholders/NoDataPlaceholder";
 
 interface IProps {
   tabindex: number;
   selectedTab: number;
-  minHeight: number;
-  dataSet: EmailCleanerInterfaceConfigurationUiModel;
-  handleUpdateConfiguration: (model: EmailCleanerUpdateModel) => Promise<void>;
-  handleInitializeFolderMapping: (settingsGuid: string) => Promise<boolean>;
+  maxHeight: number;
+  dataSet: EmailCleanerSettings;
+  handleUpdateSettings: (model: EmailCleanerSettings) => Promise<void>;
 }
 
 const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
-  const {
-    tabindex,
-    selectedTab,
-    dataSet,
-    minHeight,
-    handleUpdateConfiguration,
-    handleInitializeFolderMapping,
-  } = props;
+  const { tabindex, selectedTab, dataSet, maxHeight, handleUpdateSettings } =
+    props;
   const { getResource } = useI18n();
-  const navigate = useNavigate();
+
   const [intermediateState, setIntermediateState] =
-    React.useState<EmailCleanerInterfaceConfigurationUiModel>(dataSet);
+    React.useState<EmailCleanerSettings>(dataSet);
 
   const providerSettings = React.useMemo(() => {
     return emailProviderSettings.find((x) => x.type === dataSet.providerType);
   }, [dataSet]);
 
   const handleSettingsChanged = React.useCallback(
-    (partialState: Partial<EmailCleanerInterfaceConfigurationUiModel>) => {
+    (partialState: Partial<EmailCleanerSettings>) => {
       setIntermediateState({ ...intermediateState, ...partialState });
     },
     [intermediateState]
   );
 
   const onUpdate = React.useCallback(async () => {
-    await handleUpdateConfiguration({
-      settingsGuid: intermediateState.settingsGuid,
+    await handleUpdateSettings({
+      ...dataSet,
       emailCleanerEnabled: intermediateState.emailCleanerEnabled,
-      useAiSpamPrediction: intermediateState.useAiSpamPrediction,
-      useAiTargetFolderPrediction:
-        intermediateState.useAiTargetFolderPrediction,
-      folderMappingEnabled: intermediateState.folderMappingEnabled,
-      folderMappingIsInitialized: intermediateState.folderMappingIsInitialized,
     });
-  }, [intermediateState, handleUpdateConfiguration]);
-
-  const initializeFolderMapping = React.useCallback(async () => {
-    await handleInitializeFolderMapping(intermediateState.settingsGuid).then(
-      (res) => {
-        handleSettingsChanged({ folderMappingIsInitialized: res });
-      }
-    );
-  }, [
-    handleInitializeFolderMapping,
-    handleSettingsChanged,
-    intermediateState.settingsGuid,
-  ]);
+  }, [handleUpdateSettings, dataSet, intermediateState.emailCleanerEnabled]);
 
   const onReset = React.useCallback(() => {
     handleSettingsChanged(dataSet);
@@ -143,7 +103,8 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
         display="flex"
         flexDirection="column"
         minWidth="800px"
-        minHeight={minHeight - 100}
+        height={maxHeight}
+        maxHeight={maxHeight}
         width="inherit"
         padding={2}
       >
@@ -184,128 +145,10 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
               handleChange={(e) =>
                 handleSettingsChanged({
                   emailCleanerEnabled: e.currentTarget.checked,
-                  folderMappingEnabled: !e.currentTarget.checked
-                    ? false
-                    : intermediateState.folderMappingEnabled,
-                  folderMappingIsInitialized: !e.currentTarget.checked
-                    ? false
-                    : intermediateState.folderMappingIsInitialized,
-                  useAiSpamPrediction: !e.currentTarget.checked
-                    ? false
-                    : intermediateState.useAiSpamPrediction,
-                  useAiTargetFolderPrediction: !e.currentTarget.checked
-                    ? false
-                    : intermediateState.useAiTargetFolderPrediction,
                 })
               }
             />
           </ListItemInput>
-          <ListItemInput
-            key="folder-mapping-cleaner-enabled"
-            marginTop="30px"
-            label={getResource("interface.descriptionEnableFolderMapping")}
-          >
-            <SwitchInput
-              disabled={!dataSet.connectionTestPassed}
-              checked={intermediateState.folderMappingEnabled}
-              handleChange={(e) =>
-                handleSettingsChanged({
-                  folderMappingEnabled: e.currentTarget.checked,
-                })
-              }
-            />
-          </ListItemInput>
-          <ListItemInput
-            key="initialize-folder-mapping"
-            marginTop="30px"
-            label={getResource("interface.descriptionInitializeFolderMapping")}
-          >
-            <Tooltip
-              title={getResource("interface.labelInitializeFolderMapping")}
-              children={
-                <IconButton
-                  sx={{ marginRight: 1.5 }}
-                  disabled={
-                    !intermediateState.folderMappingEnabled ||
-                    intermediateState.folderMappingIsInitialized
-                  }
-                  onClick={initializeFolderMapping}
-                >
-                  <AutorenewRounded />
-                </IconButton>
-              }
-            />
-          </ListItemInput>
-          <ListItemInput
-            key="domain-mapping-configuration-link"
-            marginTop="30px"
-            label={getResource("interface.descriptionEmailDomainMappings")}
-          >
-            <Tooltip
-              title={
-                intermediateState.unmappedDomains > 0
-                  ? getResource("interface.labelUnmappedDomains").replace(
-                      "{Count}",
-                      intermediateState.unmappedDomains.toFixed()
-                    )
-                  : ""
-              }
-              children={
-                <IconButton
-                  sx={{ marginRight: 1.5 }}
-                  disabled={!dataSet.folderMappingIsInitialized}
-                  style={
-                    dataSet.emailCleanerEnabled &&
-                    intermediateState.unmappedDomains > 0
-                      ? { border: `1px solid ${colors.error}` }
-                      : { border: `1px solid transparent` }
-                  }
-                  onClick={() =>
-                    navigate(
-                      browserRoutes.emailDomainMapping.replace(
-                        ":id",
-                        intermediateState.settingsGuid
-                      )
-                    )
-                  }
-                >
-                  <ChecklistRtlRounded />
-                </IconButton>
-              }
-            />
-          </ListItemInput>
-          {/* <ListItemInput
-            key="use-ai-target-folder-prediction"
-            marginTop="30px"
-            label={getResource(
-              "interface.descriptionUseAiTargetFolderPrediction"
-            )}
-          >
-            <SwitchInput
-              disabled={true} // !intermediateState.emailCleanerEnabled
-              checked={intermediateState.useAiTargetFolderPrediction}
-              handleChange={(e) =>
-                handleSettingsChanged({
-                  useAiTargetFolderPrediction: e.currentTarget.checked,
-                })
-              }
-            />
-          </ListItemInput>
-          <ListItemInput
-            key="use-ai-spam-prediction"
-            marginTop="30px"
-            label={getResource("interface.descriptionUseAiSpamPrediction")}
-          >
-            <SwitchInput
-              disabled={true} // !intermediateState.emailCleanerEnabled
-              checked={intermediateState.useAiSpamPrediction}
-              handleChange={(e) =>
-                handleSettingsChanged({
-                  useAiSpamPrediction: e.currentTarget.checked,
-                })
-              }
-            />
-          </ListItemInput> */}
         </List>
         <Grid2 display="flex" p={2} marginTop={5}>
           <InfoOutlined sx={{ paddingRight: 1, color: colors.lighter }} />

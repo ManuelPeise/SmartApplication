@@ -19,15 +19,15 @@ interface IProps {
   ) => Promise<boolean>;
   handleSaveConnection: (connection: EmailAccountSettings) => Promise<void>;
 }
-const minHeight = 800;
+const maxHeight = 800;
 
 const initialState: EmailAccountSettings = {
   userId: -1,
-  settingsGuid: "",
+  accountId: -1,
   accountName: "",
   providerType: EmailProviderTypeEnum.None,
-  server: "",
-  port: -1,
+  imapServer: "",
+  imapPort: 993,
   emailAddress: "",
   password: undefined,
   connectionTestPassed: false,
@@ -75,7 +75,7 @@ const EmailAccountInterface: React.FC<IProps> = (props) => {
       isLoading={isLoading}
       tabItems={verticalTabItems}
       selectedTab={selectedTab}
-      maxHeight={minHeight}
+      maxHeight={maxHeight}
     >
       <Grid2
         height="inherit"
@@ -89,7 +89,7 @@ const EmailAccountInterface: React.FC<IProps> = (props) => {
           <EmailAccountTab
             state={connection}
             selectedTab={selectedTab}
-            minHeight={minHeight}
+            maxHeight={maxHeight}
             tabIndex={index}
             handleTestConnection={handleTestConnection}
             handleSaveConnection={handleSaveConnection}
@@ -98,7 +98,7 @@ const EmailAccountInterface: React.FC<IProps> = (props) => {
         <EmailAccountTab
           state={initialState}
           selectedTab={selectedTab}
-          minHeight={minHeight}
+          maxHeight={maxHeight}
           tabIndex={data?.length}
           handleTestConnection={handleTestConnection}
           handleSaveConnection={handleSaveConnection}

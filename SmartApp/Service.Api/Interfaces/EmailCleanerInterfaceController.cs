@@ -1,5 +1,4 @@
-﻿using Logic.Interfaces.EmailCleanerInterface.Models;
-using Logic.Interfaces.Interfaces;
+﻿using Logic.Interfaces.Interfaces;
 using Logic.Interfaces.Models;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Enums;
@@ -16,18 +15,17 @@ namespace Service.Api.Interfaces
         }
 
         [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]
-        [HttpGet(Name = "GetEmailCleanerConfigurations")]
-        public async Task<List<EmailCleanerInterfaceConfigurationUiModel>> GetEmailCleanerConfigurations([FromQuery] string? loadFolderMappings)
+        [HttpGet(Name = "GetEmailCleanerSettings")]
+        public async Task<List<EmailCleanerUiSettings>> GetEmailCleanerSettings()
         {
-
-            return await _module.GetEmailCleanerConfigurations(string.IsNullOrEmpty(loadFolderMappings) ? false : bool.Parse(loadFolderMappings));
+            return await _module.GetEmailCleanerSettings();
         }
 
         [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]
-        [HttpPost(Name = "UpdateEmailCleanerConfigurations")]
-        public async Task<bool> UpdateEmailCleanerConfigurations([FromBody] EmailCleanerUpdateModel model)
+        [HttpPost(Name = "UpdateEmailCleanerSettings")]
+        public async Task<bool> UpdateEmailCleanerSettings([FromBody] EmailCleanerUiSettings model)
         {
-            return await _module.UpdateEmailCleanerConfiguration(model);
+            return await _module.UpdateEmailCleanerSetting(model);
         }
 
     }

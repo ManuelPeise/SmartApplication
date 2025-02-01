@@ -18,7 +18,7 @@ import EmailMappingImportAlert from "./EmailMappingImportAlert";
 interface IProps {
   tabIndex: number;
   selectedTab: number;
-  minHeight: number;
+  maxHeight: number;
   state: EmailAccountSettings;
   handleTestConnection: (
     request: EmailAccountConnectionTestRequest
@@ -30,7 +30,7 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
   const {
     tabIndex,
     selectedTab,
-    minHeight,
+    maxHeight,
     state,
     handleTestConnection,
     handleSaveConnection,
@@ -66,8 +66,9 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
 
   const onTestConnection = React.useCallback(async () => {
     await handleTestConnection({
-      server: intermediateState.server,
-      port: intermediateState.port,
+      accountId: intermediateState.accountId,
+      server: intermediateState.imapServer,
+      port: intermediateState.imapPort,
       emailAddress: intermediateState.emailAddress,
       password: intermediateState.password,
     }).then((res) => {
@@ -76,10 +77,11 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
   }, [
     handleChange,
     handleTestConnection,
+    intermediateState.accountId,
     intermediateState.emailAddress,
+    intermediateState.imapPort,
+    intermediateState.imapServer,
     intermediateState.password,
-    intermediateState.port,
-    intermediateState.server,
   ]);
 
   const isModified = React.useMemo((): boolean => {
@@ -161,7 +163,7 @@ const EmailAccountTab: React.FC<IProps> = (props) => {
         display="flex"
         flexDirection="column"
         minWidth="650px"
-        minHeight={minHeight - 100}
+        minHeight={maxHeight}
         width="inherit"
         padding={2}
       >

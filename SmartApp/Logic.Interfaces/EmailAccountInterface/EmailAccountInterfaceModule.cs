@@ -1,10 +1,10 @@
 ﻿using Data.ContextAccessor.Interfaces;
-using Data.ContextAccessor.ModuleSettings;
 using Data.Shared;
 using Data.Shared.Email;
 using Logic.Interfaces.Interfaces;
 using Logic.Interfaces.Models;
 using Logic.Shared;
+using Org.BouncyCastle.Crypto.Prng;
 using Shared.Enums;
 
 namespace Logic.Interfaces.EmailAccountInterface
@@ -24,7 +24,7 @@ namespace Logic.Interfaces.EmailAccountInterface
             _logger = new Logger<EmailAccountInterfaceModule>(applicationUnitOfWork);
         }
 
-        public async Task<List<EmailAccountSettings>> GetEmailAccountSettings()
+        public async Task<List<EmailAccount>> GetEmailAccounts()
         {
             try
             {
@@ -33,9 +33,31 @@ namespace Logic.Interfaces.EmailAccountInterface
                     throw new Exception("Could not get email account settings, reason: unauthenticated!");
                 }
 
-                var accountSettings = await GetAccountSettings();
+                using (var accounts = new EmailAccounts(_applicationUnitOfWork))
+                {
+                    var existingAccounts = await accounts.LoadUserEmailAccounts();
 
-                return accountSettings;
+                    if (!existingAccounts.Any())
+                    {
+                        var defaultAccountModel = GetDefaultEmailAccountModel();
+
+                        return new List<EmailAccount> { defaultAccountModel };
+                    }
+
+
+                    return existingAccounts
+                        .Select(acc => new EmailAccount
+                        {
+                            AccountId = acc.Id,
+                            AccountName = acc.AccountName,
+                            ImapServer = acc.ImapServer,
+                            ImapPort = acc.ImapPort,
+                            EmailAddress = acc.EmailAddress,
+                            Password = acc.Password,
+                            ConnectionTestPassed = acc.ConnectionTestPassed,
+                            ProviderType = acc.ProviderType
+                        }).ToList();
+                }
             }
             catch (Exception exception)
             {
@@ -45,10 +67,10 @@ namespace Logic.Interfaces.EmailAccountInterface
                 }
             }
 
-            return new List<EmailAccountSettings>();
+            return new List<EmailAccount>();
         }
 
-        public async Task<bool> UpdateEmailAccountSettings(EmailAccountSettings accountSettings)
+        public async Task<bool> UpdateEmailAccount(EmailAccount account)
         {
             try
             {
@@ -57,68 +79,54 @@ namespace Logic.Interfaces.EmailAccountInterface
                     throw new Exception("Could not update email account settings, reason: unauthenticated!");
                 }
 
-                var settings = await _applicationUnitOfWork.GenericSettingsRepository.GetSettings<List<EmailAccountSettings>>(
-                    GenericSettigsModules.EmailAccountInterfaceModuleName,
-                    GenericSettigsModules.EmailAccountInterfaceModuleType,
-                    _applicationUnitOfWork.CurrentUserId) ?? new List<EmailAccountSettings>();
-
-                var settingIsAvailable = settings.FirstOrDefault(s => s.SettingsGuid == accountSettings.SettingsGuid) != null;
-
-                if (!settingIsAvailable)
+                using (var accounts = new EmailAccounts(_applicationUnitOfWork))
                 {
-                    accountSettings.SettingsGuid = Guid.NewGuid().ToString();
-                    accountSettings.UserId = _applicationUnitOfWork.CurrentUserId;
-                    accountSettings.Password = _passwordHandler.Encrypt(accountSettings.Password);
+                    var client = new EmailInterfaceEmailClient(_applicationUnitOfWork);
+                    var accountEntity = await accounts.LoadUserEmailAccount(account.AccountId);
 
-                    settings.Add(accountSettings);
+                    if (accountEntity == null)
+                    {
+                        accountEntity = new EmailAccountEntity
+                        {
+                            UserId = _applicationUnitOfWork.CurrentUserId,
+                            ProviderType = account.ProviderType,
+                            AccountName = account.AccountName,
+                            EmailAddress = account.EmailAddress,
+                            ImapServer = account.ImapServer,
+                            ImapPort = account.ImapPort,
+                            Password = _passwordHandler.Encrypt(account.Password),
+                            ConnectionTestPassed = account.ConnectionTestPassed,
+                        };
 
-                    await _applicationUnitOfWork.GenericSettingsRepository.SaveSettings(
-                      GenericSettigsModules.EmailAccountInterfaceModuleName,
-                    GenericSettigsModules.EmailAccountInterfaceModuleType,
-                       _applicationUnitOfWork.CurrentUserId,
-                       settings);
+                        await accounts.SaveAccount(accountEntity);
+
+                        return true;
+                    }
+
+                    accountEntity.AccountName = account.AccountName;
+                    accountEntity.ImapServer = account.ImapServer;
+                    accountEntity.ImapPort = account.ImapPort;
+                    accountEntity.EmailAddress = account.EmailAddress;
+                    accountEntity.ProviderType = account.ProviderType;
+
+                    if (account.PasswordDiffers(accountEntity.Password))
+                    {
+                        accountEntity.Password = _passwordHandler.Encrypt(account.Password);
+                    }
 
                     if (_logger != null)
                     {
-                        await _logger.Info($"Added new account [{accountSettings.SettingsGuid}].");
+                        await _logger.Info($"Email account updated [{account.AccountId}].");
                     }
 
                     return true;
                 }
-
-                settings.ForEach(s =>
-                {
-                    if (s.SettingsGuid == accountSettings.SettingsGuid)
-                    {
-                        s.ProviderType = accountSettings.ProviderType;
-                        s.AccountName = accountSettings.AccountName;
-                        s.Server = accountSettings.Server;
-                        s.Port = accountSettings.Port;
-                        s.EmailAddress = accountSettings.EmailAddress;
-
-                        // update password only if changed
-                        if (s.Password != accountSettings.Password)
-                        {
-                            s.Password = _passwordHandler.Encrypt(accountSettings.Password);
-                        }
-
-                        s.ConnectionTestPassed = accountSettings.ConnectionTestPassed;
-                    }
-                });
-
-                await _applicationUnitOfWork.GenericSettingsRepository.SaveSettings(
-                   GenericSettigsModules.EmailAccountInterfaceModuleName,
-                    GenericSettigsModules.EmailAccountInterfaceModuleType,
-                    _applicationUnitOfWork.CurrentUserId,
-                    settings);
-
-                return true;
             }
             catch (Exception exception)
             {
                 if (_logger != null)
                 {
-                    await _logger.Error($"Could not update account settings [{accountSettings.SettingsGuid}].", exception.Message);
+                    await _logger.Error($"Could not update account settings [{account.AccountId}].", exception.Message);
                 }
 
                 return false;
@@ -134,9 +142,23 @@ namespace Logic.Interfaces.EmailAccountInterface
                     throw new Exception("Could not execute connection test, reason: unauthenticated!");
                 }
 
-                var client = new EmailInterfaceEmailClient(_applicationUnitOfWork);
+                using (var accounts = new EmailAccounts(_applicationUnitOfWork))
+                {
+                    var client = new EmailInterfaceEmailClient(_applicationUnitOfWork);
 
-                return await client.ExecuteConnectionTest(model);
+                    var accountEntity = await accounts.LoadUserEmailAccount(model.AccountId);
+
+                    if (accountEntity == null)
+                    {
+                        return await client.ExecuteConnectionTest(model);
+                    }
+
+                    accountEntity.ConnectionTestPassed = await client.ExecuteConnectionTest(model);
+
+                    await accounts.UpdateAccount(accountEntity);
+
+                    return true;
+                }
             }
             catch (Exception exception)
             {
@@ -149,183 +171,15 @@ namespace Logic.Interfaces.EmailAccountInterface
             }
         }
 
-        public async Task<bool> ExecuteEmailMappingTableUpdate(string settingsGuid)
-        {
-            try
-            {
-                if (!_applicationUnitOfWork.IsAuthenticated)
-                {
-                    throw new Exception("Could not execute email mapping update, reason: unauthenticated!");
-                }
-
-                var settings = await _applicationUnitOfWork.GenericSettingsRepository.GetSettings<List<EmailAccountSettings>>(
-                   GenericSettigsModules.EmailAccountInterfaceModuleName,
-                   GenericSettigsModules.EmailAccountInterfaceModuleType,
-                   _applicationUnitOfWork.CurrentUserId) ?? new List<EmailAccountSettings>();
-
-                if (!settings.Any())
-                {
-                    if (_logger != null)
-                    {
-                        await _logger.Info($"Execute email mapping update for [{settingsGuid}] aborted, reason no settings found.");
-                    }
-
-                    return false;
-                }
-
-                var settingsToProcess = settings.FirstOrDefault(s => s.SettingsGuid == settingsGuid);
-
-                if (settingsToProcess == null)
-                {
-                    if (_logger != null)
-                    {
-                        await _logger.Info($"Could not find setting [{settingsGuid}].");
-                    }
-
-                    return false;
-                }
-
-                var client = new EmailInterfaceEmailClient(_applicationUnitOfWork);
-
-                var decodedPassword = _passwordHandler.Decrypt(settingsToProcess.Password);
-
-                var emailsToProcess = await client.LoadMailsFromServer(new EmailAccountConnectionData
-                {
-                    Server = settingsToProcess.Server,
-                    Port = settingsToProcess.Port,
-                    EmailAddress = settingsToProcess.EmailAddress,
-                    Password = decodedPassword
-                });
-
-                var addressEntities = await EnsureAllAddressEntitiesExists(emailsToProcess);
-                var subjectEntities = await EnsureAllSubjectEntitiesExists(emailsToProcess);
-
-                foreach (var email in emailsToProcess)
-                {
-                    var addressId = addressEntities.First(x => x.EmailAddress.ToLower() == email.FromAddress.ToLower()).Id;
-                    var subjectId = subjectEntities.First(x => x.EmailSubject.ToLower() == email.Subject.ToLower()).Id;
-
-                    await _applicationUnitOfWork.EmailMappingTable.InsertIfNotExists(new EmailMappingEntity
-                    {
-                        AddressId = addressId,
-                        SubjectId = subjectId,
-                        UserId = _applicationUnitOfWork.CurrentUserId,
-                        UserDefinedTargetFolder = "Unknown",
-                        UserDefinedAsSpam = false,
-                        PredictedTargetFolder = "Unknown",
-                        PredictedAsSpam = false,
-                    }, x => x.UserId == _applicationUnitOfWork.CurrentUserId
-                    && x.AddressId == addressId
-                    && x.SubjectId == subjectId);
-                }
-
-                await _applicationUnitOfWork.EmailMappingTable.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception exception)
-            {
-                if (_logger != null)
-                {
-                    await _logger.Error($"Could not execute email mapping update for [{settingsGuid}]", exception.Message);
-                }
-
-                return false;
-            }
-        }
-
         #region private 
 
-        private async Task<List<EmailAddressEntity>> EnsureAllAddressEntitiesExists(List<EmailDataModel> mappingTableList)
+        private EmailAccount GetDefaultEmailAccountModel()
         {
-            var addressEntities = await _applicationUnitOfWork.EmailAddressTable.GetAllAsync();
-            var addedEntities = new List<EmailAddressEntity>();
-
-            foreach (var mapping in mappingTableList)
+            return new EmailAccount
             {
-                if (!addressEntities.Any(x => x.EmailAddress.ToLower() == mapping.FromAddress.ToLower())
-                    && !addedEntities.Any(x => x.EmailAddress.ToLower() == mapping.FromAddress.ToLower()))
-                {
-                    var entity = new EmailAddressEntity
-                    {
-                        EmailAddress = mapping.FromAddress.Trim(),
-                        Domain = mapping.FromAddress.Split('@')[1].Trim(),
-                    };
-
-                    await _applicationUnitOfWork.EmailAddressTable.AddAsync(entity);
-
-                    addedEntities.Add(entity);
-                }
-            }
-
-            if (addedEntities.Any())
-            {
-                await _applicationUnitOfWork.EmailAddressTable.SaveChangesAsync();
-                addressEntities.AddRange(addedEntities);
-            }
-
-            return addressEntities;
-        }
-
-        private async Task<List<EmailSubjectEntity>> EnsureAllSubjectEntitiesExists(List<EmailDataModel> mappingTableList)
-        {
-            var subjectEntities = await _applicationUnitOfWork.EmailSubjectTable.GetAllAsync();
-            var addedEntities = new List<EmailSubjectEntity>();
-
-            foreach (var mapping in mappingTableList)
-            {
-                if (!subjectEntities.Any(x => x.EmailSubject.ToLower() == mapping.Subject.ToLower())
-                    && !addedEntities.Any(x => x.EmailSubject.ToLower() == mapping.Subject.ToLower()))
-                {
-                    var entity = new EmailSubjectEntity
-                    {
-                        EmailSubject = mapping.Subject,
-                    };
-
-                    await _applicationUnitOfWork.EmailSubjectTable.AddAsync(entity);
-
-                    addedEntities.Add(entity);
-                }
-            }
-
-            if (addedEntities.Any())
-            {
-                await _applicationUnitOfWork.EmailSubjectTable.SaveChangesAsync();
-                subjectEntities.AddRange(addedEntities);
-            }
-
-            return subjectEntities;
-        }
-
-        private async Task<List<EmailAccountSettings>> GetAccountSettings()
-        {
-            var accountSettings = await _applicationUnitOfWork.GenericSettingsRepository.GetSettings<List<EmailAccountSettings>>(
-                   GenericSettigsModules.EmailAccountInterfaceModuleName,
-                   GenericSettigsModules.EmailAccountInterfaceModuleType,
-                   _applicationUnitOfWork.CurrentUserId) ?? new List<EmailAccountSettings>();
-
-            if (accountSettings == null || !accountSettings.Any())
-            {
-                var emailAccount = GetDefaultEmailAccountModel();
-
-                await _applicationUnitOfWork.GenericSettingsRepository.SaveSettings(GenericSettigsModules.EmailAccountInterfaceModuleName,
-                    GenericSettigsModules.EmailAccountInterfaceModuleType, _applicationUnitOfWork.CurrentUserId, new List<EmailAccountSettings> { emailAccount });
-
-                return new List<EmailAccountSettings> { emailAccount };
-            }
-
-            return accountSettings;
-        }
-
-        private EmailAccountSettings GetDefaultEmailAccountModel()
-        {
-            return new EmailAccountSettings
-            {
-                SettingsGuid = Guid.NewGuid().ToString(),
-                UserId = _applicationUnitOfWork.CurrentUserId,
                 AccountName = string.Empty,
-                Server = string.Empty,
-                Port = -1,
+                ImapServer = string.Empty,
+                ImapPort = -1,
                 EmailAddress = string.Empty,
                 Password = string.Empty,
                 ProviderType = EmailProviderTypeEnum.None,

@@ -30,9 +30,12 @@ namespace Data.Databases
 
 
         public DbSet<LogMessageEntity> LogMessageTable { get; set; }
+        // TODO REMOVE Generic Settings Table
         public DbSet<GenericSettingsEntity> GenericSettingsTable { get; set; }
+        public DbSet<EmailAccountEntity> EmailAccountTable { get; set; }
         public DbSet<EmailSubjectEntity> EmailSubjectTable { get; set; }
         public DbSet<EmailAddressEntity> EmailAddressTable { get; set; }
+        public DbSet<EmailCleanerSettingsEntity> EmailCleanerSettingsTable { get; set; }
         public DbSet<EmailFolderMappingEntity> EmailFolderMappingTable { get; set; }
         public DbSet<EmailMappingEntity> EmailMappingTable { get; set; }
         public DbSet<EmailTargetFolderEntity> EmailTargetFolderTable { get; set; }

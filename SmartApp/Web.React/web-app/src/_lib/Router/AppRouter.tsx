@@ -12,7 +12,6 @@ import { UserRightTypeEnum } from "./routeTypes";
 import SandboxPage from "src/Pages/Sandbox/SandboxPage";
 import EmailAccountInterfaceContainer from "src/Pages/Interfaces/EmailAccountInterface/EmailAccountInterfaceContainer";
 import EmailCleanerInterfaceContainer from "src/Pages/Interfaces/EmailCleanerInterface/EmailCleanerInterfaceContainer";
-import EmailDomainMappingContainer from "src/Pages/Interfaces/EmailCleanerInterface/EmailDomainMapping/EmailDomainMappingContainer";
 
 const AppRouter: React.FC = () => {
   return (
@@ -61,10 +60,10 @@ const AppRouter: React.FC = () => {
               path={browserRoutes.emailCleanerInterface}
               Component={EmailCleanerInterfaceContainer}
             />
-            <Route
+            {/* <Route
               path={browserRoutes.emailDomainMapping}
               Component={EmailDomainMappingContainer}
-            />
+            /> */}
           </Route>
           <Route path="/sandbox" Component={SandboxPage} />
         </Routes>

@@ -1,5 +1,4 @@
-﻿using Data.ContextAccessor;
-using Data.ContextAccessor.Interfaces;
+﻿using Data.ContextAccessor.Interfaces;
 using Data.Shared.Email;
 using Logic.Interfaces.Models;
 

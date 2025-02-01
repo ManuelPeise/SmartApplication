@@ -1,28 +1,23 @@
 import React from "react";
-import {
-  EmailCleanerInterfaceConfigurationUiModel,
-  EmailCleanerUpdateModel,
-} from "./types";
+import { EmailCleanerSettings } from "./types";
 import { VerticalTabListListItem } from "src/_components/Lists/VerticalTabListMenu";
 import { AlternateEmailRounded } from "@mui/icons-material";
 import { useI18n } from "src/_hooks/useI18n";
 import VerticalTabPageLayout from "src/_components/Layouts/VerticalTabPageLayout";
 import EmailCleanerInterfaceTab from "./components/EmailCleanerInterfaceTab";
+import { Grid2 } from "@mui/material";
+
+const maxHeight = 740;
 
 interface IProps {
   isLoading: boolean;
-  data: EmailCleanerInterfaceConfigurationUiModel[];
-  handleUpdateConfiguration: (model: EmailCleanerUpdateModel) => Promise<void>;
-  handleInitializeFolderMapping: (settingsGuid: string) => Promise<boolean>;
+  data: EmailCleanerSettings[];
+  handleUpdateSettings: (model: EmailCleanerSettings) => Promise<void>;
 }
 
 const EmailCleanerInterfacePage: React.FC<IProps> = (props) => {
-  const {
-    isLoading,
-    data,
-    handleUpdateConfiguration,
-    handleInitializeFolderMapping,
-  } = props;
+  const { isLoading, data, handleUpdateSettings } = props;
+
   const { getResource } = useI18n();
   const [selectedTab, setSelectedTab] = React.useState<number>(0);
 
@@ -50,16 +45,24 @@ const EmailCleanerInterfacePage: React.FC<IProps> = (props) => {
       pageTitle={getResource("interface.labelEmailCleaner")}
       tabItems={vertivalTabItems}
     >
-      {data.map((dataset, index) => (
-        <EmailCleanerInterfaceTab
-          tabindex={index}
-          selectedTab={selectedTab}
-          dataSet={dataset}
-          minHeight={850}
-          handleUpdateConfiguration={handleUpdateConfiguration}
-          handleInitializeFolderMapping={handleInitializeFolderMapping}
-        />
-      ))}
+      <Grid2
+        height="inherit"
+        sx={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          overflow: "hidden",
+        }}
+      >
+        {data.map((dataset, index) => (
+          <EmailCleanerInterfaceTab
+            tabindex={index}
+            selectedTab={selectedTab}
+            dataSet={dataset}
+            maxHeight={maxHeight}
+            handleUpdateSettings={handleUpdateSettings}
+          />
+        ))}
+      </Grid2>
     </VerticalTabPageLayout>
   );
 };

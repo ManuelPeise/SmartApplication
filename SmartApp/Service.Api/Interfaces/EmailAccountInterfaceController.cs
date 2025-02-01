@@ -16,16 +16,16 @@ namespace Service.Api.Interfaces
 
         [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]
         [HttpGet(Name = "GetEmailAccountSettings")]
-        public async Task<List<EmailAccountSettings>> GetEmailAccountSettings()
+        public async Task<List<EmailAccount>> GetEmailAccountSettings()
         {
-            return await _module.GetEmailAccountSettings();
+            return await _module.GetEmailAccounts();
         }
 
         [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]
         [HttpPost(Name = "UpdateEmailAccountSettings")]
-        public async Task<bool> UpdateEmailAccountSettings([FromBody] EmailAccountSettings settings)
+        public async Task<bool> UpdateEmailAccountSettings([FromBody] EmailAccount settings)
         {
-            return await _module.UpdateEmailAccountSettings(settings);
+            return await _module.UpdateEmailAccount(settings);
         }
 
         [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]

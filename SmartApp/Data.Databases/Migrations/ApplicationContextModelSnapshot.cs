@@ -19,6 +19,58 @@ namespace Data.Databases.Migrations
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("Data.Shared.Email.EmailAccountEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("AccountName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("ConnectionTestPassed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("ImapPort")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImapServer")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("ProviderType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailAccountTable");
+                });
+
             modelBuilder.Entity("Data.Shared.Email.EmailAddressEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -49,6 +101,41 @@ namespace Data.Databases.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmailAddressTable");
+                });
+
+            modelBuilder.Entity("Data.Shared.Email.EmailCleanerSettingsEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("EmailCleanerEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("EmailCleanerSettingsTable");
                 });
 
             modelBuilder.Entity("Data.Shared.Email.EmailFolderMappingEntity", b =>
@@ -219,7 +306,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6972),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3767),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderUnknown",
                             TargetFolderName = "Unknown"
@@ -227,7 +314,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6977),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3770),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderFoodOrder",
                             TargetFolderName = "Food"
@@ -235,7 +322,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6978),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3771),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderTravel",
                             TargetFolderName = "Travel"
@@ -243,7 +330,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6979),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3771),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderTax",
                             TargetFolderName = "Tax"
@@ -251,7 +338,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6979),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3772),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderAccounts",
                             TargetFolderName = "Accounts"
@@ -259,7 +346,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6981),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3774),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderHealth",
                             TargetFolderName = "Health"
@@ -267,7 +354,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6981),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3774),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderRentAndReside",
                             TargetFolderName = "RentAndReside"
@@ -275,7 +362,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6982),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3775),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderArchiv",
                             TargetFolderName = "Archiv"
@@ -283,7 +370,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6982),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3775),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderSpam",
                             TargetFolderName = "Spam"
@@ -291,7 +378,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6984),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3776),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderFamilyAndFriends",
                             TargetFolderName = "FamilyAndFriends"
@@ -299,7 +386,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 11,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6984),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3777),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderShopping",
                             TargetFolderName = "Shopping"
@@ -307,7 +394,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 12,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6985),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3777),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderSocialMedia",
                             TargetFolderName = "SocialMedia"
@@ -315,7 +402,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 13,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6985),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3778),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderCar",
                             TargetFolderName = "Car"
@@ -323,7 +410,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 14,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6985),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3778),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderTelecommunication",
                             TargetFolderName = "Telecommunication"
@@ -331,7 +418,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 15,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6986),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3779),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderBankAndPayments",
                             TargetFolderName = "BankAndPayments"
@@ -339,7 +426,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 16,
-                            CreatedAt = new DateTime(2025, 1, 30, 8, 17, 36, 634, DateTimeKind.Utc).AddTicks(6986),
+                            CreatedAt = new DateTime(2025, 2, 1, 10, 19, 6, 734, DateTimeKind.Utc).AddTicks(3779),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderOther",
                             TargetFolderName = "Other"
@@ -455,6 +542,17 @@ namespace Data.Databases.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmailDataTable");
+                });
+
+            modelBuilder.Entity("Data.Shared.Email.EmailCleanerSettingsEntity", b =>
+                {
+                    b.HasOne("Data.Shared.Email.EmailAccountEntity", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Data.Shared.Email.EmailFolderMappingEntity", b =>

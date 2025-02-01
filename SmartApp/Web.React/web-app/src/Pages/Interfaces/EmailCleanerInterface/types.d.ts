@@ -1,35 +1,16 @@
 import { CellMeasurerCache } from "react-virtualized";
 import { EmailProviderTypeEnum } from "src/_lib/_enums/EmailProviderTypeEnum";
 
-export type EmailCleanerInterfaceConfigurationUiModel = {
-  settingsGuid: string;
+export type EmailCleanerSettings = {
+  settingsId: number;
   userId: number;
   accountName: string;
   emailAddress: string;
-  providerType: EmailProviderTypeEnum;
-  unmappedDomains: number;
   connectionTestPassed: boolean;
   emailCleanerEnabled: boolean;
-  folderMappingEnabled: boolean;
-  folderMappingIsInitialized: boolean;
-  useAiSpamPrediction: boolean;
-  useAiTargetFolderPrediction: boolean;
+  providerType: EmailProviderTypeEnum;
   updatedBy?: string;
   updatedAt?: string;
-  emails: EmailMappingModel[];
-};
-
-export type EmailMappingModel = {
-  mappingId: number;
-  addressEntityId: number;
-  subjectEntityId: number;
-  userId: number;
-  userDefinedTargetFolder: string;
-  predictedTargetFolder: string;
-  userDefinedAsSpam: boolean;
-  predictedAsSpam: boolean;
-  fromAddress: string;
-  subject: string;
 };
 
 export type EmailCleanerUpdateModel = {

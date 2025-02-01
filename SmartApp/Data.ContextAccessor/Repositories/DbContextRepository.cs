@@ -13,7 +13,6 @@ namespace Data.ContextAccessor.Repositories
         private readonly DbSet<T> _dbSet;
         private readonly IHttpContextAccessor _contextAccessor;
 
-
         public DbContextRepository(DbContext context, IHttpContextAccessor contextAccessor)
         {
             _context = context;
@@ -40,7 +39,9 @@ namespace Data.ContextAccessor.Repositories
 
         public async Task<List<T>> GetAllAsyncBy(Expression<Func<T, bool>> predicate)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            var table = _context.Set<T>();
+
+            return await table.AsNoTracking().Where(predicate).ToListAsync();
         }
 
         public async Task<T?> GetByIdAsync(int id)
@@ -147,8 +148,9 @@ namespace Data.ContextAccessor.Repositories
 
         public async Task SaveChangesAsync()
         {
-            var currentUser = _contextAccessor?.HttpContext.User.Identity;
-
+            var currentUser = _contextAccessor?.HttpContext.User;
+            var userName = currentUser?.Claims.FirstOrDefault(x => x.Type == "name")?.Value ?? "System";
+            
             var modifiedEntries = _context.ChangeTracker.Entries()
               .Where(x => x.State == EntityState.Modified ||
               x.State == EntityState.Added);
@@ -159,16 +161,16 @@ namespace Data.ContextAccessor.Repositories
                 {
                     if (entry.State == EntityState.Added)
                     {
-                        ((AEntityBase)entry.Entity).CreatedBy = currentUser?.Name ?? "System";
-                        ((AEntityBase)entry.Entity).CreatedAt = DateTime.Now;
-                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
-                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+                        ((AEntityBase)entry.Entity).CreatedBy = userName;
+                        ((AEntityBase)entry.Entity).CreatedAt = DateTime.UtcNow;
+                        ((AEntityBase)entry.Entity).UpdatedBy = userName;
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.UtcNow;
 
                     }
                     else if (entry.State == EntityState.Modified)
                     {
-                        ((AEntityBase)entry.Entity).UpdatedBy = currentUser?.Name ?? "System";
-                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.Now;
+                        ((AEntityBase)entry.Entity).UpdatedBy = userName;
+                        ((AEntityBase)entry.Entity).UpdatedAt = DateTime.UtcNow;
                     }
                 }
             }

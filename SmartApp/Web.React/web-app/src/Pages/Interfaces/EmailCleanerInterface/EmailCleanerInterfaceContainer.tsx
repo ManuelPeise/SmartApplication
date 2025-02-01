@@ -2,10 +2,7 @@ import React from "react";
 import { useAuth } from "src/_hooks/useAuth";
 import { useStatefulApiService } from "src/_hooks/useStatefulApiService";
 import { StatelessApi } from "src/_lib/_api/StatelessApi";
-import {
-  EmailCleanerInterfaceConfigurationUiModel,
-  EmailCleanerUpdateModel,
-} from "./types";
+import { EmailCleanerSettings } from "./types";
 import EmailCleanerInterfacePage from "./EmailCleanerInterfacePage";
 import NoDataPlaceholder from "src/_components/Placeholders/NoDataPlaceholder";
 import { useI18n } from "src/_hooks/useI18n";
@@ -17,20 +14,19 @@ const EmailCleanerInterfaceContainer: React.FC = () => {
   const api = StatelessApi.create();
 
   const { isLoading, data, rebindData, sendPost } = useStatefulApiService<
-    EmailCleanerInterfaceConfigurationUiModel[]
+    EmailCleanerSettings[]
   >(
     api,
     {
-      serviceUrl: "EmailCleanerInterface/GetEmailCleanerConfigurations",
-      parameters: { loadFolderMappings: "false" },
+      serviceUrl: "EmailCleanerInterface/GetEmailCleanerSettings",
     },
     authenticationState.token
   );
 
-  const handleUpdateConfiguration = React.useCallback(
-    async (model: EmailCleanerUpdateModel) => {
+  const handleUpdateSettings = React.useCallback(
+    async (model: EmailCleanerSettings) => {
       await sendPost<boolean>({
-        serviceUrl: "EmailCleanerInterface/UpdateEmailCleanerConfigurations",
+        serviceUrl: "EmailCleanerInterface/UpdateEmailCleanerSettings",
         body: model,
       }).then(async (res) => {
         if (res) {
@@ -39,16 +35,6 @@ const EmailCleanerInterfaceContainer: React.FC = () => {
       });
     },
     [rebindData, sendPost]
-  );
-
-  const handleInitializeFolderMapping = React.useCallback(
-    async (settingsGuid: string) => {
-      return await sendPost<boolean>({
-        serviceUrl: "FolderMapping/ExecuteFolderMapping",
-        parameters: { settingsGuid: settingsGuid },
-      });
-    },
-    [sendPost]
   );
 
   if (!data) {
@@ -72,8 +58,7 @@ const EmailCleanerInterfaceContainer: React.FC = () => {
     <EmailCleanerInterfacePage
       isLoading={isLoading}
       data={data}
-      handleUpdateConfiguration={handleUpdateConfiguration}
-      handleInitializeFolderMapping={handleInitializeFolderMapping}
+      handleUpdateSettings={handleUpdateSettings}
     />
   );
 };

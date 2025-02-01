@@ -40,8 +40,8 @@ const ProviderSelection: React.FC<IProps> = (props) => {
       if (type === EmailProviderTypeEnum.None) {
         handleChange({
           accountName: "",
-          server: "",
-          port: -1,
+          imapServer: "",
+          imapPort: -1,
           providerType: EmailProviderTypeEnum.None,
           emailAddress: "",
           password: "",
@@ -51,8 +51,8 @@ const ProviderSelection: React.FC<IProps> = (props) => {
       }
 
       handleChange({
-        server: providerSettings.server,
-        port: providerSettings.port,
+        imapServer: providerSettings.server,
+        imapPort: providerSettings.port,
         providerType: providerSettings.type,
         emailAddress: state.emailAddress,
         password: state.password,
