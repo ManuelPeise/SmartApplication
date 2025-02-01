@@ -12,11 +12,23 @@ namespace Web.Core.Startup
     {
         //private static string EmailClassificationTrainingDataCollector = "email-classification-training-data-collector";
         private static string UserActivationTask = "user-activation-task";
+        private static string EmailDataImportTask = "email-data-import-task";
 
         public static void ExecuteScheduler(string baseUrl, SecurityData securityData)
         {
             var scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
 
+            // task to import email data for all active email cleaner instances runs all 60 minutes
+            AddJob(scheduler,
+                GetJobDetails(EmailDataImportTask,
+                    new Dictionary<string, object>
+                    {
+                        { "Url", $"{baseUrl}/api/EmailDataImport/ImportEmailData"},
+                        { "SecurityData", securityData}
+                    }),
+                GetTrigger(
+                    $"{EmailDataImportTask}-trigger",
+                    60));
 #if !DEBUG
             AddJob(scheduler,
                GetJobDetails(
@@ -51,12 +63,11 @@ namespace Web.Core.Startup
                 .Build();
         }
 
-        private static ITrigger GetTrigger(string name, int intervallMinutes, string cronExpression)
+        private static ITrigger GetTrigger(string name, int intervallMinutes)
         {
             return TriggerBuilder.Create()
                 .WithIdentity(name)
                 .WithSimpleSchedule(x => x.WithIntervalInMinutes(intervallMinutes))
-                // .WithCronSchedule(cronExpression)
                 .StartNow()
                 .Build();
 

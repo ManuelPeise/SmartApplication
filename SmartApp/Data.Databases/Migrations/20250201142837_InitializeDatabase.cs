@@ -119,27 +119,6 @@ namespace Data.Databases.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "GenericSettingsTable",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ModuleName = table.Column<string>(type: "longtext", nullable: false),
-                    ModuleType = table.Column<int>(type: "int", nullable: false),
-                    SettingsJson = table.Column<string>(type: "longtext", nullable: true),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GenericSettingsTable", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "LogMessageTable",
                 columns: table => new
                 {
@@ -187,61 +166,140 @@ namespace Data.Databases.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "EmailCleanupTable",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    SubjectId = table.Column<int>(type: "int", nullable: false),
+                    TargetFolderId = table.Column<int>(type: "int", nullable: false),
+                    PredictedTargetFolderId = table.Column<int>(type: "int", nullable: true),
+                    SpamIdentifierValue = table.Column<int>(type: "int", nullable: false),
+                    PredictedSpamIdentifierValue = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailCleanupTable", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmailCleanupTable_EmailAccountTable_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "EmailAccountTable",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmailCleanupTable_EmailAddressTable_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "EmailAddressTable",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmailCleanupTable_EmailSubjectTable_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "EmailSubjectTable",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmailCleanupTable_EmailTargetFolderTable_PredictedTargetFold~",
+                        column: x => x.PredictedTargetFolderId,
+                        principalTable: "EmailTargetFolderTable",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_EmailCleanupTable_EmailTargetFolderTable_TargetFolderId",
+                        column: x => x.TargetFolderId,
+                        principalTable: "EmailTargetFolderTable",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
             migrationBuilder.InsertData(
                 table: "EmailTargetFolderTable",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "ResourceKey", "TargetFolderName", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4458), "System", "labelFolderUnknown", "Unknown", null, null },
-                    { 2, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4461), "System", "labelFolderFoodOrder", "Food", null, null },
-                    { 3, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4462), "System", "labelFolderTravel", "Travel", null, null },
-                    { 4, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4463), "System", "labelFolderTax", "Tax", null, null },
-                    { 5, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4463), "System", "labelFolderAccounts", "Accounts", null, null },
-                    { 6, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4464), "System", "labelFolderHealth", "Health", null, null },
-                    { 7, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4561), "System", "labelFolderRentAndReside", "RentAndReside", null, null },
-                    { 8, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4564), "System", "labelFolderArchiv", "Archiv", null, null },
-                    { 9, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4565), "System", "labelFolderSpam", "Spam", null, null },
-                    { 10, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4567), "System", "labelFolderFamilyAndFriends", "FamilyAndFriends", null, null },
-                    { 11, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4568), "System", "labelFolderShopping", "Shopping", null, null },
-                    { 12, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4569), "System", "labelFolderSocialMedia", "SocialMedia", null, null },
-                    { 13, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4569), "System", "labelFolderCar", "Car", null, null },
-                    { 14, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4570), "System", "labelFolderTelecommunication", "Telecommunication", null, null },
-                    { 15, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4571), "System", "labelFolderBankAndPayments", "BankAndPayments", null, null },
-                    { 16, new DateTime(2025, 2, 1, 12, 58, 34, 219, DateTimeKind.Utc).AddTicks(4571), "System", "labelFolderOther", "Other", null, null }
+                    { 1, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(786), "System", "labelFolderUnknown", "Unknown", null, null },
+                    { 2, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(791), "System", "labelFolderFoodOrder", "Food", null, null },
+                    { 3, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(792), "System", "labelFolderTravel", "Travel", null, null },
+                    { 4, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(792), "System", "labelFolderTax", "Tax", null, null },
+                    { 5, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(793), "System", "labelFolderAccounts", "Accounts", null, null },
+                    { 6, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(817), "System", "labelFolderHealth", "Health", null, null },
+                    { 7, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(817), "System", "labelFolderRentAndReside", "RentAndReside", null, null },
+                    { 8, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(818), "System", "labelFolderArchiv", "Archiv", null, null },
+                    { 9, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(819), "System", "labelFolderSpam", "Spam", null, null },
+                    { 10, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(820), "System", "labelFolderFamilyAndFriends", "FamilyAndFriends", null, null },
+                    { 11, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(820), "System", "labelFolderShopping", "Shopping", null, null },
+                    { 12, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(821), "System", "labelFolderSocialMedia", "SocialMedia", null, null },
+                    { 13, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(822), "System", "labelFolderCar", "Car", null, null },
+                    { 14, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(822), "System", "labelFolderTelecommunication", "Telecommunication", null, null },
+                    { 15, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(823), "System", "labelFolderBankAndPayments", "BankAndPayments", null, null },
+                    { 16, new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(823), "System", "labelFolderOther", "Other", null, null }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmailCleanerSettingsTable_AccountId",
                 table: "EmailCleanerSettingsTable",
                 column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailCleanupTable_AccountId",
+                table: "EmailCleanupTable",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailCleanupTable_AddressId",
+                table: "EmailCleanupTable",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailCleanupTable_PredictedTargetFolderId",
+                table: "EmailCleanupTable",
+                column: "PredictedTargetFolderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailCleanupTable_SubjectId",
+                table: "EmailCleanupTable",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmailCleanupTable_TargetFolderId",
+                table: "EmailCleanupTable",
+                column: "TargetFolderId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "EmailAddressTable");
-
-            migrationBuilder.DropTable(
                 name: "EmailCleanerSettingsTable");
 
             migrationBuilder.DropTable(
+                name: "EmailCleanupTable");
+
+            migrationBuilder.DropTable(
                 name: "EmailDataTable");
-
-            migrationBuilder.DropTable(
-                name: "EmailSubjectTable");
-
-            migrationBuilder.DropTable(
-                name: "EmailTargetFolderTable");
-
-            migrationBuilder.DropTable(
-                name: "GenericSettingsTable");
 
             migrationBuilder.DropTable(
                 name: "LogMessageTable");
 
             migrationBuilder.DropTable(
                 name: "EmailAccountTable");
+
+            migrationBuilder.DropTable(
+                name: "EmailAddressTable");
+
+            migrationBuilder.DropTable(
+                name: "EmailSubjectTable");
+
+            migrationBuilder.DropTable(
+                name: "EmailTargetFolderTable");
         }
     }
 }

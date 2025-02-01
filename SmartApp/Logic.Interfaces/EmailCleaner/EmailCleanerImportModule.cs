@@ -4,6 +4,7 @@ using Data.Shared.Email;
 using Logic.Interfaces.Interfaces;
 using Logic.Interfaces.Models;
 using Logic.Shared;
+using Shared.Enums;
 
 namespace Logic.Interfaces.EmailCleaner
 {
@@ -55,10 +56,40 @@ namespace Logic.Interfaces.EmailCleaner
                         Password = _passwordHandler.Decrypt(settingsEntity.Account.Password)
                     });
 
-                    var addressIdDictionary = await importer.EnsureAllAddressEntitiesExists(emailData);
-                    var subjectDictionary = await importer.EnsureAllSubjectEntitiesExists(emailData);
+                    var validatedEmailData = emailData
+                        .Where(e => !string.IsNullOrEmpty(e.Subject))
+                        .GroupBy(e => new { e.FromAddress, e.Subject })
+                        .Select(grp => grp.First())
+                        .ToList();
+
+                    var addressIdDictionary = await importer.EnsureAllAddressEntitiesExists(validatedEmailData);
+                    var subjectDictionary = await importer.EnsureAllSubjectEntitiesExists(validatedEmailData);
                     var targetFolderDictionary = await importer.GetTargetFolderDictionary();
 
+                    var emailCleanupConfigurationEntities = new List<EmailCleanupConfigurationEntity>();
+
+                    foreach (var data in validatedEmailData)
+                    {
+                        // TODO predict target and spam later on
+
+                        emailCleanupConfigurationEntities.Add(new EmailCleanupConfigurationEntity
+                        {
+                            UserId = settingsEntity.UserId,
+                            AccountId = settingsEntity.AccountId,
+                            AddressId = addressIdDictionary[data.FromAddress],
+                            SubjectId = subjectDictionary[data.Subject],
+                            TargetFolderId = targetFolderDictionary["Unknown"],
+                            SpamIdentifierValue = SpamValueEnum.Ham,
+                            PredictedSpamIdentifierValue = null,
+                        });
+                    }
+
+                    await importer.SaveEmailCleanupConfigurationEntities(emailCleanupConfigurationEntities);
+
+                    if(_logger != null)
+                    {
+                        await _logger.Info($"Email data for {settingsEntity.UserId} / {settingsEntity.AccountId} imported with success.");
+                    }
                 }
             }
             catch (Exception exception)

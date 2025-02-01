@@ -178,6 +178,9 @@ namespace Data.Databases.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
@@ -256,7 +259,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4314),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(786),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderUnknown",
                             TargetFolderName = "Unknown"
@@ -264,7 +267,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4318),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(791),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderFoodOrder",
                             TargetFolderName = "Food"
@@ -272,7 +275,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4318),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(792),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderTravel",
                             TargetFolderName = "Travel"
@@ -280,7 +283,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4319),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(792),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderTax",
                             TargetFolderName = "Tax"
@@ -288,7 +291,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4320),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(793),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderAccounts",
                             TargetFolderName = "Accounts"
@@ -296,7 +299,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4321),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(817),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderHealth",
                             TargetFolderName = "Health"
@@ -304,7 +307,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4322),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(817),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderRentAndReside",
                             TargetFolderName = "RentAndReside"
@@ -312,7 +315,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4322),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(818),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderArchiv",
                             TargetFolderName = "Archiv"
@@ -320,7 +323,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4323),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(819),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderSpam",
                             TargetFolderName = "Spam"
@@ -328,7 +331,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4324),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(820),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderFamilyAndFriends",
                             TargetFolderName = "FamilyAndFriends"
@@ -336,7 +339,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 11,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4324),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(820),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderShopping",
                             TargetFolderName = "Shopping"
@@ -344,7 +347,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 12,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4325),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(821),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderSocialMedia",
                             TargetFolderName = "SocialMedia"
@@ -352,7 +355,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 13,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4325),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(822),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderCar",
                             TargetFolderName = "Car"
@@ -360,7 +363,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 14,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4326),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(822),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderTelecommunication",
                             TargetFolderName = "Telecommunication"
@@ -368,7 +371,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 15,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4326),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(823),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderBankAndPayments",
                             TargetFolderName = "BankAndPayments"
@@ -376,7 +379,7 @@ namespace Data.Databases.Migrations
                         new
                         {
                             Id = 16,
-                            CreatedAt = new DateTime(2025, 2, 1, 14, 15, 7, 953, DateTimeKind.Utc).AddTicks(4326),
+                            CreatedAt = new DateTime(2025, 2, 1, 14, 28, 37, 139, DateTimeKind.Utc).AddTicks(823),
                             CreatedBy = "System",
                             ResourceKey = "labelFolderOther",
                             TargetFolderName = "Other"
