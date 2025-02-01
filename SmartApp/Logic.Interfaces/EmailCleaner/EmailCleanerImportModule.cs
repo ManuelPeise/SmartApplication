@@ -5,7 +5,6 @@ using Logic.Interfaces.Interfaces;
 using Logic.Interfaces.Models;
 using Logic.Shared;
 using Shared.Enums;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Logic.Interfaces.EmailCleaner
 {
@@ -25,7 +24,7 @@ namespace Logic.Interfaces.EmailCleaner
         }
 
 
-        public async Task Import(EmailCleanerSettingsEntity? settingsEntity)
+        public async Task Import(EmailCleanerSettingsEntity? settingsEntity, int? accountId)
         {
             try
             {
@@ -39,7 +38,12 @@ namespace Logic.Interfaces.EmailCleaner
 
                         foreach (var entity in settingsEntities)
                         {
-                            await Import(entity);
+                            
+                            if(accountId != null && entity.AccountId == accountId)
+                            {
+                                await Import(entity, entity.AccountId);
+                            }
+                            
                         }
                     }
 
@@ -48,13 +52,15 @@ namespace Logic.Interfaces.EmailCleaner
 
                 using (var importer = new EmailDataImporter(_applicationUnitOfWork))
                 {
+                    var account = await importer.LoadAccountEntity(settingsEntity.AccountId);
+
                     var emailData = await emailClient.LoadMailsFromServer(new EmailAccountConnectionData
                     {
-                        AccountId = settingsEntity.AccountId,
-                        Server = settingsEntity.Account.ImapServer,
-                        Port = settingsEntity.Account.ImapPort,
-                        EmailAddress = settingsEntity.Account.EmailAddress,
-                        Password = _passwordHandler.Decrypt(settingsEntity.Account.Password)
+                        AccountId = account.Id,
+                        Server = account.ImapServer,
+                        Port = account.ImapPort,
+                        EmailAddress = account.EmailAddress,
+                        Password = _passwordHandler.Decrypt(account.Password)
                     });
 
                     var validatedEmailData = emailData
@@ -104,7 +110,7 @@ namespace Logic.Interfaces.EmailCleaner
 
                 foreach (var settingsEntity in activeEmailCleanerSettings)
                 {
-                    await Import(settingsEntity);
+                    await Import(settingsEntity, settingsEntity.AccountId);
                 }
             }
         }

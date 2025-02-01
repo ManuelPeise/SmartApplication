@@ -13,10 +13,11 @@ interface IProps {
   isLoading: boolean;
   data: EmailCleanerSettings[];
   handleUpdateSettings: (model: EmailCleanerSettings) => Promise<void>;
+  handleImportData: (accountId: number) => Promise<void>;
 }
 
 const EmailCleanerInterfacePage: React.FC<IProps> = (props) => {
-  const { isLoading, data, handleUpdateSettings } = props;
+  const { isLoading, data, handleUpdateSettings, handleImportData } = props;
 
   const { getResource } = useI18n();
   const [selectedTab, setSelectedTab] = React.useState<number>(0);
@@ -60,6 +61,7 @@ const EmailCleanerInterfacePage: React.FC<IProps> = (props) => {
             dataSet={dataset}
             maxHeight={maxHeight}
             handleUpdateSettings={handleUpdateSettings}
+            handleImportData={handleImportData}
           />
         ))}
       </Grid2>

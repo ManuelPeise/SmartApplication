@@ -22,7 +22,7 @@ namespace Logic.Interfaces
             
             foreach(var settings in allSettingsEntities)
             {
-                if(settings.EmailCleanerEnabled)
+                if(settings.EmailCleanerEnabled && settings.UseScheduledEmailDataExport)
                 {
                     settingsEntities.Add(settings);
                 }

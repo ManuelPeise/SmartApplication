@@ -2,12 +2,14 @@ import { CellMeasurerCache } from "react-virtualized";
 import { EmailProviderTypeEnum } from "src/_lib/_enums/EmailProviderTypeEnum";
 
 export type EmailCleanerSettings = {
+  accountId: number;
   settingsId: number;
   userId: number;
   accountName: string;
   emailAddress: string;
   connectionTestPassed: boolean;
   emailCleanerEnabled: boolean;
+  useScheduledEmailDataImport: boolean;
   providerType: EmailProviderTypeEnum;
   updatedBy?: string;
   updatedAt?: string;

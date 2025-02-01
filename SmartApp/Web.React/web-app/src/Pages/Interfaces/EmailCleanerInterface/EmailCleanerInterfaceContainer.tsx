@@ -37,6 +37,16 @@ const EmailCleanerInterfaceContainer: React.FC = () => {
     [rebindData, sendPost]
   );
 
+  const handleImportData = React.useCallback(
+    async (accountId: number) => {
+      await sendPost({
+        serviceUrl: "EmailCleanerInterface/ExecuteEmailDataImport",
+        parameters: { accountId: accountId.toFixed(0) },
+      });
+    },
+    [sendPost]
+  );
+
   if (!data) {
     return null;
   }
@@ -59,6 +69,7 @@ const EmailCleanerInterfaceContainer: React.FC = () => {
       isLoading={isLoading}
       data={data}
       handleUpdateSettings={handleUpdateSettings}
+      handleImportData={handleImportData}
     />
   );
 };

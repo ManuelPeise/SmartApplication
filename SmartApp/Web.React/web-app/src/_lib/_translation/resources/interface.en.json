@@ -54,5 +54,7 @@
   "labelInitializeFolderMapping": "Initialize folder mapping",
   "descriptionEnableFolderMapping": "Enable email folder mapping for automatic cleanup task.",
   "descriptionInitializeFolderMapping": "Initialize email folder mapping.",
-  "labelShowOnlyIncativeMappings": "Show only inactive mappings"
+  "descriptionScheduledDataImport": "Define if the email data should be imported automaticly, the task will run every 60 minutes.",
+  "labelShowOnlyIncativeMappings": "Show only inactive mappings",
+  "labelImportData": "Import data"
 }

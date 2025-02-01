@@ -32,9 +32,9 @@ namespace Service.Api.Interfaces
         // manual email data import
         [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true, AllowMaintananceUser = false)]
         [HttpPost(Name = "ExecuteEmailDataImport")]
-        public async Task ExecuteEmailDataImport()
+        public async Task ExecuteEmailDataImport([FromQuery] int accountId)
         {
-            await _importModule.Import(null);
+            await _importModule.Import(null, accountId);
         }
 
     }

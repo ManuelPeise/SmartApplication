@@ -18,11 +18,18 @@ interface IProps {
   maxHeight: number;
   dataSet: EmailCleanerSettings;
   handleUpdateSettings: (model: EmailCleanerSettings) => Promise<void>;
+  handleImportData: (accountId: number) => Promise<void>;
 }
 
 const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
-  const { tabindex, selectedTab, dataSet, maxHeight, handleUpdateSettings } =
-    props;
+  const {
+    tabindex,
+    selectedTab,
+    dataSet,
+    maxHeight,
+    handleUpdateSettings,
+    handleImportData,
+  } = props;
   const { getResource } = useI18n();
 
   const [intermediateState, setIntermediateState] =
@@ -43,8 +50,15 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
     await handleUpdateSettings({
       ...dataSet,
       emailCleanerEnabled: intermediateState.emailCleanerEnabled,
+      useScheduledEmailDataImport:
+        intermediateState.useScheduledEmailDataImport,
     });
-  }, [handleUpdateSettings, dataSet, intermediateState.emailCleanerEnabled]);
+  }, [
+    handleUpdateSettings,
+    dataSet,
+    intermediateState.emailCleanerEnabled,
+    intermediateState.useScheduledEmailDataImport,
+  ]);
 
   const onReset = React.useCallback(() => {
     handleSettingsChanged(dataSet);
@@ -73,6 +87,21 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
     ];
   }, [canSave, getResource, onReset, onUpdate]);
 
+  const additionalButtonProps = React.useMemo((): ButtonProps[] => {
+    return [
+      {
+        label: getResource("interface.labelImportData"),
+        disabled: dataSet.useScheduledEmailDataImport,
+        onAction: handleImportData.bind(null, dataSet.accountId),
+      },
+    ];
+  }, [
+    dataSet.accountId,
+    dataSet.useScheduledEmailDataImport,
+    getResource,
+    handleImportData,
+  ]);
+
   if (selectedTab !== tabindex) {
     return null;
   }
@@ -91,7 +120,10 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
   }
 
   return (
-    <DetailsView saveCancelButtonProps={saveCancelButtonProps}>
+    <DetailsView
+      saveCancelButtonProps={saveCancelButtonProps}
+      additionalButtonProps={additionalButtonProps}
+    >
       <Grid2
         sx={{
           scrollbarWidth: "none",
@@ -145,6 +177,24 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
               handleChange={(e) =>
                 handleSettingsChanged({
                   emailCleanerEnabled: e.currentTarget.checked,
+                  useScheduledEmailDataImport: !e.currentTarget.checked
+                    ? false
+                    : intermediateState.useScheduledEmailDataImport,
+                })
+              }
+            />
+          </ListItemInput>
+          <ListItemInput
+            key="email-cleaner-scheduled-import"
+            marginTop="30px"
+            label={getResource("interface.descriptionScheduledDataImport")}
+          >
+            <SwitchInput
+              disabled={!intermediateState.emailCleanerEnabled}
+              checked={intermediateState.useScheduledEmailDataImport}
+              handleChange={(e) =>
+                handleSettingsChanged({
+                  useScheduledEmailDataImport: e.currentTarget.checked,
                 })
               }
             />

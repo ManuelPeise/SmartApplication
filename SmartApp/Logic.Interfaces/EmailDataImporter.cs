@@ -108,6 +108,11 @@ namespace Logic.Interfaces
             await _applicationUnitOfWork.EmailCleanupConfigurationTable.SaveChangesAsync();
         }
 
+        public async Task<EmailAccountEntity?> LoadAccountEntity(int id)
+        {
+            return await _applicationUnitOfWork.EmailAccountsTable.GetByIdAsync(id);
+        }
+
         #region dispose
 
         protected virtual void Dispose(bool disposing)
