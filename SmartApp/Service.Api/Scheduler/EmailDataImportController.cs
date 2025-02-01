@@ -8,12 +8,16 @@ using Shared.Models.Settings;
 
 namespace Service.Api.Scheduler
 {
-    public class EmailDataImportController: MaintananceControllerBase
+    public class EmailDataImportController : MaintananceControllerBase
     {
-       
+
         private readonly IEmailCleanerImportModule _importModule;
 
-        public EmailDataImportController(IUserAdministrationService userAdministrationService, IEmailCleanerImportModule importModule, IOptions<AppSettingsModel> appSettings, IEmailClient emailClient) : base(appSettings, emailClient)
+        public EmailDataImportController(
+            IUserAdministrationService userAdministrationService,
+            IEmailCleanerImportModule importModule,
+            IOptions<AppSettingsModel> appSettings,
+            IEmailClient emailClient) : base(appSettings, emailClient)
         {
             _importModule = importModule;
         }
@@ -22,7 +26,6 @@ namespace Service.Api.Scheduler
         [HttpPost(Name = "ImportEmailData")]
         public async Task ImportEmailData()
         {
-
             await _importModule.ImportAll();
         }
     }

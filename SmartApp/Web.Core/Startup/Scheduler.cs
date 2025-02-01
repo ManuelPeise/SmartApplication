@@ -28,7 +28,7 @@ namespace Web.Core.Startup
                     }),
                 GetTrigger(
                     $"{EmailDataImportTask}-trigger",
-                    60));
+                    2));
 #if !DEBUG
             AddJob(scheduler,
                GetJobDetails(
