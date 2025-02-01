@@ -4,7 +4,6 @@ using Data.Shared.Email;
 using Logic.Interfaces.Interfaces;
 using Logic.Interfaces.Models;
 using Logic.Shared;
-using Org.BouncyCastle.Crypto.Prng;
 using Shared.Enums;
 
 namespace Logic.Interfaces.EmailAccountInterface

@@ -14,6 +14,28 @@ namespace Logic.Interfaces
             _unitOfWork = applicationUnitOfWork;
         }
 
+        public async Task<List<EmailCleanerSettingsEntity>> GetAllActiveSettings()
+        {
+            var settingsEntities = new List<EmailCleanerSettingsEntity>();
+
+            var allSettingsEntities = await _unitOfWork.EmailCleanerSettingsTable.GetAllAsync()?? new List<EmailCleanerSettingsEntity>();
+            
+            foreach(var settings in allSettingsEntities)
+            {
+                if(settings.EmailCleanerEnabled)
+                {
+                    settingsEntities.Add(settings);
+                }
+            }
+
+            var accountIds = settingsEntities.Select(x => x.AccountId).ToList();
+
+            await _unitOfWork.EmailAccountsTable.GetAllAsyncBy(e => accountIds.Contains(e.Id));
+
+            return settingsEntities;
+
+        }
+
         public async Task<List<EmailCleanerSettingsEntity>> GetEmailCleanerSettings(bool loadAccounts = false)
         {
             var settingsEntities = await _unitOfWork.EmailCleanerSettingsTable.GetAllAsyncBy(x =>

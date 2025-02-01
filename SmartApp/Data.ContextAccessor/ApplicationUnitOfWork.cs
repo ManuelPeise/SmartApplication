@@ -43,6 +43,7 @@ namespace Data.ContextAccessor
         public DbContextRepository<EmailTargetFolderEntity> EmailTargetFolderTable => new DbContextRepository<EmailTargetFolderEntity>(_applicationContext, _contextAccessor);
         public DbContextRepository<EmailAccountEntity> EmailAccountsTable => new DbContextRepository<EmailAccountEntity>(_applicationContext, _contextAccessor);
         public DbContextRepository<EmailCleanerSettingsEntity> EmailCleanerSettingsTable => new DbContextRepository<EmailCleanerSettingsEntity>(_applicationContext, _contextAccessor);
+        public DbContextRepository<EmailCleanupConfigurationEntity> EmailCleanupConfigurationTable => new DbContextRepository<EmailCleanupConfigurationEntity>(_applicationContext, _contextAccessor);
 
         public ClaimsAccessor ClaimsAccessor => new ClaimsAccessor();
 
