@@ -13,8 +13,6 @@ namespace Data.ContextAccessor.Interfaces
         DbContextRepository<LogMessageEntity> LogMessageRepository { get; }
         DbContextRepository<EmailSubjectEntity> EmailSubjectTable { get; }
         DbContextRepository<EmailAddressEntity> EmailAddressTable { get; }
-        DbContextRepository<EmailMappingEntity> EmailMappingTable { get; }
-        DbContextRepository<EmailFolderMappingEntity> EmailFolderMappingTable { get; }
         DbContextRepository<EmailTargetFolderEntity> EmailTargetFolderTable { get; }
         DbContextRepository<EmailAccountEntity> EmailAccountsTable { get; }
         DbContextRepository<EmailCleanerSettingsEntity> EmailCleanerSettingsTable { get; }

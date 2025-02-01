@@ -13,15 +13,15 @@ namespace Data.Databases
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<EmailAddressEntity>()
-                .HasMany(e => e.MappingEntities)
-                .WithOne(e => e.AddressEntity)
-                .HasForeignKey(e => e.AddressId);
+            //modelBuilder.Entity<EmailAddressEntity>()
+            //    .HasMany(e => e.MappingEntities)
+            //    .WithOne(e => e.AddressEntity)
+            //    .HasForeignKey(e => e.AddressId);
 
-            modelBuilder.Entity<EmailSubjectEntity>()
-               .HasMany(e => e.MappingEntities)
-               .WithOne(e => e.SubjectEntity)
-               .HasForeignKey(e => e.SubjectId);
+            //modelBuilder.Entity<EmailSubjectEntity>()
+            //   .HasMany(e => e.MappingEntities)
+            //   .WithOne(e => e.SubjectEntity)
+            //   .HasForeignKey(e => e.SubjectId);
 
             base.OnModelCreating(modelBuilder);
 
@@ -36,8 +36,6 @@ namespace Data.Databases
         public DbSet<EmailSubjectEntity> EmailSubjectTable { get; set; }
         public DbSet<EmailAddressEntity> EmailAddressTable { get; set; }
         public DbSet<EmailCleanerSettingsEntity> EmailCleanerSettingsTable { get; set; }
-        public DbSet<EmailFolderMappingEntity> EmailFolderMappingTable { get; set; }
-        public DbSet<EmailMappingEntity> EmailMappingTable { get; set; }
         public DbSet<EmailTargetFolderEntity> EmailTargetFolderTable { get; set; }
 
         // TODO Check that 
