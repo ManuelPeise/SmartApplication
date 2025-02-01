@@ -1,5 +1,4 @@
-﻿using Data.ContextAccessor;
-using Data.ContextAccessor.Interfaces;
+﻿using Data.ContextAccessor.Interfaces;
 using Data.Shared.Ai;
 using Logic.Ai.Models.Input;
 using Logic.Ai.Models.Prediction;
@@ -9,7 +8,6 @@ using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 using Microsoft.ML.Transforms;
 using Shared.Models.Administration.SpamClassification;
-using System.Text;
 
 namespace Logic.Ai.SpamPrediction
 {
