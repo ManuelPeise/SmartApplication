@@ -18,7 +18,6 @@ namespace Data.ContextAccessor.Interfaces
         DbContextRepository<EmailCleanerSettingsEntity> EmailCleanerSettingsTable { get; }
 
         IdentityRepository IdentityRepository { get; }
-        GenericSettingsRepository GenericSettingsRepository { get; }
         ClaimsAccessor ClaimsAccessor { get; }
         bool IsAuthenticated { get; }
         IOptions<SecurityData> SecurityData { get; }

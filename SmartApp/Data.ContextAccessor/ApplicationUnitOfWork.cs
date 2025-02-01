@@ -38,7 +38,6 @@ namespace Data.ContextAccessor
         public bool IsAuthenticated => _currentUserId != 0;
         public DbContextRepository<LogMessageEntity> LogMessageRepository => new DbContextRepository<LogMessageEntity>(_applicationContext, _contextAccessor);
         public IdentityRepository IdentityRepository => new IdentityRepository(_userIdentityContext, _contextAccessor);
-        public GenericSettingsRepository GenericSettingsRepository => new GenericSettingsRepository(_applicationContext, _contextAccessor);
         public DbContextRepository<EmailSubjectEntity> EmailSubjectTable => new DbContextRepository<EmailSubjectEntity>(_applicationContext, _contextAccessor);
         public DbContextRepository<EmailAddressEntity> EmailAddressTable => new DbContextRepository<EmailAddressEntity>(_applicationContext, _contextAccessor);
         public DbContextRepository<EmailTargetFolderEntity> EmailTargetFolderTable => new DbContextRepository<EmailTargetFolderEntity>(_applicationContext, _contextAccessor);
