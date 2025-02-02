@@ -1,4 +1,4 @@
-import { DeleteOutlineRounded } from "@mui/icons-material";
+import { HighlightOffRounded } from "@mui/icons-material";
 import { IconButton, TextField } from "@mui/material";
 import React from "react";
 
@@ -39,15 +39,15 @@ const FilterTextInput: React.FC<IProps> = (props) => {
               size="small"
               disabled={value === ""}
               sx={{
-                width: "30px",
-                height: "30px",
+                width: "20px",
+                height: "20px",
                 p: 1,
               }}
             >
-              <DeleteOutlineRounded
+              <HighlightOffRounded
                 style={{
-                  width: "30px",
-                  height: "30px",
+                  width: "20px",
+                  height: "20px",
                 }}
                 onClick={handleClearFilterText}
               />

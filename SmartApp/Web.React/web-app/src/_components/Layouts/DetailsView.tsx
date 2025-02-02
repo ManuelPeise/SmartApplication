@@ -24,25 +24,21 @@ const DetailsView: React.FC<IDetailsViewProps> = (props) => {
 
   return (
     <Grid2
-      sx={{ overflow: "hidden" }}
-      container
-      minHeight="100%"
-      size={12}
       display="flex"
-      alignItems="space-between"
-      justifyContent="center"
+      flexDirection="column"
+      flex={1}
+      width="100%"
+      sx={{ overflow: "hidden" }}
+      height="inherit"
     >
       <Grid2
         id="details-view-child-container"
-        size={12}
-        height="90%"
-        display="flex"
         sx={{ overflowY: "scroll", scrollbarWidth: "none" }}
         justifyContent={justifyContent}
       >
         {children}
       </Grid2>
-      <Grid2 size={12} height={30} display="flex" flexDirection="row">
+      <Grid2 size={12} display="flex" flexDirection="row">
         <Grid2
           id="details-view-additional-buttons-container"
           size={6}

@@ -21,7 +21,8 @@ namespace Data.Shared.Email
         public int? PredictedTargetFolderId { get; set; } = null;
         [ForeignKey(nameof(PredictedTargetFolderId))]
         public EmailTargetFolderEntity? PredictedTargetFolder { get; set; }
-        public SpamValueEnum SpamIdentifierValue { get; set; } = SpamValueEnum.Ham;
-        public SpamValueEnum? PredictedSpamIdentifierValue { get; set; } = null;
+        public bool IsSharedWithAi { get; set; }
+        public bool IsSpam { get; set; }
+        public bool IsPredictedAsSpam { get; set; }
     }
 }

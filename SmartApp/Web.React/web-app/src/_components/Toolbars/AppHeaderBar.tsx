@@ -29,7 +29,12 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const withReplacedPath = React.useCallback((path: string, route: string) => {
+    return path.replace(route, route);
+  }, []);
+
   const pageTitle = React.useMemo((): string => {
+    console.log(location.pathname);
     switch (location.pathname) {
       case browserRoutes.home:
         return `${process.env.REACT_APP_Name} - Home`;
@@ -47,10 +52,15 @@ const AppHeaderBar: React.FC<IProps> = (props) => {
         return `${process.env.REACT_APP_Name} - Email Accounts`;
       case browserRoutes.emailCleanerInterface:
         return `${process.env.REACT_APP_Name} - Email Cleaner`;
+      case withReplacedPath(
+        location.pathname,
+        browserRoutes.emailClassification
+      ):
+        return `${process.env.REACT_APP_Name} - Email Classification`;
       default:
         return "";
     }
-  }, [location.pathname, getResource]);
+  }, [location.pathname, getResource, withReplacedPath]);
 
   return (
     <AppBar

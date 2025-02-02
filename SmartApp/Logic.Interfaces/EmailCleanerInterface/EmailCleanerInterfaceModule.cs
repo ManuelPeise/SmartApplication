@@ -41,7 +41,8 @@ namespace Logic.Interfaces.EmailCleanerInterface
                         AccountName = e.Account.AccountName,
                         EmailAddress = e.Account.EmailAddress,
                         EmailCleanerEnabled = e.EmailCleanerEnabled,
-                        UseScheduledEmailDataImport = e.UseScheduledEmailDataExport,
+                        UseScheduledEmailDataImport = e.UseScheduledEmailDataImport,
+                        ShareDataWithAi = e.ShareDataWithAi,
                         ProviderType = e.Account.ProviderType,
                         ConnectionTestPassed = e.Account.ConnectionTestPassed,
                         UpdatedAt = e.UpdatedAt?.ToString("dd.MM.yyyy HH:mm"),
@@ -75,7 +76,8 @@ namespace Logic.Interfaces.EmailCleanerInterface
                     }
 
                     entity.EmailCleanerEnabled = model.EmailCleanerEnabled;
-                    entity.UseScheduledEmailDataExport = model.UseScheduledEmailDataImport;
+                    entity.UseScheduledEmailDataImport = model.UseScheduledEmailDataImport;
+                    entity.ShareDataWithAi = model.ShareDataWithAi;
 
                     await settings.UpdateEmailCleanerSetting(entity);
 

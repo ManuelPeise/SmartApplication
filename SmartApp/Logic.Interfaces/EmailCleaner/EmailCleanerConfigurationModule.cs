@@ -34,7 +34,6 @@ namespace Logic.Interfaces.EmailCleaner
                     var targetFolderEntities = await configuration.GetAllTargetFolderEntities();
                     var configurationEntities = await configuration.LoadEntities(accountId);
 
-
                     return new EmailClassificationPageModel
                     {
                         AccountId = accountId,
@@ -48,17 +47,17 @@ namespace Logic.Interfaces.EmailCleaner
                             Id = e.Id,
                             EmailAddress = e.Address.EmailAddress,
                             Subject = e.Subject.EmailSubject,
-                            SpamId = e.SpamIdentifierValue,
+                            IsSpam = e.IsSpam,
                             TargetFolderId = e.TargetFolderId,
-                            PredictedSpamId = e.PredictedSpamIdentifierValue,
+                            PredictedAsSpam = e.IsPredictedAsSpam,
                             PredictedTargetFolderId = e.PredictedTargetFolderId
-                        }).ToList()
+                        }).ToList(),
                     };
 
                 }
                 catch (Exception exception)
                 {
-                    if(_logger != null)
+                    if (_logger != null)
                     {
                         await _logger.Error($"Could not load spam classification data for account: [{accountId}]", exception.Message);
                     }

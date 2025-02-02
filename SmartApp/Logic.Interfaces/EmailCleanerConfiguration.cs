@@ -21,23 +21,9 @@ namespace Logic.Interfaces
         public async Task<List<EmailCleanupConfigurationEntity>> LoadEntities(int accountId)
         {
             var configurationEntities = await _applicationUnitOfWork.EmailCleanupConfigurationTable.GetAllAsyncBy(x =>
-                x.AccountId == accountId) ?? new List<EmailCleanupConfigurationEntity>();
+                x.AccountId == accountId, [x => x.Account, x => x.Address, x => x.Subject, x => x.TargetFolder, x => x.PredictedTargetFolder]) ?? new List<EmailCleanupConfigurationEntity>();
 
-            await _applicationUnitOfWork.EmailAccountsTable.GetFirstOrDefault(x => x.Id == accountId);
-
-            await LoadFolders(configurationEntities.Select(e => e.TargetFolderId));
-
-            await LoadFolders(configurationEntities.Where(e => e.PredictedTargetFolderId != null).Select(e => (int)e.PredictedTargetFolderId));
-           
-            var addressIds = configurationEntities.Select(x => x.AddressId).Distinct().ToList();
-
-            await _applicationUnitOfWork.EmailAddressTable.GetAllAsyncBy(e => addressIds.Contains(e.Id));
-
-            var subjectIds = configurationEntities.Select(x => x.SubjectId).Distinct().ToList();
-
-            await _applicationUnitOfWork.EmailSubjectTable.GetAllAsyncBy(e => subjectIds.Contains(e.Id));
-
-            return configurationEntities?? new List<EmailCleanupConfigurationEntity>();
+            return configurationEntities ?? new List<EmailCleanupConfigurationEntity>();
         }
 
         public async Task<List<EmailTargetFolderEntity>> GetAllTargetFolderEntities()

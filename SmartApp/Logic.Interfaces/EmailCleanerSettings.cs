@@ -18,32 +18,17 @@ namespace Logic.Interfaces
         {
             var settingsEntities = new List<EmailCleanerSettingsEntity>();
 
-            var allSettingsEntities = await _unitOfWork.EmailCleanerSettingsTable.GetAllAsync()?? new List<EmailCleanerSettingsEntity>();
+            var allSettingsEntities = await _unitOfWork.EmailCleanerSettingsTable.GetAllAsync([x => x.Account])?? new List<EmailCleanerSettingsEntity>();
             
             foreach(var settings in allSettingsEntities)
             {
-                if(settings.EmailCleanerEnabled && settings.UseScheduledEmailDataExport)
+                if(settings.EmailCleanerEnabled && settings.UseScheduledEmailDataImport)
                 {
                     settingsEntities.Add(settings);
                 }
             }
 
-            var accountIds = settingsEntities.Select(x => x.AccountId).ToList();
-
-            var accountEntities = await _unitOfWork.EmailAccountsTable.GetAllAsyncBy(e => accountIds.Contains(e.Id));
-
-            foreach (var entity in settingsEntities)
-            {
-                var accountEntity = accountEntities.FirstOrDefault(e => e.Id == entity.AccountId);
-
-                if (accountEntity != null)
-                {
-                    entity.Account = accountEntity;
-                }
-            }
-
             return settingsEntities;
-
         }
 
         public async Task<List<EmailCleanerSettingsEntity>> GetEmailCleanerSettings(bool loadAccounts = false)

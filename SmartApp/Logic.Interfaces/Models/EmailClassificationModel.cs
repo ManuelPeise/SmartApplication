@@ -10,7 +10,7 @@ namespace Logic.Interfaces.Models
         public string Subject { get; set; } = string.Empty;
         public int TargetFolderId { get; set; }
         public int? PredictedTargetFolderId { get; set; }
-        public SpamValueEnum SpamId { get; set; }
-        public SpamValueEnum? PredictedSpamId { get; set; }
+        public bool IsSpam { get; set; }
+        public bool PredictedAsSpam { get; set; }
     }
 }

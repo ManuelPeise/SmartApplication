@@ -78,8 +78,9 @@ namespace Logic.Interfaces.EmailCleaner
                         AddressId = addressIdDictionary[data.FromAddress],
                         SubjectId = subjectDictionary[data.Subject],
                         TargetFolderId = targetFolderDictionary["Unknown"],
-                        SpamIdentifierValue = SpamValueEnum.Ham,
-                        PredictedSpamIdentifierValue = null,
+                        IsSharedWithAi = settingsEntity.ShareDataWithAi, 
+                        IsSpam = false,
+                        IsPredictedAsSpam = false,
                     }).ToList();
 
                     if (emailCleanupConfigurationEntities.Any())

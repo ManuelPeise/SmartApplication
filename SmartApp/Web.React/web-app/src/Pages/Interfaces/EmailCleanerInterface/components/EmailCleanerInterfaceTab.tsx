@@ -1,16 +1,25 @@
 import React from "react";
 import DetailsView, { ButtonProps } from "src/_components/Layouts/DetailsView";
 import { EmailCleanerSettings } from "../types";
-import { Box, Divider, Grid2, List, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Grid2,
+  IconButton,
+  List,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { emailProviderSettings } from "src/_lib/Settings/EmailProviderSettings";
 import { colors } from "src/_lib/colors";
 import ListItemInput from "src/_components/Lists/ListItemInput";
 import { useI18n } from "src/_hooks/useI18n";
 import SwitchInput from "src/_components/Input/SwitchInput";
 import { isEqual } from "lodash";
-import { InfoOutlined } from "@mui/icons-material";
+import { InfoOutlined, SettingsRounded } from "@mui/icons-material";
 import { browserRoutes } from "src/_lib/Router/RouterUtils";
 import NoDataPlaceholder from "src/_components/Placeholders/NoDataPlaceholder";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   tabindex: number;
@@ -31,6 +40,7 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
     handleImportData,
   } = props;
   const { getResource } = useI18n();
+  const navigate = useNavigate();
 
   const [intermediateState, setIntermediateState] =
     React.useState<EmailCleanerSettings>(dataSet);
@@ -196,6 +206,31 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
                 handleSettingsChanged({
                   useScheduledEmailDataImport: e.currentTarget.checked,
                 })
+              }
+            />
+          </ListItemInput>
+          <ListItemInput
+            key="email-cleaner-classification-linl"
+            marginTop="30px"
+            label={getResource("interface.descriptionScheduledDataImport")}
+          >
+            <Tooltip
+              title={getResource("interface.labelClassification")}
+              children={
+                <IconButton
+                  size="medium"
+                  sx={{ marginRight: 1 }}
+                  onClick={() =>
+                    navigate(
+                      browserRoutes.emailClassification.replace(
+                        ":id",
+                        `${dataSet.accountId}`
+                      )
+                    )
+                  }
+                >
+                  <SettingsRounded />
+                </IconButton>
               }
             />
           </ListItemInput>

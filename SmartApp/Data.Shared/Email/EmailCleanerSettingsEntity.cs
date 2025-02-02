@@ -6,7 +6,8 @@ namespace Data.Shared.Email
     {
         public int UserId { get; set; }
         public bool EmailCleanerEnabled { get; set; }
-        public bool UseScheduledEmailDataExport { get; set; }
+        public bool UseScheduledEmailDataImport { get; set; }
+        public bool ShareDataWithAi { get; set; }
         public int AccountId { get; set; }
         [ForeignKey(nameof(AccountId))]
         public EmailAccountEntity Account { get; set; } = new EmailAccountEntity();

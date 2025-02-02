@@ -2,6 +2,7 @@
 using Data.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace Data.ContextAccessor.Repositories
@@ -32,14 +33,38 @@ namespace Data.ContextAccessor.Repositories
             return table.Count();
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, object>>[]? includeExpressions = null)
         {
+            if (includeExpressions != null) 
+            {
+                var data = _dbSet.AsQueryable();
+
+                foreach (var includeExpression in includeExpressions)
+                {
+                   data = data.Include(includeExpression);
+                }
+
+                return data.ToList();
+            }
+
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<List<T>> GetAllAsyncBy(Expression<Func<T, bool>> predicate)
+        public async Task<List<T>> GetAllAsyncBy(Expression<Func<T, bool>> predicate, Expression<Func<T, object>>[]? includeExpressions = null)
         {
             var table = _context.Set<T>();
+
+            if (includeExpressions != null)
+            {
+                var data = _dbSet.AsQueryable();
+
+                foreach (var includeExpression in includeExpressions)
+                {
+                    data = data.Include(includeExpression);
+                }
+
+                return data.ToList();
+            }
 
             return await table.AsNoTracking().Where(predicate).ToListAsync();
         }
@@ -150,7 +175,7 @@ namespace Data.ContextAccessor.Repositories
         {
             var currentUser = _contextAccessor?.HttpContext.User;
             var userName = currentUser?.Claims.FirstOrDefault(x => x.Type == "name")?.Value ?? "System";
-            
+
             var modifiedEntries = _context.ChangeTracker.Entries()
               .Where(x => x.State == EntityState.Modified ||
               x.State == EntityState.Added);

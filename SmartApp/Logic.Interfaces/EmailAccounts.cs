@@ -15,7 +15,8 @@ namespace Logic.Interfaces
 
         public async Task<List<EmailAccountEntity>> LoadUserEmailAccounts()
         {
-            return await _unitOfWork.EmailAccountsTable.GetAllAsyncBy(x => x.UserId == _unitOfWork.CurrentUserId)?? new List<EmailAccountEntity>();
+            return await _unitOfWork.EmailAccountsTable.GetAllAsyncBy(x => 
+                x.UserId == _unitOfWork.CurrentUserId)?? new List<EmailAccountEntity>();
         }
 
         public async Task<EmailAccountEntity?> LoadUserEmailAccount(int accountId)
