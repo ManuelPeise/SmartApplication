@@ -26,9 +26,24 @@ namespace Logic.Interfaces
             return configurationEntities ?? new List<EmailCleanupConfigurationEntity>();
         }
 
+        public async Task<List<EmailCleanupConfigurationEntity>> LoadEntities(IEnumerable<int> configurationIds)
+        {
+            var configurationEntities = await _applicationUnitOfWork.EmailCleanupConfigurationTable.GetAllAsyncBy(x =>
+                configurationIds.Contains(x.Id)) ?? new List<EmailCleanupConfigurationEntity>();
+
+            return configurationEntities ?? new List<EmailCleanupConfigurationEntity>();
+        }
+
         public async Task<List<EmailTargetFolderEntity>> GetAllTargetFolderEntities()
         {
             return await _applicationUnitOfWork.EmailTargetFolderTable.GetAllAsync();
+        }
+
+        public async Task UpdateConfigurations(List<EmailCleanupConfigurationEntity> configurationEntities)
+        {
+            configurationEntities.ForEach(e => _applicationUnitOfWork.EmailCleanupConfigurationTable.Update(e));
+
+            await _applicationUnitOfWork.EmailCleanupConfigurationTable.SaveChangesAsync();
         }
 
         #region private

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
@@ -149,6 +148,8 @@ namespace Data.Databases.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     EmailCleanerEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UseScheduledEmailDataImport = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    SpamPredictionEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    FolderPredictionEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     ShareDataWithAi = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false),
@@ -183,6 +184,8 @@ namespace Data.Databases.Migrations
                     IsSharedWithAi = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IsSpam = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IsPredictedAsSpam = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Backup = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Delete = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedBy = table.Column<string>(type: "longtext", nullable: true),
@@ -228,22 +231,22 @@ namespace Data.Databases.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "ResourceKey", "TargetFolderName", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1164), "System", "labelFolderUnknown", "Unknown", null, null },
-                    { 2, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1167), "System", "labelFolderFoodOrder", "Food", null, null },
-                    { 3, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1168), "System", "labelFolderTravel", "Travel", null, null },
-                    { 4, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1169), "System", "labelFolderTax", "Tax", null, null },
-                    { 5, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1169), "System", "labelFolderAccounts", "Accounts", null, null },
-                    { 6, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1170), "System", "labelFolderHealth", "Health", null, null },
-                    { 7, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1170), "System", "labelFolderRentAndReside", "RentAndReside", null, null },
-                    { 8, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1171), "System", "labelFolderArchiv", "Archiv", null, null },
-                    { 9, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1171), "System", "labelFolderSpam", "Spam", null, null },
-                    { 10, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1172), "System", "labelFolderFamilyAndFriends", "FamilyAndFriends", null, null },
-                    { 11, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1173), "System", "labelFolderShopping", "Shopping", null, null },
-                    { 12, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1173), "System", "labelFolderSocialMedia", "SocialMedia", null, null },
-                    { 13, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1173), "System", "labelFolderCar", "Car", null, null },
-                    { 14, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1174), "System", "labelFolderTelecommunication", "Telecommunication", null, null },
-                    { 15, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1174), "System", "labelFolderBankAndPayments", "BankAndPayments", null, null },
-                    { 16, new DateTime(2025, 2, 2, 10, 43, 54, 307, DateTimeKind.Utc).AddTicks(1174), "System", "labelFolderOther", "Other", null, null }
+                    { 1, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6568), "System", "labelFolderUnknown", "Unknown", null, null },
+                    { 2, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6572), "System", "labelFolderFoodOrder", "Food", null, null },
+                    { 3, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6573), "System", "labelFolderTravel", "Travel", null, null },
+                    { 4, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6573), "System", "labelFolderTax", "Tax", null, null },
+                    { 5, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6574), "System", "labelFolderAccounts", "Accounts", null, null },
+                    { 6, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6575), "System", "labelFolderHealth", "Health", null, null },
+                    { 7, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6576), "System", "labelFolderRentAndReside", "RentAndReside", null, null },
+                    { 8, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6577), "System", "labelFolderArchiv", "Archiv", null, null },
+                    { 9, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6577), "System", "labelFolderSpam", "Spam", null, null },
+                    { 10, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6578), "System", "labelFolderFamilyAndFriends", "FamilyAndFriends", null, null },
+                    { 11, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6579), "System", "labelFolderShopping", "Shopping", null, null },
+                    { 12, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6579), "System", "labelFolderSocialMedia", "SocialMedia", null, null },
+                    { 13, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6580), "System", "labelFolderCar", "Car", null, null },
+                    { 14, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6580), "System", "labelFolderTelecommunication", "Telecommunication", null, null },
+                    { 15, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6581), "System", "labelFolderBankAndPayments", "BankAndPayments", null, null },
+                    { 16, new DateTime(2025, 2, 2, 18, 24, 51, 776, DateTimeKind.Utc).AddTicks(6582), "System", "labelFolderOther", "Other", null, null }
                 });
 
             migrationBuilder.CreateIndex(

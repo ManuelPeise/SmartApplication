@@ -1,5 +1,4 @@
-﻿using Shared.Enums;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Shared.Email
 {
@@ -24,5 +23,7 @@ namespace Data.Shared.Email
         public bool IsSharedWithAi { get; set; }
         public bool IsSpam { get; set; }
         public bool IsPredictedAsSpam { get; set; }
+        public bool Backup { get; set; }
+        public bool Delete { get; set; }
     }
 }

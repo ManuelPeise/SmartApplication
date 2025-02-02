@@ -1,9 +1,13 @@
 import { DropDownItem } from "src/_components/Input/Dropdown";
-import { ColumnDefinition } from "src/_hooks/useProcentalColumnWidth";
 
 export type EmailFolderModel = {
   folderId: number;
   resourceKey: string;
+};
+
+export type ColumnDefinition<TModel> = {
+  name: keyof TModel | "update";
+  width?: number;
 };
 
 export type EmailClassificationModel = {
@@ -15,6 +19,8 @@ export type EmailClassificationModel = {
   predictedTargetFolderId: number | null;
   isSpam: boolean;
   predictedAsSpam: boolean;
+  backup: boolean;
+  delete: boolean;
 };
 
 export type EmailClassificationPageModel = {
@@ -29,7 +35,7 @@ export type TableCellProps<TModel> = {
   rowIndex: number;
   colIndex: number;
   model: TModel;
-  dataKey: keyof TModel;
+  dataKey: keyof TModel | "update";
   columnDefinition: EmailTableColumn<TModel>;
   disabled?: boolean;
   dropdownItems?: DropDownItem[];

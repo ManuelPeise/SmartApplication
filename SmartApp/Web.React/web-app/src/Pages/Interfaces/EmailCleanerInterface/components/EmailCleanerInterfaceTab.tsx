@@ -62,12 +62,16 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
       emailCleanerEnabled: intermediateState.emailCleanerEnabled,
       useScheduledEmailDataImport:
         intermediateState.useScheduledEmailDataImport,
+      folderPredictionEnabled: intermediateState.folderPredictionEnabled,
+      spamPredictionEnabled: intermediateState.spamPredictionEnabled,
     });
   }, [
     handleUpdateSettings,
     dataSet,
     intermediateState.emailCleanerEnabled,
     intermediateState.useScheduledEmailDataImport,
+    intermediateState.folderPredictionEnabled,
+    intermediateState.spamPredictionEnabled,
   ]);
 
   const onReset = React.useCallback(() => {
@@ -205,6 +209,38 @@ const EmailCleanerInterfaceTab: React.FC<IProps> = (props) => {
               handleChange={(e) =>
                 handleSettingsChanged({
                   useScheduledEmailDataImport: e.currentTarget.checked,
+                })
+              }
+            />
+          </ListItemInput>
+          <ListItemInput
+            key="email-cleaner-use-spam-prediction"
+            marginTop="30px"
+            label={getResource("interface.descriptionUseAiSpamPrediction")}
+          >
+            <SwitchInput
+              disabled={!intermediateState.emailCleanerEnabled}
+              checked={intermediateState.spamPredictionEnabled}
+              handleChange={(e) =>
+                handleSettingsChanged({
+                  spamPredictionEnabled: e.currentTarget.checked,
+                })
+              }
+            />
+          </ListItemInput>
+          <ListItemInput
+            key="email-cleaner-use-folder-prediction"
+            marginTop="30px"
+            label={getResource(
+              "interface.descriptionUseAiTargetFolderPrediction"
+            )}
+          >
+            <SwitchInput
+              disabled={!intermediateState.emailCleanerEnabled}
+              checked={intermediateState.folderPredictionEnabled}
+              handleChange={(e) =>
+                handleSettingsChanged({
+                  folderPredictionEnabled: e.currentTarget.checked,
                 })
               }
             />

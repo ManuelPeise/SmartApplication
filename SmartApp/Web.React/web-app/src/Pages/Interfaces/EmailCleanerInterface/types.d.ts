@@ -10,6 +10,8 @@ export type EmailCleanerSettings = {
   connectionTestPassed: boolean;
   emailCleanerEnabled: boolean;
   useScheduledEmailDataImport: boolean;
+  spamPredictionEnabled: boolean;
+  folderPredictionEnabled: boolean;
   providerType: EmailProviderTypeEnum;
   updatedBy?: string;
   updatedAt?: string;

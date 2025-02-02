@@ -6,12 +6,11 @@
   "descriptionEnableFolderMapping": "Enable email folder mapping for automatic cleanup task.",
   "descriptionInitializeFolderMapping": "Initialize email folder mapping.",
   "descriptionScheduledDataImport": "Define if the email data should be imported automaticly, the task will run every 60 minutes.",
-  "descriptionUseAiSpamPrediction": "Use the AI spam prediction for this account.",
-  "descriptionUseAiTargetFolderPrediction": "Use the AI target folder prediction for this account.",
+  "descriptionUseAiSpamPrediction": "Enable the spam prediction for this account.",
+  "descriptionUseAiTargetFolderPrediction": "Enable the target email folder prediction for this account.",
   "labelAccountName": "AccountName",
   "labelAddAccount": "Add account",
   "labelAddressFilter": "Address filter",
-  "labelAvailableItems": "Found {Count} items",
   "labelClassification": "Configure classification",
   "labelConfigure": "Configure",
   "labelConfigureEmailAccount": "You have to configure a email account first.",
@@ -62,5 +61,10 @@
   "labelUpdateMappingTable": "Update Mappings",
   "labelUpdatePrediction": "Update prediction",
   "pageTitleEmailAccountInterface": "Email Account Interface",
-  "placeholderTextNoContent": "No content found, check your filter!"
+  "placeholderTextNoContent": "No content found, check your filter!",
+  "labelBackup": "Backup",
+  "labelDelete": "Delete",
+  "labelPrediction": "Prediction",
+  "labelUpdate": "Update",
+  "labelCategories": "{Count} Categories"
 }

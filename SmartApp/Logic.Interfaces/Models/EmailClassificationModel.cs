@@ -12,5 +12,7 @@ namespace Logic.Interfaces.Models
         public int? PredictedTargetFolderId { get; set; }
         public bool IsSpam { get; set; }
         public bool PredictedAsSpam { get; set; }
+        public bool Backup { get; set; }
+        public bool Delete { get; set; }
     }
 }

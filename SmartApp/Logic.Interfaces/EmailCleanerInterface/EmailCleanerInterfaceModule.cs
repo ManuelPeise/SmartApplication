@@ -42,6 +42,8 @@ namespace Logic.Interfaces.EmailCleanerInterface
                         EmailAddress = e.Account.EmailAddress,
                         EmailCleanerEnabled = e.EmailCleanerEnabled,
                         UseScheduledEmailDataImport = e.UseScheduledEmailDataImport,
+                        SpamPredictionEnabled = e.SpamPredictionEnabled,
+                        FolderPredictionEnabled = e.FolderPredictionEnabled,
                         ShareDataWithAi = e.ShareDataWithAi,
                         ProviderType = e.Account.ProviderType,
                         ConnectionTestPassed = e.Account.ConnectionTestPassed,
@@ -77,6 +79,8 @@ namespace Logic.Interfaces.EmailCleanerInterface
 
                     entity.EmailCleanerEnabled = model.EmailCleanerEnabled;
                     entity.UseScheduledEmailDataImport = model.UseScheduledEmailDataImport;
+                    entity.SpamPredictionEnabled = model.SpamPredictionEnabled;
+                    entity.FolderPredictionEnabled = model.FolderPredictionEnabled;
                     entity.ShareDataWithAi = model.ShareDataWithAi;
 
                     await settings.UpdateEmailCleanerSetting(entity);

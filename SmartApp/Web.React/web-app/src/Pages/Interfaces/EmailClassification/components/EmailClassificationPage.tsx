@@ -17,11 +17,19 @@ import { isEqual } from "lodash";
 interface IProps {
   classifications: EmailClassificationModel[];
   folders: EmailFolderModel[];
+  spamPredictionEnabled: boolean;
+  folderPredictionEnabled: boolean;
   handleSave: (items: EmailClassificationModel[]) => Promise<void>;
 }
 
 const EmailClassificationPage: React.FC<IProps> = (props) => {
-  const { classifications, folders, handleSave } = props;
+  const {
+    classifications,
+    folders,
+    folderPredictionEnabled,
+    spamPredictionEnabled,
+    handleSave,
+  } = props;
   const { getResource } = useI18n();
   const [filter, setFilter] = React.useState<EmailFilter>({
     address: "",
@@ -78,64 +86,104 @@ const EmailClassificationPage: React.FC<IProps> = (props) => {
 
   const tableColumnDefinitions =
     React.useMemo((): EmailTableColumn<EmailClassificationModel>[] => {
-      return [
-        {
-          name: "emailAddress",
-          headerLabel: getResource("interface.labelEmailAddress"),
-          percentageWidth: 0.1,
-          align: "left",
-          width: 500,
-          hasToolTip: true,
-          component: emailTableCell,
-        },
-        {
-          name: "subject",
-          headerLabel: getResource("interface.labelSubject"),
-          percentageWidth: 0.3,
-          align: "left",
-          width: 600,
-          hasToolTip: true,
-          component: emailTableCell,
-        },
-        {
-          name: "isSpam",
-          headerLabel: getResource("interface.labelIsSpam"),
-          percentageWidth: 0.3,
-          align: "center",
-          width: 200,
-          hasToolTip: true,
-          component: emailTableCell,
-        },
-        {
+      const columns: EmailTableColumn<EmailClassificationModel>[] = [];
+
+      columns.push({
+        name: "emailAddress",
+        headerLabel: getResource("interface.labelEmailAddress"),
+        align: "left",
+        width: 400,
+        hasToolTip: true,
+        component: emailTableCell,
+      });
+
+      columns.push({
+        name: "subject",
+        headerLabel: getResource("interface.labelSubject"),
+        align: "left",
+        width:
+          spamPredictionEnabled && folderPredictionEnabled
+            ? 500
+            : spamPredictionEnabled || folderPredictionEnabled
+            ? 600
+            : 700,
+        hasToolTip: true,
+        component: emailTableCell,
+      });
+
+      columns.push({
+        name: "isSpam",
+        headerLabel: getResource("interface.labelIsSpam"),
+        align: "center",
+        width: 160,
+        hasToolTip: true,
+        component: emailTableCell,
+      });
+
+      if (spamPredictionEnabled) {
+        columns.push({
           name: "predictedAsSpam",
-          headerLabel: getResource("interface.labelSpamPrediction"),
-          percentageWidth: 0.3,
+          headerLabel: getResource("interface.labelPrediction"),
           align: "center",
-          width: 200,
+          width: 100,
           hasToolTip: false,
           isReadonly: true,
           component: emailTableCell,
-        },
-        {
-          name: "targetFolderId",
-          headerLabel: getResource("interface.labelTargetFolder"),
-          percentageWidth: 0.3,
-          align: "left",
-          width: 200,
-          hasToolTip: false,
-          component: emailTableCell,
-        },
-        {
+        });
+      }
+
+      columns.push({
+        name: "backup",
+        headerLabel: getResource("interface.labelBackup"),
+        align: "center",
+        width: 100,
+        hasToolTip: false,
+        isReadonly: false,
+        component: emailTableCell,
+      });
+
+      columns.push({
+        name: "delete",
+        headerLabel: getResource("interface.labelDelete"),
+        align: "center",
+        width: 100,
+        hasToolTip: false,
+        isReadonly: false,
+        component: emailTableCell,
+      });
+
+      columns.push({
+        name: "targetFolderId",
+        headerLabel: getResource("interface.labelTargetFolder"),
+        align: "left",
+        width: 200,
+        hasToolTip: false,
+        component: emailTableCell,
+      });
+
+      if (folderPredictionEnabled) {
+        columns.push({
           name: "predictedTargetFolderId",
-          headerLabel: getResource("interface.labelPredictedTargetFolder"),
-          percentageWidth: 0.3,
-          align: "left",
-          width: 200,
+          headerLabel: getResource("interface.labelPrediction"),
+          align: "center",
+          width: 100,
           hasToolTip: false,
           component: emailTableCell,
-        },
-      ];
-    }, [getResource]);
+        });
+      }
+
+      columns.push({
+        name: "update",
+        headerLabel: getResource("interface.labelUpdate"),
+        align: "center",
+        width: 100,
+        isReadonly: !spamPredictionEnabled && !folderPredictionEnabled,
+        hasToolTip: false,
+        component: emailTableCell,
+      });
+
+      return columns;
+    }, [folderPredictionEnabled, getResource, spamPredictionEnabled]);
 
   const modifiedIds = React.useMemo((): number[] => {
     const ids: number[] = [];

@@ -81,6 +81,8 @@ namespace Logic.Interfaces.EmailCleaner
                         IsSharedWithAi = settingsEntity.ShareDataWithAi, 
                         IsSpam = false,
                         IsPredictedAsSpam = false,
+                        Backup = false,
+                        Delete = false,
                     }).ToList();
 
                     if (emailCleanupConfigurationEntities.Any())

@@ -1,6 +1,7 @@
 import {
   Box,
   Checkbox,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -8,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { EmailClassificationModel, TableCellProps } from "../types";
+import { OnlinePrediction, UpdateRounded } from "@mui/icons-material";
 
 function labelCell(props: TableCellProps<EmailClassificationModel>) {
   const { rowIndex, colIndex, model, columnDefinition } = props;
@@ -38,18 +40,43 @@ function labelCell(props: TableCellProps<EmailClassificationModel>) {
   );
 }
 
-function predictedFolderCell(props: TableCellProps<EmailClassificationModel>) {
+function folderPredictionCell(props: TableCellProps<EmailClassificationModel>) {
   const {
     rowIndex,
     colIndex,
-    model,
     dataKey,
-    columnDefinition,
     dropdownItems,
+    model,
+    columnDefinition,
   } = props;
 
   const folderKey = model[dataKey] ?? 1;
   const label = dropdownItems.find((x) => x.key === folderKey).label;
+  return (
+    <Box
+      key={`${rowIndex}-${colIndex}-${columnDefinition.name}`}
+      sx={{
+        width: columnDefinition.width,
+        height: "100%",
+        padding: 0,
+        textOverflow: "ellipsis",
+        display: "flex",
+        justifyContent: columnDefinition.align,
+        alignItems: columnDefinition.align,
+      }}
+    >
+      <Tooltip title={label} children={<OnlinePrediction />} />
+    </Box>
+  );
+}
+
+function predictionUpdateCell(props: TableCellProps<EmailClassificationModel>) {
+  const {
+    rowIndex,
+    colIndex,
+
+    columnDefinition,
+  } = props;
 
   return (
     <Box
@@ -58,9 +85,19 @@ function predictedFolderCell(props: TableCellProps<EmailClassificationModel>) {
         width: columnDefinition.width,
         height: "100%",
         padding: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Typography sx={{ opacity: 0.7 }}>{label}</Typography>
+      <Tooltip
+        title={columnDefinition.headerLabel}
+        children={
+          <IconButton size="small" disabled={columnDefinition.isReadonly}>
+            <UpdateRounded />
+          </IconButton>
+        }
+      />
     </Box>
   );
 }
@@ -131,7 +168,7 @@ function dropdownCell(
       }}
     >
       <Select
-        disabled={disabled}
+        disabled={disabled || !model.backup}
         variant="standard"
         disableUnderline
         value={model[dataKey] as number}
@@ -162,11 +199,15 @@ export function emailTableCell(
       return labelCell(props);
     case "isSpam":
     case "predictedAsSpam":
+    case "backup":
+    case "delete":
       return checkboxCell(props);
     case "targetFolderId":
       return dropdownCell(props);
     case "predictedTargetFolderId":
-      return predictedFolderCell(props);
+      return folderPredictionCell(props);
+    case "update":
+      return predictionUpdateCell(props);
     default:
       return null;
   }

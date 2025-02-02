@@ -47,6 +47,8 @@ const EmailClassificationContainer: React.FC = () => {
     <EmailClassificationPage
       classifications={data.classificationModels}
       folders={data.folders}
+      folderPredictionEnabled={data.folderPredictionEnabled}
+      spamPredictionEnabled={data.spamPredictionEnabled}
       handleSave={handleSave}
     />
   );

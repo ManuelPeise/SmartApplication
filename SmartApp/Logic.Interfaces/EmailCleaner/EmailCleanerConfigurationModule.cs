@@ -1,5 +1,6 @@
 ﻿using Data.ContextAccessor.Interfaces;
 using Data.Shared;
+using Data.Shared.Email;
 using Logic.Interfaces.Interfaces;
 using Logic.Interfaces.Models;
 using Logic.Shared;
@@ -23,6 +24,7 @@ namespace Logic.Interfaces.EmailCleaner
         public async Task<EmailClassificationPageModel?> LoadConfigurationData(int accountId)
         {
             using (var configuration = new EmailCleanerConfiguration(_applicationUnitOfWork))
+            using (var settings = new EmailCleanerSettings(_applicationUnitOfWork))
             {
                 try
                 {
@@ -33,10 +35,15 @@ namespace Logic.Interfaces.EmailCleaner
 
                     var targetFolderEntities = await configuration.GetAllTargetFolderEntities();
                     var configurationEntities = await configuration.LoadEntities(accountId);
+                    var emailCleanerSettings = await settings.GetEmailCleanerSettings();
+
+                    var relatedSettings = emailCleanerSettings.Single(x => x.AccountId == accountId);
 
                     return new EmailClassificationPageModel
                     {
                         AccountId = accountId,
+                        SpamPredictionEnabled = relatedSettings.SpamPredictionEnabled,
+                        FolderPredictionEnabled = relatedSettings.FolderPredictionEnabled,
                         Folders = (targetFolderEntities.Select(e => new EmailFolderModel
                         {
                             FolderId = e.Id,
@@ -50,7 +57,9 @@ namespace Logic.Interfaces.EmailCleaner
                             IsSpam = e.IsSpam,
                             TargetFolderId = e.TargetFolderId,
                             PredictedAsSpam = e.IsPredictedAsSpam,
-                            PredictedTargetFolderId = e.PredictedTargetFolderId
+                            PredictedTargetFolderId = e.PredictedTargetFolderId,
+                            Backup = e.Backup,
+                            Delete = e.Delete,
                         }).ToList(),
                     };
 
@@ -67,6 +76,41 @@ namespace Logic.Interfaces.EmailCleaner
             }
         }
 
+        public async Task<bool> UpdateConfigurations(List<EmailClassificationModel> configurations)
+        {
+            using (var configuration = new EmailCleanerConfiguration(_applicationUnitOfWork))
+            {
+                try
+                {
+                    var affectedConfigurations = await configuration.LoadEntities(configurations.Select(x => x.Id)) ?? new List<EmailCleanupConfigurationEntity>();
+
+                    foreach (var affectedConfiguration in affectedConfigurations)
+                    {
+                        var relatedConfig = configurations.Single(x => x.Id == affectedConfiguration.Id);
+
+                        affectedConfiguration.IsSpam = relatedConfig.IsSpam;
+                        affectedConfiguration.IsPredictedAsSpam = relatedConfig.PredictedAsSpam;
+                        affectedConfiguration.TargetFolderId = relatedConfig.TargetFolderId;
+                        affectedConfiguration.PredictedTargetFolderId = affectedConfiguration.PredictedTargetFolderId;
+                        affectedConfiguration.Backup = relatedConfig.Backup;
+                        affectedConfiguration.Delete = relatedConfig.Delete;
+                    }
+
+                    await configuration.UpdateConfigurations(affectedConfigurations);
+
+                    return true;
+                }
+                catch (Exception exception)
+                {
+                    if (_logger != null)
+                    {
+                        await _logger.Error($"Could not update spam classification data.", exception.Message);
+                    }
+
+                    return false;
+                }
+            }
+        }
         #region dispose
 
         protected virtual void Dispose(bool disposing)
