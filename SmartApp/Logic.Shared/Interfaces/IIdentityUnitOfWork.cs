@@ -5,9 +5,9 @@ namespace Logic.Shared.Interfaces
 {
     public interface IIdentityUnitOfWork : IDisposable
     {
-        public IRepositoryBase<UserIdentity> UserRepository { get; }
-        public IRepositoryBase<UserCredentials> UserCredentialsRepository { get; }
-        public IRepositoryBase<UserRole> UserRoleRepository { get; }
-        public IRepositoryBase<UserModuleEntity> UserModuleRepository { get; }
+        public IDbContextRepository<UserIdentity> UserRepository { get; }
+        public IDbContextRepository<UserCredentials> UserCredentialsRepository { get; }
+        public IDbContextRepository<UserRole> UserRoleRepository { get; }
+        
     }
 }

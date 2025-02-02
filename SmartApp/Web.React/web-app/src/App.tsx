@@ -1,17 +1,16 @@
 import React from "react";
 import "./_lib/_translation/i18n";
 import "./App.css";
-import RootLayout from "./_components/_containers/RootLayout";
-import AppRouter from "./_lib/AppRouter";
-import AuthContextProvider from "./_providers/AuthContextProvider";
+import { ThemeProvider, useTheme } from "@mui/material";
+import { customTheme } from "./theme";
+import AppRouter from "./_lib/Router/AppRouter";
 
 const App: React.FC = () => {
+  const theme = useTheme();
   return (
-    <RootLayout>
-      <AuthContextProvider>
-        <AppRouter />
-      </AuthContextProvider>
-    </RootLayout>
+    <ThemeProvider theme={{ ...theme, ...customTheme }}>
+      <AppRouter />
+    </ThemeProvider>
   );
 };
 

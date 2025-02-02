@@ -1,7 +1,7 @@
 ﻿using Logic.Identity.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models.Identity;
-using Shared.Models.Response;
 
 namespace Service.Api.Identity
 {
@@ -14,14 +14,17 @@ namespace Service.Api.Identity
             _identityService = identityService;
         }
 
+        [AllowAnonymous]
         [HttpPost(Name = "Authenticate")]
-        public async Task<ApiResponseBase<AuthTokenResponse>> Authenticate([FromBody] AuthenticationRequest request)
+        public async Task<string> Authenticate([FromBody] AuthenticationRequest request)
         {
-            return await _identityService.AuthenticateAsync(request);
+            var response = await _identityService.AuthenticateAsync(request);
+
+            return response;
         }
 
         [HttpGet(Name = "Logout")]
-        public async Task<ApiResponseBase<LogoutResponse>> Logout([FromQuery] int userId)
+        public async Task<bool> Logout([FromQuery] int userId)
         {
             return await _identityService.LogoutAsync(userId);
         }

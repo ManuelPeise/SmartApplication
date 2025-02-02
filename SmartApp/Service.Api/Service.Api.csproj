@@ -11,7 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Logic.Administration\Logic.Administration.csproj" />
+    <ProjectReference Include="..\Logic.Ai\Logic.Ai.csproj" />
     <ProjectReference Include="..\Logic.Identity\Logic.Identity.csproj" />
+    <ProjectReference Include="..\Logic.Interfaces\Logic.Interfaces.csproj" />
+    <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
   </ItemGroup>
 
 </Project>

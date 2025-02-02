@@ -19,16 +19,21 @@
     </PackageReference>
     <PackageReference Include="MySql.Data" Version="8.4.0" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="Quartz" Version="3.13.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data.AppContext\Data.AppContext.csproj" />
-    <ProjectReference Include="..\Data.Identity\Data.Identity.csproj" />
     <ProjectReference Include="..\Logic.Administration\Logic.Administration.csproj" />
     <ProjectReference Include="..\Logic.Identity\Logic.Identity.csproj" />
+    <ProjectReference Include="..\Logic.Interfaces\Logic.Interfaces.csproj" />
     <ProjectReference Include="..\Service.Api\Service.Api.csproj" />
-    <ProjectReference Include="..\Shared.Configuration\Shared.Configuration.csproj" />
+    <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="AiData\Models\" />
+    <Folder Include="AiData\TrainingData\" />
   </ItemGroup>
 
 </Project>

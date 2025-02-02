@@ -1,31 +1,44 @@
-﻿using Logic.Shared.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+﻿using Data.ContextAccessor.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Enums;
 using Shared.Models.Administration.Log;
-using Shared.Models.Response;
 
 namespace Service.Api.Administration
 {
-    [Authorize]
     public class LogController : ApiControllerBase
     {
-        private readonly ILogMessageService _logMessageService;
+        private readonly IApplicationUnitOfWork _applicationUnitOfWork;
 
-        public LogController(ILogMessageService logMessageService)
+        public LogController(IApplicationUnitOfWork applicationUnitOfWork)
         {
-            _logMessageService = logMessageService;
+            _applicationUnitOfWork = applicationUnitOfWork;
         }
 
-        [HttpGet(Name = "GetMessages")]
+        [RoleAuthorization(RequiredRole = UserRoleEnum.Admin, AllowAdmin = true)]
+        [HttpGet(Name = "GetLogMessages")]
         public async Task<List<LogMessageExportModel>> GetLogMessages()
         {
-            return await _logMessageService.GetLogmessages();
+            var entities = await _applicationUnitOfWork.LogMessageRepository.GetAllAsync();
+
+            return entities.Select(x => new LogMessageExportModel
+            {
+                Id = x.Id,
+                Message = x.Message,
+                ExceptionMessage = x.ExceptionMessage,
+                MessageType = x.MessageType,
+                TimeStamp = x.TimeStamp,
+            }).ToList();
         }
 
-        [HttpGet(Name = "DeleteMessages")]
-        public async Task<List<LogMessageExportModel>> GetLogMessages([FromBody] List<int> messageIds)
+        [RoleAuthorization(RequiredRole = UserRoleEnum.Admin, AllowAdmin = true)]
+        [HttpPost(Name = "DeleteMessages")]
+        public async Task DeleteMessages([FromBody] List<int> messageIds)
         {
-            return await _logMessageService.DeleteMessages(messageIds);
+            //foreach (var messageId in messageIds) {
+            //{
+            //    await _administrationRepository.LogMessageRepository.Delete(messageId);
+            //})
+            //await _administrationRepository.LogMessageRepository.Delete.DeleteMessages(messageIds);
 
         }
     }

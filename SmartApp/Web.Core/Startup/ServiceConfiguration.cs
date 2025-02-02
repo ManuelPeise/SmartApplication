@@ -1,23 +1,28 @@
-﻿using Data.AppContext;
-using Data.Identity;
+﻿using Data.ContextAccessor;
+using Data.ContextAccessor.Interfaces;
+using Data.ContextAccessor.Repositories;
+using Data.Databases;
 using Logic.Administration;
+using Logic.Administration.Interfaces;
 using Logic.Identity;
 using Logic.Identity.Interfaces;
+using Logic.Interfaces;
+using Logic.Shared.Clients;
 using Logic.Shared.Interfaces;
-using Logic.Shared.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Models.Identity;
+using Shared.Models.Settings;
 using System.Text;
 
 namespace Web.Core.Startup
 {
     public static class ServiceConfiguration
     {
-        public static void ConfigureServices(WebApplicationBuilder builder, string corsPolicy, string? identityContextConnectionString, string? applicationContextConnectionString)
+        public static void ConfigureServices(WebApplicationBuilder builder, string corsPolicy, string? identityContextConnectionString, string? applicationContextConnectionString, string? aiContextConnectionString)
         {
-            builder.Services.AddDbContext<IdentityDbContext>(opt =>
+            builder.Services.AddDbContext<UserIdentityContext>(opt =>
             {
                 if (identityContextConnectionString == null)
                 {
@@ -27,7 +32,7 @@ namespace Web.Core.Startup
                 opt.UseMySQL(identityContextConnectionString);
             });
 
-            builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+            builder.Services.AddDbContext<ApplicationContext>(opt =>
             {
                 if (applicationContextConnectionString == null)
                 {
@@ -37,12 +42,29 @@ namespace Web.Core.Startup
                 opt.UseMySQL(applicationContextConnectionString);
             });
 
+            builder.Services.AddDbContext<AiDbContext>(opt =>
+            {
+                if (aiContextConnectionString == null)
+                {
+                    throw new ArgumentNullException(nameof(aiContextConnectionString));
+                }
+
+                opt.UseMySQL(aiContextConnectionString);
+            });
+
+            builder.Services.AddScoped<WebJob>();
+
             builder.Services.AddHttpContextAccessor();
-
-            builder.Services.AddScoped<ILogRepository, LogRepository>();
             builder.Services.AddScoped<IIdentityService, IdentityService>();
+            builder.Services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
 
-            builder.Services.AddScoped<ILogMessageService, LogMessageService>();
+            builder.Services.RegisterInterfaceServices();
+
+            builder.Services.AddScoped<IUserAdministrationService, UserAdministrationService>();
+            builder.Services.AddScoped<IAccessRightAdministrationService, AccessRightAdministrationService>();
+            builder.Services.AddScoped<IEmailClient, EmailClient>();
+            builder.Services.AddScoped<IAiRepository, AiRepository>();
+
             ConfigureOptions(builder);
 
             ConfigureJwt(builder);
@@ -87,15 +109,16 @@ namespace Web.Core.Startup
 
         private static (string? jwtIssuer, string? jwtKey) GetJwtDataFromConfig(WebApplicationBuilder builder)
         {
-            var jwtIssuer = builder.Configuration.GetSection("JwtSettings:issuer").Get<string>();
-            var jwtKey = builder.Configuration.GetSection("JwtSettings:key").Get<string>();
+            var jwtIssuer = builder.Configuration.GetSection("Security:issuer").Get<string>();
+            var jwtKey = builder.Configuration.GetSection("Security:key").Get<string>();
 
             return (jwtIssuer, jwtKey);
         }
 
         private static void ConfigureOptions(WebApplicationBuilder builder)
         {
-            builder.Services.Configure<JwtData>(builder.Configuration.GetSection("JwtSettings"));
+            builder.Services.Configure<SecurityData>(builder.Configuration.GetSection("Security"));
+            builder.Services.Configure<AppSettingsModel>(builder.Configuration.GetSection("AppSettings"));
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Data.Shared.Identity.Entities
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public bool IsNewUserRegistration { get; set; }
         public bool IsActive { get; set; }
 
         public int CredentialsId { get; set; }
@@ -18,6 +19,5 @@ namespace Data.Shared.Identity.Entities
         [ForeignKey(nameof(RoleId))]
         public UserRole? UserRole { get; set; }
 
-        public List<ModuleEntity> Modules { get; set; } = [];
     }
 }

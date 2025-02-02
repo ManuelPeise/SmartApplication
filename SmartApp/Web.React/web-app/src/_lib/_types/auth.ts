@@ -7,8 +7,6 @@ export type AccountRequest = {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
-  passwordValidation: string;
 };
 
 export type JwtTokenData = {
@@ -27,8 +25,38 @@ export type AuthenticationState = {
 
 export type AuthContextProps = {
   isLoading: boolean;
-  authenticationState: AuthenticationState;
+  authenticationState: AuthenticationState | null;
   onLogin: (data: LoginData) => Promise<boolean>;
   onLogout: (userId: number) => Promise<boolean>;
   onRegister: (model: AccountRequest) => Promise<boolean>;
+};
+
+export type UserAccessRightModel = {
+  userId: number;
+  userName?: string;
+  accessRights: AccessRight[];
+};
+
+export type AccessRight = {
+  id: number;
+  group: string;
+  name: string;
+  canView: boolean;
+  canEdit: boolean;
+  deny: boolean;
+};
+
+export type AccessRightValues = Pick<
+  AccessRight,
+  "canView" | "deny" | "canEdit"
+>;
+
+export type AccessRightContextProps = {
+  accessRights: UserAccessRightModel | null;
+  userHasAssess: (name: string, value: keyof AccessRightValues) => boolean;
+  getAccessRight: (name: string) => {
+    deny: boolean;
+    canView: boolean;
+    canEdit: boolean;
+  };
 };
