@@ -8,21 +8,31 @@ import {
   Typography,
 } from "@mui/material";
 import { useI18n } from "src/_hooks/useI18n";
-import FilterTextInput from "src/_components/Input/FilterTextInput";
+import AutoCompleteFilter from "src/_components/Filter/AutoCompleteFilter";
 
 interface IProps {
   filter: EmailFilter;
+  addressItems: string[];
   itemsCount: number;
   handleFilterChanged: (partialFilter: Partial<EmailFilter>) => void;
 }
 
 const EmailFilterToolBar: React.FC<IProps> = (props) => {
-  const { filter, itemsCount, handleFilterChanged } = props;
+  const { filter, addressItems, itemsCount, handleFilterChanged } = props;
   const { getResource } = useI18n();
 
   return (
-    <Paper sx={{ width: "inherit", height: "5rem" }} elevation={4}>
+    <Paper
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        width: "inherit",
+        height: "5rem",
+      }}
+      elevation={4}
+    >
       <Box
+        width="100%"
         display="flex"
         flexDirection="row"
         gap={2}
@@ -31,12 +41,33 @@ const EmailFilterToolBar: React.FC<IProps> = (props) => {
         alignItems="center"
       >
         <Box width="20%" paddingRight={12}>
-          <FilterTextInput
-            fullwidth
-            label={getResource("interface.labelAddressFilter")}
+          <AutoCompleteFilter
+            componentKey="email-address-filter"
+            options={addressItems}
             value={filter.address}
-            onChange={(value) => handleFilterChanged({ address: value })}
-            handleClearFilterText={() => handleFilterChanged({ address: "" })}
+            placeHolder={getResource("interface.labelAddressFilter")}
+            handleChange={(e) =>
+              handleFilterChanged({
+                address: e,
+              })
+            }
+          />
+        </Box>
+        <Box display="flex" alignContent="center" minWidth="10%">
+          <FormControlLabel
+            label={getResource("interface.labelModifyEntireFilterResult")}
+            labelPlacement="end"
+            control={
+              <Checkbox
+                disabled={filter.address === ""}
+                checked={filter.modifyEntireFilterResult}
+                onChange={(e) =>
+                  handleFilterChanged({
+                    modifyEntireFilterResult: e.currentTarget.checked,
+                  })
+                }
+              />
+            }
           />
         </Box>
         <Box display="flex" alignContent="center" minWidth="10%">
@@ -45,6 +76,7 @@ const EmailFilterToolBar: React.FC<IProps> = (props) => {
             labelPlacement="end"
             control={
               <Checkbox
+                disabled={filter.hideSpam}
                 checked={filter.hideHam}
                 onChange={(e) =>
                   handleFilterChanged({ hideHam: e.currentTarget.checked })
@@ -59,6 +91,7 @@ const EmailFilterToolBar: React.FC<IProps> = (props) => {
             labelPlacement="end"
             control={
               <Checkbox
+                disabled={filter.hideHam}
                 checked={filter.hideSpam}
                 onChange={(e) =>
                   handleFilterChanged({ hideSpam: e.currentTarget.checked })

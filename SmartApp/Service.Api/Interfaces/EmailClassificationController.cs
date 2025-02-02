@@ -20,5 +20,12 @@ namespace Service.Api.Interfaces
         {
             return await _configurationModule.LoadConfigurationData(accountId);
         }
+
+        [RoleAuthorization(RequiredRole = UserRoleEnum.User, AllowAdmin = true)]
+        [HttpPost(Name = "UpdateSpamClassificationData")]
+        public async Task<bool?> UpdateSpamClassificationData([FromBody] List<EmailClassificationModel> items)
+        {
+            return true;
+        }
     }
 }

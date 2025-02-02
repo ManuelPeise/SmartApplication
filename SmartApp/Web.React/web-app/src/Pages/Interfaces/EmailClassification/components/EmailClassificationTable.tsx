@@ -1,19 +1,29 @@
-import { Box, Grid2 } from "@mui/material";
+import { Box, Grid2, Typography } from "@mui/material";
 import React from "react";
 import { EmailClassificationModel, EmailTableColumn } from "../types";
 import { colors } from "src/_lib/colors";
 import { AutoSizer, Column, Table } from "react-virtualized";
 import "react-virtualized/styles.css";
 import { DropDownItem } from "src/_components/Input/Dropdown";
+import EmailTablePlaceHolder from "./EmailTablePlaceHolder";
 
 interface IProps {
   classifications: EmailClassificationModel[];
   columnDefinitions: EmailTableColumn<EmailClassificationModel>[];
   folderDropdownItems: DropDownItem[];
+  handleItemsChanged: (
+    partialState: Partial<EmailClassificationModel>,
+    id: number
+  ) => void;
 }
 
 const EmailClassificationTable: React.FC<IProps> = (props) => {
-  const { classifications, columnDefinitions, folderDropdownItems } = props;
+  const {
+    classifications,
+    columnDefinitions,
+    folderDropdownItems,
+    handleItemsChanged,
+  } = props;
 
   const dataGetter = React.useCallback(
     ({ index }) => {
@@ -28,7 +38,7 @@ const EmailClassificationTable: React.FC<IProps> = (props) => {
         <Box
           className={className}
           role="row"
-          style={{ ...style, backgroundColor: colors.lighter }}
+          style={{ ...style, backgroundColor: colors.lighter, opacity: 0.6 }}
         >
           {columns}
         </Box>
@@ -48,7 +58,9 @@ const EmailClassificationTable: React.FC<IProps> = (props) => {
           minWidth={coldef.width}
           justifyContent={coldef.align}
         >
-          {label}
+          <Typography variant="caption" sx={{ fontWeight: 600 }}>
+            {label}
+          </Typography>
         </Box>
       );
     },
@@ -65,6 +77,7 @@ const EmailClassificationTable: React.FC<IProps> = (props) => {
             rowStyle={{
               borderBottom: `1px solid ${colors.lighter}`,
             }}
+            noRowsRenderer={() => <EmailTablePlaceHolder />}
             rowCount={classifications.length}
             rowHeight={50}
             headerHeight={60}
@@ -96,6 +109,7 @@ const EmailClassificationTable: React.FC<IProps> = (props) => {
                     disabled: coldef.isReadonly,
                     columnDefinition: coldef,
                     dropdownItems: folderDropdownItems,
+                    handleChange: handleItemsChanged,
                   })
                 }
               />

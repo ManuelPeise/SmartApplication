@@ -49,4 +49,5 @@ export type EmailFilter = {
   address: string;
   hideHam: boolean;
   hideSpam: boolean;
+  modifyEntireFilterResult: boolean;
 };

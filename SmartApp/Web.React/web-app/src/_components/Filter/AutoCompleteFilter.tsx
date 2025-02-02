@@ -1,16 +1,17 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { ClearRounded } from "@mui/icons-material";
+import { Autocomplete, IconButton, TextField } from "@mui/material";
 import React from "react";
-import { DropDownItem } from "../Input/Dropdown";
 
 interface IProps {
   componentKey: string;
-  options: DropDownItem[];
+  options: string[];
   disabled?: boolean;
   fullWidth?: boolean;
   maxWidth?: number;
   minWidth?: number;
   placeHolder: string;
-  handleChange: (id: number) => void;
+  value: string;
+  handleChange: (id: string) => void;
 }
 
 const AutoCompleteFilter: React.FC<IProps> = (props) => {
@@ -22,19 +23,16 @@ const AutoCompleteFilter: React.FC<IProps> = (props) => {
     maxWidth,
     options,
     placeHolder,
+    value,
     handleChange,
   } = props;
 
   const handleValueSelected = React.useCallback(
-    (e: React.SyntheticEvent<Element, Event>, key: string) => {
+    (e: React.SyntheticEvent<Element, Event>, key: string, reason: string) => {
       e.preventDefault();
-      const id = options.find(
-        (x) => x.label.toLowerCase() === key.toLowerCase()
-      ).key;
-
-      handleChange(id);
+      handleChange(key);
     },
-    [handleChange, options]
+    [handleChange]
   );
 
   return (
@@ -43,13 +41,15 @@ const AutoCompleteFilter: React.FC<IProps> = (props) => {
       disabled={disabled}
       disableClearable
       fullWidth={fullWidth}
-      // noOptionsText={}
+      value={value}
       sx={{
         minWidth: minWidth,
         maxWidth: maxWidth,
+        alignContent: "end",
       }}
+      clearOnEscape
       onChange={handleValueSelected}
-      options={options.map((opt) => opt.label)}
+      options={options.map((opt) => opt)}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -58,7 +58,15 @@ const AutoCompleteFilter: React.FC<IProps> = (props) => {
             input: {
               ...params.InputProps,
               placeholder: placeHolder,
-              type: "search",
+              // type: value "search",
+              startAdornment: value !== "" && (
+                <IconButton
+                  sx={{ width: 10, height: 10, margin: "8px" }}
+                  onClick={() => handleChange("")}
+                >
+                  <ClearRounded />
+                </IconButton>
+              ),
             },
           }}
         />

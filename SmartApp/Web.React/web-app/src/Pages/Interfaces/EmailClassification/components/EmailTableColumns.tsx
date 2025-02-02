@@ -95,7 +95,7 @@ function checkboxCell(props: TableCellProps<EmailClassificationModel>) {
         disabled={disabled}
         checked={model[columnDefinition.name] as boolean}
         onChange={(e) =>
-          handleChange({ [dataKey]: e.currentTarget.checked }, rowIndex)
+          handleChange({ [dataKey]: e.currentTarget.checked }, model.id)
         }
       />
     </Box>
@@ -118,7 +118,7 @@ function dropdownCell(
 
   const onChange = (e: SelectChangeEvent<number>) => {
     handleChange &&
-      handleChange({ [dataKey]: e.target.value as number }, rowIndex);
+      handleChange({ [dataKey]: e.target.value as number }, model.id);
   };
 
   return (

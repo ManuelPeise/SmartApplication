@@ -3,7 +3,10 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "src/_hooks/useAuth";
 import { useStatefulApiService } from "src/_hooks/useStatefulApiService";
 import { StatelessApi } from "src/_lib/_api/StatelessApi";
-import { EmailClassificationPageModel } from "./types";
+import {
+  EmailClassificationModel,
+  EmailClassificationPageModel,
+} from "./types";
 import EmailClassificationPage from "./components/EmailClassificationPage";
 
 const EmailClassificationContainer: React.FC = () => {
@@ -12,13 +15,28 @@ const EmailClassificationContainer: React.FC = () => {
 
   const api = StatelessApi.create();
 
-  const { data } = useStatefulApiService<EmailClassificationPageModel>(
-    api,
-    {
-      serviceUrl: "EmailClassification/GetSpamClassificationData",
-      parameters: { accountId: id },
+  const { data, sendPost, rebindData } =
+    useStatefulApiService<EmailClassificationPageModel>(
+      api,
+      {
+        serviceUrl: "EmailClassification/GetSpamClassificationData",
+        parameters: { accountId: id },
+      },
+      authenticationState.token
+    );
+
+  const handleSave = React.useCallback(
+    async (items: EmailClassificationModel[]) => {
+      await sendPost<boolean>({
+        serviceUrl: "EmailClassification/UpdateSpamClassificationData",
+        body: items,
+      }).then(async (res) => {
+        if (res) {
+          await rebindData();
+        }
+      });
     },
-    authenticationState.token
+    [rebindData, sendPost]
   );
 
   if (data == null || !data?.classificationModels?.length) {
@@ -29,6 +47,7 @@ const EmailClassificationContainer: React.FC = () => {
     <EmailClassificationPage
       classifications={data.classificationModels}
       folders={data.folders}
+      handleSave={handleSave}
     />
   );
 };
